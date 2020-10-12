@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import solar from './solar.jpg';
+import solar from '../images/solar.jpg';
 class SolarTitle extends Component {
 	styles = {
 		fontSize: 100,
