@@ -8,4 +8,4 @@ def hello_world():
 @app.route('/all', methods=['GET'])
 def returnAll():
     #return all data that exists
-    return {}
+    return {} 
