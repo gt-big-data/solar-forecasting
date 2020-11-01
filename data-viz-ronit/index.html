@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>D3 Page Template</title>
+        <!-- <script src="https://d3js.org/d3.v4.js"></script> -->
+        <script src="d3/d3.js"></script>
+    </head>
+    <body>
+        <p> Bar Graph of data over one day (Jan 1 2019).</p>
+        <script type="text/javascript">
+
+        //Row Converstion function to get integers (csv gives only strings)
+        var rowConverter = function(d) {
+            return {
+                Month: parseInt(d.Month),
+                Day: parseInt(d.Day),
+                Hour: parseInt(d.Hour),
+                Minute: parseInt(d.Minnute),
+                GHI: parseFloat(d.GHI) 
+             };
+        }   
+
+        //Global data variable for use in other functions AFTER *asynchronous* call to d3.csv()
+        var dataset;
+
+        //ASYNCHRONOUS - Load CSV file (1st Day Jan 2019 Sample)
+        d3.csv("sampledata2019.csv", rowConverter, function(data) {
+
+            //Set global variable
+            dataset = data;
+
+            //Display sample bar graph (call to function)
+            displayBarGraph();
+        });
+
+        //Array for only holding GHI data
+        var GHIArray = [];
+
+        //For console reference if needed (made them global)
+        var xScale;
+        var yScale;
+        var tempYScale;
+
+        //Function to create bar graph - run only after asynchronous data load.
+        function displayBarGraph() {
+            //Add elements to the GHI array
+            for (var j = 0; j < dataset.length; j++) {
+                GHIArray.push(dataset[j].GHI);
+            }
+
+            //Specifications for svg element.
+            var w=1500;
+            var h=800;
+            var barPadding = 0.15; //gaps between bars - value btwn 0 and 1.
+            var padding = 100; //padding that goes around svg. Important!
+
+
+            //Time scales (for later)
+            // var fTime = d3.timeParse("%H:%M");
+
+
+            // Note that this is only for a ONE DAY Graph. (Working on 
+            // displaying the past 24 hrs data soon).
+
+            //Create x scale that goes from 0 to 23.5, representing the hours.
+            // Future use - scaleTime() function to be utilized.
+            xScale = d3.scaleLinear()
+            .domain([0, 23.5])
+            .range([padding, w - padding * 2]);
+
+            //Create x axis, approximately estimate 20 ticks.
+            var xAxis = d3.axisBottom()
+            .scale(xScale)
+            .ticks(20);
+
+            //Create y scale for mapping data to correct pixels in svg.
+            yScale = d3.scaleLinear()
+            .domain([0, d3.max(GHIArray)])
+            .range([h - padding, padding]);
+
+            //Create y axis, approximately estimate 20 ticks.
+            var yAxis = d3.axisLeft()
+            .scale(yScale)
+            .ticks(20);
+
+            //Scale used for correct rectangle heights of the bars.
+            //(Not used for any axes).
+            tempYScale = d3.scaleLinear()
+            .domain([0, d3.max(GHIArray)])
+            .range([0, h - 2 * padding]);
+               
+            //Create the svg element in body.
+            var svg = d3.select("body")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+
+            //BIND GHI data (important) and add rectangles.
+            svg.selectAll("rect")
+            .data(GHIArray)
+            .enter()
+            .append("rect")
+            .attr("x", function(d, i) {
+                //Scaling x value of rectangle to match with x-axis.
+                return xScale(i / 2);
+            })
+            .attr("y", function(d) {
+                //Scaling y value of rectangle to match with y-axis.
+                return yScale(d);
+            })
+            .attr("width", function(d) {
+                return (1 - barPadding) * Math.floor((w - 2 * padding) / GHIArray.length);
+            })
+            .attr("height", function(d) {
+                //Uses tempYScale to only go to bottom of x axis.
+                return tempYScale(d);
+            })
+            .attr("fill", function(d, i) {
+                //An example of an RGB that can be used. Hotter colors for
+                //higher GHI values.
+                //Future use: embed DHI and DNI values in GHI bars, use
+                //different colors.
+                var temp = (255 - d)/2.5;
+                return "rgb(" + d * 2 + ", " + d * 0.75 + ", " + temp + ")";
+            });
+
+            //Add a group element, shift x axis to bottom.
+            svg.append("g")
+            .attr("transform", "translate(0," + (h - padding) + ")")
+            .call(xAxis);
+
+            //Add a group element, shift y axis to left side.
+            svg.append("g")
+            .attr("transform", "translate(" + padding + ",0)")
+            .call(yAxis);
+        }
+        </script>
+    </body>
+</html>
