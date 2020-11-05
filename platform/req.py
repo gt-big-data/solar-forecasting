@@ -11,12 +11,12 @@ import seaborn as sns
 
 # Declare all variables as strings. Spaces must be replaced with '+', i.e., change 'John Smith' to 'John+Smith'.
 # Define the lat, long of the location and the year
-lat, lon, year = 33.2164, -97.1292, 2010
+lat, lon = 32.55, -84.27
 # You must request an NSRDB api key from the link above
 api_key = 'gv55YTdtraJqabUYQaUcJJSXkzir9Mq5FvZGgLHs'
 # Set the attributes to extract (e.g., dhi, ghi, etc.), separated by commas.
-attributes = 'ghi,dhi,dni,wind_speed,air_temperature,solar_zenith_angle,fill_flag,surface_albedo,wind_speed'
-year = '2016'
+attributes = 'ghi,clearsky_ghi'
+year = '1998'
 # Set leap year to true or false. True will return leap day data if present, false will not.
 leap_year = 'false'
 # Set time interval in minutes, i.e., '30' is half hour intervals. Valid intervals are 30 & 60.
@@ -47,10 +47,9 @@ temperature = info['Latitude']
 new_headers = info.iloc[1]
 info = info[2:]
 info.columns = new_headers
-print((info[0:]))
-# graph for fun
-df=pd.DataFrame({'x': range(0,17520), 'y':info['Temperature'] })
-plt.plot( 'x', 'y', data=df, linestyle='-', marker='o')
-plt.show()
+info = info.dropna(how='all',axis=1)
+print((info[40:]))
+
+
 
 
