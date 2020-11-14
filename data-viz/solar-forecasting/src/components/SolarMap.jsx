@@ -7,7 +7,7 @@ class SolarMap extends Component {
 				<title 
 					style={
 						{
-							fontSize: 100,
+							fontSize: 85,
 							fontWeight : 'bold',
 							textAlign: 'center',
 							width: "100%",	
@@ -27,8 +27,8 @@ class SolarMap extends Component {
 								fontSize: 25,	
 								marginLeft: 'auto',
 							  	marginRight: 'auto',
-							  	width: "5%",
-							  	marginTop: "35%",
+							  	width: "10%",
+							  	marginTop: "40%",
 							}
 						}> 
 						Back

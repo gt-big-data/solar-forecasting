@@ -47,7 +47,25 @@ class SolarTitle extends Component {
 							  	marginTop: "5%",
 							}
 						}> 
-						Go
+						Solar Map
+					 </button>
+				 </Link>
+				 <Link to='/solargraph'>
+				 <button 
+						type="button" 
+						class="btn btn-primary" 
+						style={
+							{
+								display: 'block',
+								fontWeight : 'bold',
+								fontSize: 50,	
+								marginLeft: 'auto',
+							  	marginRight: 'auto',
+							  	width: "25%",
+							  	marginTop: "5%",
+							}
+						}> 
+						Solar Graph
 					 </button>
 				 </Link>
 			</div>
