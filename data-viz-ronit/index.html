@@ -5,10 +5,10 @@
         <title>D3 Page Template</title>
         <!-- <script src="https://d3js.org/d3.v4.js"></script> -->
         <script src="d3/d3.js"></script>
-        <link rel="stylesheet" href="dataviz-style.css">
+        <link rel="stylesheet" type="text/css" href="dataviz-style.css">
     </head>
     <body>
-        <p> Bar Graph of data over one day (Jan 1 2019).</p>
+        <!-- <p> Bar Graph of data over one day (Jan 1 2019).</p> -->
         <script type="text/javascript">
 
         //Row Converstion function to get integers (csv gives only strings)
@@ -17,10 +17,10 @@
                 // Keeping this set of clean date data for the displayBarGraph()
                 // function - we can remove this after succcessfully working 
                 // out the scaleTime() function.
-                Month: parseInt(d.Month),
-                Day: parseInt(d.Day),
-                Hour: parseInt(d.Hour),
-                Minute: parseInt(d.Minnute),
+                // Month: parseInt(d.Month),
+                // Day: parseInt(d.Day),
+                // Hour: parseInt(d.Hour),
+                // Minute: parseInt(d.Minute),
 
                 date: new Date(+2019, (+d.Month - 1), +d.Day, +d.Hour, +d.Minute),
                 GHI: parseFloat(d.GHI) 
@@ -32,13 +32,13 @@
 
         //ASYNCHRONOUS - Load CSV file (1st Day Jan 2019 Sample)
         // 2 Files: solardata2019, sampledata2019.
-        d3.csv("sampledata2019.csv", rowConverter, function(data) {
+        d3.csv("solardata2019.csv", rowConverter, function(data) {
 
             //Set global variable
             dataset = data;
 
             //Display sample bar graph (call to function)
-            displayBarGraph();
+            // displayBarGraph();
 
             //Display Line Graph
             displayLineGraph();
@@ -53,124 +53,151 @@
         var tempYScale;
 
         //Specifications for svg element.
-        var w=1500;
+        var w=window.innerWidth - 50;
         var h=800;
         var padding = 100; //padding that goes around svg. Important!
 
         //Function to create bar graph - run only after asynchronous data load.
-        function displayBarGraph() {
-            //Add elements to the GHI array
-            for (var j = 0; j < dataset.length; j++) {
-                GHIArray.push(dataset[j].GHI);
-            }
+        // function displayBarGraph() {
+        //                 //Add elements to the GHI array
+        //     for (var j = 0; j < dataset.length; j++) {
+        //         GHIArray.push(dataset[j].GHI);
+        //     }
 
 
-            var barPadding = 0.15; //gaps between bars - value btwn 0 and 1.
+        //     var barPadding = 0.15; //gaps between bars - value btwn 0 and 1.
             
 
 
-            //Time scales (for later)
-            // var fTime = d3.timeParse("%H:%M");
+        //     //Time scales (for later)
+        //     // var fTime = d3.timeParse("%H:%M");
 
 
-            // Note that this is only for a ONE DAY Graph. (Working on 
-            // displaying the past 24 hrs data soon).
+        //     // Note that this is only for a ONE DAY Graph. (Working on 
+        //     // displaying the past 24 hrs data soon).
 
-            //Create x scale that goes from 0 to 23.5, representing the hours.
-            // Future use - scaleTime() function to be utilized.
-            xScale = d3.scaleLinear()
-            .domain([0, 23.5])
-            .range([padding, w - padding * 2]);
+        //     //Create x scale that goes from 0 to 23.5, representing the hours.
+        //     // Future use - scaleTime() function to be utilized.
+        //     xScale = d3.scaleLinear()
+        //     .domain([0, 23.5])
+        //     .range([padding, w - padding * 2]);
 
-            //Create x axis, approximately estimate 20 ticks.
-            var xAxis = d3.axisBottom()
-            .scale(xScale)
-            .ticks(20);
+        //     //Create x axis, approximately estimate 20 ticks.
+        //     var xAxis = d3.axisBottom()
+        //     .scale(xScale)
+        //     .ticks(20);
 
-            //Create y scale for mapping data to correct pixels in svg.
-            yScale = d3.scaleLinear()
-            .domain([0, d3.max(GHIArray)])
-            .range([h - padding, padding]);
+        //     //Create y scale for mapping data to correct pixels in svg.
+        //     yScale = d3.scaleLinear()
+        //     .domain([0, d3.max(GHIArray)])
+        //     .range([h - padding, padding]);
 
-            //Create y axis, approximately estimate 20 ticks.
-            var yAxis = d3.axisLeft()
-            .scale(yScale)
-            .ticks(20);
+        //     //Create y axis, approximately estimate 20 ticks.
+        //     var yAxis = d3.axisLeft()
+        //     .scale(yScale)
+        //     .ticks(20);
 
-            //Scale used for correct rectangle heights of the bars.
-            //(Not used for any axes).
-            tempYScale = d3.scaleLinear()
-            .domain([0, d3.max(GHIArray)])
-            .range([0, h - 2 * padding]);
+        //     //Scale used for correct rectangle heights of the bars.
+        //     //(Not used for any axes).
+        //     tempYScale = d3.scaleLinear()
+        //     .domain([0, d3.max(GHIArray)])
+        //     .range([0, h - 2 * padding]);
                
-            //Create the svg element in body.
-            var svg = d3.select("body")
-            .append("svg")
-            .attr("width", w)
-            .attr("height", h);
+        //     //Create the svg element in body.
+        //     var svg = d3.select("body")
+        //     .append("svg")
+        //     .attr("width", w)
+        //     .attr("height", h);
 
-            //BIND GHI data (important) and add rectangles.
-            svg.selectAll("rect")
-            .data(GHIArray)
-            .enter()
-            .append("rect")
-            .attr("x", function(d, i) {
-                //Scaling x value of rectangle to match with x-axis.
-                return xScale(i / 2);
-            })
-            .attr("y", function(d) {
-                //Scaling y value of rectangle to match with y-axis.
-                return yScale(d);
-            })
-            .transition()
-            .duration(1500)
-            .attr("width", function(d) {
-                return (1 - barPadding) * Math.floor((w - 2 * padding) / GHIArray.length);
-            })
+        //     //BIND GHI data (important) and add rectangles.
+        //     svg.selectAll("rect")
+        //     .data(GHIArray)
+        //     .enter()
+        //     .append("rect")
+        //     .attr("x", function(d, i) {
+        //         //Scaling x value of rectangle to match with x-axis.
+        //         return xScale(i / 2);
+        //     })
+        //     .attr("y", function(d) {
+        //         //Scaling y value of rectangle to match with y-axis.
+        //         return yScale(d);
+        //     })
+        //     .transition()
+        //     .duration(1500)
+        //     .attr("width", function(d) {
+        //         return (1 - barPadding) * Math.floor((w - 2 * padding) / GHIArray.length);
+        //     })
 
-            .attr("height", function(d) {
-                //Uses tempYScale to only go to bottom of x axis.
-                return tempYScale(d);
-            })
+        //     .attr("height", function(d) {
+        //         //Uses tempYScale to only go to bottom of x axis.
+        //         return tempYScale(d);
+        //     })
 
-            .attr("fill", function(d, i) {
-                //An example of an RGB that can be used. Hotter colors for
-                //higher GHI values.
-                //Future use: embed DHI and DNI values in GHI bars, use
-                //different colors.
-                var temp = (255 - d)/2.5;
-                return "rgb(" + d * 2 + ", " + d * 0.75 + ", " + temp + ")";
-            });
+        //     .attr("fill", function(d, i) {
+        //         //An example of an RGB that can be used. Hotter colors for
+        //         //higher GHI values.
+        //         //Future use: embed DHI and DNI values in GHI bars, use
+        //         //different colors.
+        //         var temp = (255 - d)/2.5;
+        //         return "rgb(" + d * 2 + ", " + d * 0.75 + ", " + temp + ")";
+        //     });
 
-            //Add a group element, shift x axis to bottom.
-            svg.append("g")
-            .attr("transform", "translate(0," + (h - padding) + ")")
-            .call(xAxis);
+        //     //Add a group element, shift x axis to bottom.
+        //     svg.append("g")
+        //     .attr("transform", "translate(0," + (h - padding) + ")")
+        //     .call(xAxis);
 
-            //Add a group element, shift y axis to left side.
-            svg.append("g")
-            .attr("transform", "translate(" + padding + ",0)")
-            .call(yAxis);
-        }
+        //     //Add a group element, shift y axis to left side.
+        //     svg.append("g")
+        //     .attr("transform", "translate(" + padding + ",0)")
+        //     .call(yAxis);
+        // }
 
 
+        //Scales to be used for line graph
         var timeXScale;
         var lineYScale;
+
+        //grouping element parent (to add elements into)
+        var gParent;
+
+        //xAxis - public for manuipulating by zooming.
+        var xAxis;
+
+        //line from d3.line(), public for modifying with zooming
+        var line;
+
+        //margin properties
+        var margin = {top: 40, right: 40, bottom: 40, left: 40}
+
+        //width and height of actual graph
+        var width = w - margin.left - margin.right;
+        var height = h - margin.top - margin.bottom;
         
         function displayLineGraph() {
-            timeXScale = d3.scaleTime()
+            //This statement is only necessary if we want to view a part of the data.
+            // dataset = dataset.slice(dataset.length - 4000, dataset.length);
+
+            var zoom = d3.zoom()
+            .scaleExtent([1, 400]) //how much I can zoom in
+            .translateExtent([[0, 0], [width, height]]) //for performing translations
+            .extent([[0, 0], [width, height]])
+            .on("zoom", zoomed); // refer to zoomed function
+
+            
+            timeXScale = d3.scaleTime() // time scaling for the x axis.
             .domain([
             d3.min(dataset, function(d) { return d.date; }),
             d3.max(dataset, function(d) { return d.date; }) ])
-            .range([padding, w - padding * 2]);
+            .range([0, width]);
 
-
+            //Linear scaling for y axis
             lineYScale = d3.scaleLinear()
             .domain([0, d3.max(dataset, function(d) { return d.GHI; })])
-            .range([h - padding, padding]);
+            .range([height, 0]);
 
             //Create x axis, approximately estimate 20 ticks.
-            var xAxis = d3.axisBottom()
+            xAxis = d3.axisBottom()
             .scale(timeXScale)
             .ticks(20);
 
@@ -178,37 +205,57 @@
             .scale(lineYScale)
             .ticks(20);
 
-
-            var line = d3.line()
+            //set value for line variable, set appropriate scaling.
+            line = d3.line()
             .x(function(d) { return timeXScale(d.date); })
             .y(function(d) { return lineYScale(d.GHI); });
 
 
-
-            //create new svg element for the graph
+            //create new svg element for the graph. Has larger true width and height (w, h)
             var svg = d3.select("body")
             .append("svg")
             .attr("width", w)
             .attr("height", h);
-            
+
+            // Create rectangle for the clipping path. only graph parts inside rectangle will be shown.
+            svg.append("defs").append("clipPath")
+            .attr("id", "clip") //set id, referred to in css file.
+            .append("rect")
+            .attr("width", width)
+            .attr("height", height);
+
+            //Set the gParent variable (to group future elements inside of)
+            gParent = svg.append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
             //Create line
-            svg.append("path")
-            //Get column here! be careful
+            gParent.append("path")
+            //Bind the data appropriately
             .datum(dataset)
-            // .transition()
-            // .duration(5000)
             .attr("class", "line")  //for later CSS purposes to reformat line
-            .attr("d", line);
+            .attr("d", line); // refer to previous line generator defined.
 
             //Add a group element, shift x axis to bottom.
-            svg.append("g")
-            .attr("transform", "translate(0," + (h - padding) + ")")
+            gParent.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + height + ")")
             .call(xAxis);
 
             //Add a group element, shift y axis to left side.
-            svg.append("g")
-            .attr("transform", "translate(" + padding + ",0)")
-            .call(yAxis);           
+            gParent.append("g")
+            // use this statement to move axis to right, if desired
+            // .attr("transform", "translate(" + width + ",0)")
+            .call(yAxis);
+
+            //Needed for zooming capabilities
+            svg.call(zoom);  
+        }
+
+        //Function to scale the graph appropriately, alongside the x axis.
+        function zoomed() {
+            var t = d3.event.transform, xt = t.rescaleX(timeXScale);
+            gParent.select(".line").attr("d", line.x(function(d) { return xt(d.date); }));
+            gParent.select(".axis--x").call(xAxis.scale(xt));
         }
         </script>
     </body>

@@ -1,6 +1,7 @@
+@charset "UTF-8";
 .line {
     fill: none;
-    stroke: blue;
-    stroke-width: 5;
-    transition: 1s;
+    stroke: #3452a2;
+    stroke-width: 1;
+    clip-path: url(#clip);
 }
