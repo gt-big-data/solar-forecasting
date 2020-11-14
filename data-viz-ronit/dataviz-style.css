@@ -1,0 +1,6 @@
+.line {
+    fill: none;
+    stroke: blue;
+    stroke-width: 5;
+    transition: 1s;
+}
