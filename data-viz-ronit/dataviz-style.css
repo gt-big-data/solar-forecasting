@@ -1,7 +1,20 @@
 @charset "UTF-8";
-.line {
+#GHIDataLine {
     fill: none;
     stroke: #3452a2;
     stroke-width: 1;
     clip-path: url(#clip);
 }
+#GHIPredictionLine {
+    fill: none;
+    stroke: red;
+    stroke-width: 1;
+    clip-path: url(#clip);
+}
+./*line {
+    fill: none;
+    stroke: blue;
+    stroke-width: 1;
+    clip-path: url(#clip);
+}
+*/

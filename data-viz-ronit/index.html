@@ -8,7 +8,7 @@
         <link rel="stylesheet" type="text/css" href="dataviz-style.css">
     </head>
     <body>
-        <!-- <p> Bar Graph of data over one day (Jan 1 2019).</p> -->
+        <p> Blue = Data, Red = Predictions</p>
         <script type="text/javascript">
 
         //Row Converstion function to get integers (csv gives only strings)
@@ -22,8 +22,9 @@
                 // Hour: parseInt(d.Hour),
                 // Minute: parseInt(d.Minute),
 
-                date: new Date(+2019, (+d.Month - 1), +d.Day, +d.Hour, +d.Minute),
-                GHI: parseFloat(d.GHI) 
+                date: new Date(+d.Year, (+d.Month - 1), +d.Day, +d.Hour, +d.Minute),
+                GHI: parseFloat(d.GHI),
+                Prediction: +d.Predictions
              };
         }   
 
@@ -32,7 +33,7 @@
 
         //ASYNCHRONOUS - Load CSV file (1st Day Jan 2019 Sample)
         // 2 Files: solardata2019, sampledata2019.
-        d3.csv("solardata2019.csv", rowConverter, function(data) {
+        d3.csv("Merriweather_2019_wPreds.csv", rowConverter, function(data) {
 
             //Set global variable
             dataset = data;
@@ -166,6 +167,7 @@
 
         //line from d3.line(), public for modifying with zooming
         var line;
+        var analysisLine;
 
         //margin properties
         var margin = {top: 40, right: 40, bottom: 40, left: 40}
@@ -210,6 +212,11 @@
             .x(function(d) { return timeXScale(d.date); })
             .y(function(d) { return lineYScale(d.GHI); });
 
+            //set value for analysis line using Prediction data
+            analysisLine = d3.line()
+            .x(function(d) { return timeXScale(d.date); })
+            .y(function(d) { return lineYScale(d.Prediction); });
+
 
             //create new svg element for the graph. Has larger true width and height (w, h)
             var svg = d3.select("body")
@@ -233,7 +240,17 @@
             //Bind the data appropriately
             .datum(dataset)
             .attr("class", "line")  //for later CSS purposes to reformat line
+            .attr("id", "GHIDataLine")
             .attr("d", line); // refer to previous line generator defined.
+
+
+            //Create line - same thing, but for prediction!
+            gParent.append("path")
+            //Bind the data appropriately
+            .datum(dataset)
+            .attr("class", "line")  //for later CSS purposes to reformat line
+            .attr("id", "GHIPredictionLine")
+            .attr("d", analysisLine); // refer to previous line generator defined.
 
             //Add a group element, shift x axis to bottom.
             gParent.append("g")
@@ -251,10 +268,13 @@
             svg.call(zoom);  
         }
 
+        var xt;
         //Function to scale the graph appropriately, alongside the x axis.
         function zoomed() {
-            var t = d3.event.transform, xt = t.rescaleX(timeXScale);
-            gParent.select(".line").attr("d", line.x(function(d) { return xt(d.date); }));
+            var t = d3.event.transform
+            xt = t.rescaleX(timeXScale);
+            gParent.select("#GHIDataLine").attr("d", line.x(function(d) { return xt(d.date); }));
+            gParent.select("#GHIPredictionLine").attr("d", analysisLine.x(function(d) { return xt(d.date); }));
             gParent.select(".axis--x").call(xAxis.scale(xt));
         }
         </script>
