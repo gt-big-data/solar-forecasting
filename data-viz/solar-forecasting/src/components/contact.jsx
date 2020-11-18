@@ -17,7 +17,8 @@ export default class Contact extends Component {
                     fontSize: 85,
                     fontWeight : 'bold',
                     textAlign: 'center',
-                    width: "100%",	
+                    width: "100%",
+                    backgroundColor: "orange",	
                   }
                 } 
                 className="badge badge-primary">
@@ -64,7 +65,8 @@ export default class Contact extends Component {
 							{
 								display: 'block',
 								fontWeight : 'bold',
-								fontSize: 25,	
+                fontSize: 25,
+                backgroundColor: "orange",	
 								marginLeft: 'auto',
 							  	marginRight: 'auto',
 							  	width: "10%",

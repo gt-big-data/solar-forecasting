@@ -11,10 +11,11 @@ class SolarGraph extends Component {
 							fontWeight : 'bold',
 							textAlign: 'center',
 							width: "100%",	
+							backgroundColor: "orange",
 						}
 					} 
 					className="badge badge-primary">
-					Solar Graph
+					Solar Graph and Map
 				</title>
 				<Link to='/'>
 					<button 
