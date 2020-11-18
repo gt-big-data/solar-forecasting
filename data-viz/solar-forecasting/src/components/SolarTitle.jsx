@@ -10,7 +10,7 @@ class SolarTitle extends Component {
 				<title 
 					style={
 						{
-							fontSize: 85,
+							fontSize: 30,
 							fontWeight : 'bold',
 							textAlign: 'center',
 							width: "100%",
