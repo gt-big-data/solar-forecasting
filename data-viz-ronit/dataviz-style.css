@@ -1,20 +1,63 @@
 @charset "UTF-8";
 #GHIDataLine {
     fill: none;
-    stroke: #3452a2;
-    stroke-width: 1;
+    /*stroke: #3452a2;*/
+    /*stroke: red;*/
+    stroke: red;
+    stroke-width: 1.5;
     clip-path: url(#clip);
 }
 #GHIPredictionLine {
     fill: none;
-    stroke: red;
-    stroke-width: 1;
+    /*stroke: #3452a2;*/
+    stroke: steelblue;
+    stroke-width: 1.5;
     clip-path: url(#clip);
 }
-./*line {
+
+.solarfarmbutton {
+    border-radius: 16px;
+    background-color: white;
+    /*background-color: #EDC8C8;*/
+    color: black;
+    transition-duration: 0.3s;
+    padding: 8px 28px;
+    font: 15px Arial, sans-serif;
+    border-color: #F76444;
+
+}
+.solarfarmbutton:hover {
+    /*Peach color*/
+    background-color: #F76444;
+    /*background-color: blue;*/
+    color: white;
+}
+
+#clickedfarmbutton {
+    border-radius: 16px;
+    background-color: #F76444;
+    transition-duration: 0.3s;
+    padding: 8px 28px;
+    font: 15px Arial, sans-serif;
+    border-color: #F76444;
+    color: white;
+
+}
+
+.divider{
+    width:10px;
+    height:auto;
+    display:inline-block;
+}
+
+.lineviz {
+    display: block;
+    margin: auto;
+}
+
+/*.line {
     fill: none;
     stroke: blue;
     stroke-width: 1;
     clip-path: url(#clip);
-}
-*/
+}*/
