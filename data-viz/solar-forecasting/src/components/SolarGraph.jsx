@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+
 import {Link} from 'react-router-dom';
 class SolarGraph extends Component {
 	render() {
@@ -7,16 +8,17 @@ class SolarGraph extends Component {
 				<title 
 					style={
 						{
-							fontSize: 85,
+							fontSize: 30,
 							fontWeight : 'bold',
 							textAlign: 'center',
 							width: "100%",	
+							backgroundColor: "orange",
 						}
 					} 
 					className="badge badge-primary">
-					Solar Graph
+					Solar Graph and Map
 				</title>
-				<Link to='/'>
+				{/* <Link to='/'>
 					<button 
 						type="button" 
 						class="btn btn-primary" 
@@ -24,7 +26,8 @@ class SolarGraph extends Component {
 							{
 								display: 'block',
 								fontWeight : 'bold',
-								fontSize: 25,	
+								fontSize: 20,	
+								backgroundColor: "orange",
 								marginLeft: 'auto',
 							  	marginRight: 'auto',
 							  	width: "10%",
@@ -33,7 +36,7 @@ class SolarGraph extends Component {
 						}> 
 						Back
 				 	</button>
-			 	</Link>
+			 	</Link> */}
 			</div>
 		);
 	}
