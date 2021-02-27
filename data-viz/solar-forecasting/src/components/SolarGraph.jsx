@@ -18,25 +18,7 @@ class SolarGraph extends Component {
 					className="badge badge-primary">
 					Solar Graph and Map
 				</title>
-				{/* <Link to='/'>
-					<button 
-						type="button" 
-						class="btn btn-primary" 
-						style={
-							{
-								display: 'block',
-								fontWeight : 'bold',
-								fontSize: 20,	
-								backgroundColor: "orange",
-								marginLeft: 'auto',
-							  	marginRight: 'auto',
-							  	width: "10%",
-							  	marginTop: "40%",
-							}
-						}> 
-						Back
-				 	</button>
-			 	</Link> */}
+				
 			</div>
 		);
 	}

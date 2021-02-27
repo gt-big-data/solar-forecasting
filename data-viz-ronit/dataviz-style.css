@@ -6,6 +6,7 @@
     stroke: red;
     stroke-width: 1.5;
     clip-path: url(#clip);
+    -webkit-transform: translate3d(0,0,0);
 }
 #GHIPredictionLine {
     fill: none;
@@ -13,6 +14,7 @@
     stroke: steelblue;
     stroke-width: 1.5;
     clip-path: url(#clip);
+    -webkit-transform: translate3d(0,0,0);
 }
 
 .solarfarmbutton {
