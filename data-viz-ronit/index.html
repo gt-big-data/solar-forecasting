@@ -30,32 +30,32 @@
 
         //ASYNCHRONOUS - Load CSV file (1st Day Jan 2019 Sample)
         // 2 Files: solardata2019, sampledata2019.
-        d3.csv("Merriweather_2019_wPreds.csv", rowConverter, function(data1) {
-            //dataset is a general variable for holding one type of solar farm dataset.
-            //the value gets updated in runtime when choosing a different solar farm
-            //a call is then made to displayLineGraph to adjust the graph appropriately/
-            dataset = data1;
+        // d3.csv("Merriweather_2019_wPreds.csv", rowConverter, function(data1) {
+        //     //dataset is a general variable for holding one type of solar farm dataset.
+        //     //the value gets updated in runtime when choosing a different solar farm
+        //     //a call is then made to displayLineGraph to adjust the graph appropriately/
+        //     dataset = data1;
             
-            datasetMerriweather = data1;
-            d3.csv("Butler_2019_wPreds.csv", rowConverter, function(data2) {
-                datasetButler = data2;
-                d3.csv("Dublin_2019_wPreds.csv", rowConverter, function(data3) {
-                    datasetDublin = data3;
-                    d3.csv("Simon_2019_wPreds.csv", rowConverter, function(data4) {
-                        datasetSimon = data4;
+        //     datasetMerriweather = data1;
+        //     d3.csv("Butler_2019_wPreds.csv", rowConverter, function(data2) {
+        //         datasetButler = data2;
+        //         d3.csv("Dublin_2019_wPreds.csv", rowConverter, function(data3) {
+        //             datasetDublin = data3;
+        //             d3.csv("Simon_2019_wPreds.csv", rowConverter, function(data4) {
+        //                 datasetSimon = data4;
 
-                        createButtons();
+        //                 createButtons();
 
-                        //Display Line Graph - DO NOT EXECUTE!
-                        // displayLineGraph();
+        //                 //Display Line Graph - DO NOT EXECUTE!
+        //                 // displayLineGraph();
 
-                        //Important for first selection!
-                        farmButtonClick(datasetMerriweather, merriweatherButton);
-                    });
-                });
-            });
+        //                 //Important for first selection!
+        //                 farmButtonClick(datasetMerriweather, merriweatherButton);
+        //             });
+        //         });
+        //     });
             
-        });
+        // });
 
         //Array for only holding GHI data
         var GHIArray = [];
@@ -95,55 +95,55 @@
         var svg;
 
         //create new svg element for the graph. Has larger true width and height (w, h)
-        svg = d3.select("body")
-        .append("svg")
-        .attr("width", w)
-        .attr("height", h)
-        .attr("class", "lineviz");
+        // svg = d3.select("body")
+        // .append("svg")
+        // .attr("width", w)
+        // .attr("height", h)
+        // .attr("class", "lineviz");
 
-        // Create rectangle for the clipping path. only graph parts inside rectangle will be shown.
-        svg.append("defs").append("clipPath")
-        .attr("id", "clip") //set id, referred to in css file.
-        .append("rect")
-        .attr("width", width)
-        .attr("height", height);
+        // // Create rectangle for the clipping path. only graph parts inside rectangle will be shown.
+        // svg.append("defs").append("clipPath")
+        // .attr("id", "clip") //set id, referred to in css file.
+        // .append("rect")
+        // .attr("width", width)
+        // .attr("height", height);
 
-        timeXScale = d3.scaleTime() // time scaling for the x axis.
-            .range([0, width]);
+        // timeXScale = d3.scaleTime() // time scaling for the x axis.
+        //     .range([0, width]);
 
-            //Linear scaling for y axis
-            lineYScale = d3.scaleLinear()
-            .range([height, 0]);
+        //     //Linear scaling for y axis
+        //     lineYScale = d3.scaleLinear()
+        //     .range([height, 0]);
 
-        //Set the gParent variable (to group future elements inside of)
-        gParent = svg.append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        // //Set the gParent variable (to group future elements inside of)
+        // gParent = svg.append("g")
+        // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        //Create x axis once, approximately estimate 20 ticks.
-        xAxis = d3.axisBottom()
-        .scale(timeXScale)
-        .ticks(20);
+        // //Create x axis once, approximately estimate 20 ticks.
+        // xAxis = d3.axisBottom()
+        // .scale(timeXScale)
+        // .ticks(20);
 
-        //Create y axis once, also appx 20 ticks.
-        yAxis = d3.axisLeft()
-        .scale(lineYScale)
-        .ticks(20);
+        // //Create y axis once, also appx 20 ticks.
+        // yAxis = d3.axisLeft()
+        // .scale(lineYScale)
+        // .ticks(20);
 
-        //Add a group element, shift x axis to bottom.
-        gParent.append("g")
-        .attr("class", "axis axis--x")
-        .attr("transform", "translate(0," + height + ")");
+        // //Add a group element, shift x axis to bottom.
+        // gParent.append("g")
+        // .attr("class", "axis axis--x")
+        // .attr("transform", "translate(0," + height + ")");
 
-        //Add a group element, shift y axis to left side.
-        gParent.append("g")
-        .attr("class", "axis axis--y");
-        // use this statement to move axis to right, if desired
-        // .attr("transform", "translate(" + width + ",0)")
+        // //Add a group element, shift y axis to left side.
+        // gParent.append("g")
+        // .attr("class", "axis axis--y");
+        // // use this statement to move axis to right, if desired
+        // // .attr("transform", "translate(" + width + ",0)")
 
-        //used for zooming capabilities.
-        var t;
-        var xt;
-        var zoomPerformed = false;
+        // //used for zooming capabilities.
+        // var t;
+        // var xt;
+        // var zoomPerformed = false;
         
         function displayLineGraph() {
             //This statement is only necessary if we want to view a part of the data.
@@ -376,6 +376,32 @@
             displayLineGraph();
 
         }
+
+        // Future ref - diff projection may need to be used, they affect scaling
+        // in different ways.
+        var path2 = d3.geoPath().projection(d3.geoAlbersUsa().translate([w/2, h/2])
+                                .scale([2000]))
+                                ;
+
+        var svgMap = d3.select("body")
+                        .append("svg")
+                        .attr("width", 1600)
+                        .attr("height", 1100);
+
+        d3.json("Counties_Georgia_Geo2.json", function(json) {
+                
+                //Bind data and create one path per GeoJSON feature
+                console.log("json file supposedly loaded in");
+                svgMap.selectAll("path")
+                   .data(json.features)
+                   .enter()
+                   .append("path")
+                   .attr('class', 'pathMap')
+                   .attr("d", path2);
+        
+            });
+
+
         </script>
     </body>
 </html>
