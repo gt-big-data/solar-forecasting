@@ -302,7 +302,8 @@ class SolarGraph extends Component {
         groupButton.appendChild(simonButton);
         groupButton.style.textAlign = "center";
 
-        document.body.appendChild(groupButton);
+        const buttonDiv = document.getElementById('button-group');
+        buttonDiv.appendChild(groupButton);
       }
 
       //TODO
@@ -364,6 +365,7 @@ class SolarGraph extends Component {
 					Solar Graph and Map
 				</title>
 				<svg id="solar-graph"></svg>
+        <div id="button-group"></div>
 			</div>
 		);
 	}
