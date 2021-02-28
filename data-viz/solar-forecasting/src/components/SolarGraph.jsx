@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import * as d3 from 'd3';
-
+import './dataviz-style.css';
 class SolarGraph extends Component {
   componentDidMount() {
     this.drawSolarGraph();
