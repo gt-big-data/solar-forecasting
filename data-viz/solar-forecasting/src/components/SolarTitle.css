@@ -1,0 +1,14 @@
+.content {
+  margin: 0 10vw;
+  font-weight: 100;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.home-card {
+  flex: 1;
+  padding: 0px 1vw;
+}
