@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
+import * as topojson from "topojson-client";
 import './dataviz-style.css';
-import { svg } from 'd3';
 class SolarGraph extends Component {
   componentDidMount() {
     // this.drawSolarGraph();
@@ -356,29 +356,37 @@ class SolarGraph extends Component {
     var h = 800;
     // Future ref - diff projection may need to be used, they affect scaling
     // in different ways.
-
-    var projection = d3.geoAlbersUsa()
-      .scale(1200);
     
     var svg = d3.select("#heat-map")
       .attr("width", w)
       .attr("height", h);
 
-    var path = d3.geoPath()
-      .projection(projection);
-
     var g = svg.append('g');
 
-    d3.json("/data/Counties_Georgia_Geo2.json").then(function (geoData) {
-      //Bind data and create one path per GeoJSON feature
-      console.log(geoData);
-      console.log(d3.max(geoData.features))
+    d3.json("/data/Counties_Georgia_Topo.json").then(function (topoData) {
+      const geoData = topojson.feature(topoData, {
+        type: "GeometryCollection",
+        geometries: topoData.objects.Counties_Georgia.geometries
+      });
+      
+      var projection = d3.geoTransverseMercator()
+        .rotate([83 + 26 / 60, -33 - 14 / 60])
+        .fitExtent([[20, 20], [w, h]], geoData);
+
+      var path = d3.geoPath()
+        .projection(projection);
+      
       g.selectAll('path')
         .data(geoData.features)
         .enter()
         .append('path')
         .attr('d', path)
         .attr('class', 'pathMap');
+      
+      g.append("path")
+        .datum(topojson.mesh(topoData, topoData.objects.Counties_Georgia, function(a, b) { return a !== b; }))
+        .attr("class", "county-border")
+        .attr("d", path);
     });
   }
   render() {

@@ -57,11 +57,22 @@
     margin: auto;
 }
 
+#heat-map {
+  border: 2px solid red;
+}
+
 .pathMap {
   fill: none;
   stroke: blue;
 }
 
-#heat-map {
-  border: 2px solid red;
+.pathMap:hover {
+  fill: orange;
 }
+
+.county-border {
+  fill: none;
+  stroke: #777;
+  pointer-events: none;
+}
+
