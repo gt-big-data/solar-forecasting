@@ -1,60 +1,60 @@
 @charset "UTF-8";
 #GHIDataLine {
-    fill: none;
-    /*stroke: #3452a2;*/
-    /*stroke: red;*/
-    stroke: red;
-    stroke-width: 1.5;
-    clip-path: url(#clip);
-    -webkit-transform: translate3d(0,0,0);
+  fill: none;
+  /*stroke: #3452a2;*/
+  /*stroke: red;*/
+  stroke: red;
+  stroke-width: 1.5;
+  clip-path: url(#clip);
+  -webkit-transform: translate3d(0, 0, 0);
 }
+
 #GHIPredictionLine {
-    fill: none;
-    /*stroke: #3452a2;*/
-    stroke: steelblue;
-    stroke-width: 1.5;
-    clip-path: url(#clip);
-    -webkit-transform: translate3d(0,0,0);
+  fill: none;
+  /*stroke: #3452a2;*/
+  stroke: steelblue;
+  stroke-width: 1.5;
+  clip-path: url(#clip);
+  -webkit-transform: translate3d(0, 0, 0);
 }
 
 .solarfarmbutton {
-    border-radius: 16px;
-    background-color: white;
-    /*background-color: #EDC8C8;*/
-    color: black;
-    transition-duration: 0.3s;
-    padding: 8px 28px;
-    font: 15px Arial, sans-serif;
-    border-color: #F76444;
-
+  border-radius: 16px;
+  background-color: white;
+  /*background-color: #EDC8C8;*/
+  color: black;
+  transition-duration: 0.3s;
+  padding: 8px 28px;
+  font: 15px Arial, sans-serif;
+  border-color: #F76444;
 }
+
 .solarfarmbutton:hover {
-    /*Peach color*/
-    background-color: #F76444;
-    /*background-color: blue;*/
-    color: white;
+  /*Peach color*/
+  background-color: #F76444;
+  /*background-color: blue;*/
+  color: white;
 }
 
 #clickedfarmbutton {
-    border-radius: 16px;
-    background-color: #F76444;
-    transition-duration: 0.3s;
-    padding: 8px 28px;
-    font: 15px Arial, sans-serif;
-    border-color: #F76444;
-    color: white;
-
+  border-radius: 16px;
+  background-color: #F76444;
+  transition-duration: 0.3s;
+  padding: 8px 28px;
+  font: 15px Arial, sans-serif;
+  border-color: #F76444;
+  color: white;
 }
 
-.divider{
-    width:10px;
-    height:auto;
-    display:inline-block;
+.divider {
+  width: 10px;
+  height: auto;
+  display: inline-block;
 }
 
 .lineviz {
-    display: block;
-    margin: auto;
+  display: block;
+  margin: auto;
 }
 
 #heat-map {
@@ -62,17 +62,30 @@
 }
 
 .pathMap {
-  fill: none;
-  stroke: blue;
+  stroke: #303030;
 }
 
-.pathMap:hover {
-  fill: orange;
+.very-high {
+  fill: #80042c;
 }
 
+.high {
+  fill: #ac4444;
+}
+
+.med {
+  fill: #d07444;
+}
+
+.low {
+  fill: #f09c54;
+}
+
+.very-low {
+  fill: #f8bc5c;
+}
 .county-border {
   fill: none;
-  stroke: #777;
+  stroke: #303030;
   pointer-events: none;
 }
-

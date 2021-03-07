@@ -4,7 +4,7 @@ import * as topojson from "topojson-client";
 import './dataviz-style.css';
 class SolarGraph extends Component {
   componentDidMount() {
-    // this.drawSolarGraph();
+    this.drawSolarGraph();
     this.drawSolarHeatMap();
   }
 
@@ -369,6 +369,7 @@ class SolarGraph extends Component {
         geometries: topoData.objects.Counties_Georgia.geometries
       });
       
+      console.log(geoData);
       var projection = d3.geoTransverseMercator()
         .rotate([83 + 26 / 60, -33 - 14 / 60])
         .fitExtent([[20, 20], [w, h]], geoData);
@@ -381,7 +382,19 @@ class SolarGraph extends Component {
         .enter()
         .append('path')
         .attr('d', path)
-        .attr('class', 'pathMap');
+        .attr('class', (county, i) => {
+          if (i < 30) {
+            return 'pathMap very-high';
+          } else if (i < 60) {
+            return 'pathmap high';
+          } else if (i < 90) {
+            return 'pathMap med';
+          } else if (i < 120) {
+            return 'pathMap low';
+          } else {
+            return 'pathMap very-low';
+          }
+        });
       
       g.append("path")
         .datum(topojson.mesh(topoData, topoData.objects.Counties_Georgia, function(a, b) { return a !== b; }))
