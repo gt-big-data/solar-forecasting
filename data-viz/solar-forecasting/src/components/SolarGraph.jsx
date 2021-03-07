@@ -1,26 +1,28 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import * as d3 from 'd3';
 import './dataviz-style.css';
+import { svg } from 'd3';
 class SolarGraph extends Component {
   componentDidMount() {
-    this.drawSolarGraph();
+    // this.drawSolarGraph();
+    this.drawSolarHeatMap();
   }
 
   drawSolarGraph = () => {
-    var rowConverter = function(d) {
+    var rowConverter = function (d) {
       return {
-          date: new Date(+d.Year, (+d.Month - 1), +d.Day, +d.Hour, +d.Minute),
-          GHI: parseFloat(d.GHI),
-          Prediction: +d.Predictions
-       };
-    }   
+        date: new Date(+d.Year, (+d.Month - 1), +d.Day, +d.Hour, +d.Minute),
+        GHI: parseFloat(d.GHI),
+        Prediction: +d.Predictions
+      };
+    }
     //ASYNCHRONOUS - Load CSV file (1st Day Jan 2019 Sample)
     Promise.all([
       d3.csv("/data/Merriweather_2019_wPreds.csv", rowConverter),
       d3.csv("/data/Butler_2019_wPreds.csv", rowConverter),
       d3.csv("/data/Dublin_2019_wPreds.csv", rowConverter),
       d3.csv("/data/Simon_2019_wPreds.csv", rowConverter),
-    ]).then(function(data) {
+    ]).then(function (data) {
       // data[0] will contain merriweather
       // data[1] will contain butler
       // data[2] will contain dublin
@@ -40,8 +42,8 @@ class SolarGraph extends Component {
       var tempYScale;
 
       //Specifications for svg element.
-      var w=window.innerWidth - 50;
-      var h=800;
+      var w = window.innerWidth - 50;
+      var h = 800;
       var padding = 100; //padding that goes around svg. Important!
 
       //Scales to be used for line graph
@@ -60,7 +62,7 @@ class SolarGraph extends Component {
       var analysisLine;
 
       //margin properties
-      var margin = {top: 40, right: 40, bottom: 40, left: 40}
+      var margin = { top: 40, right: 40, bottom: 40, left: 40 }
 
       //width and height of actual graph
       var width = w - margin.left - margin.right;
@@ -111,8 +113,8 @@ class SolarGraph extends Component {
       //Add a group element, shift y axis to left side.
       gParent.append("g")
         .attr("class", "axis axis--y");
-        // use this statement to move axis to right, if desired
-        // .attr("transform", "translate(" + width + ",0)")
+      // use this statement to move axis to right, if desired
+      // .attr("transform", "translate(" + width + ",0)")
 
       var merriweatherButton;
       var butlerButton;
@@ -128,30 +130,30 @@ class SolarGraph extends Component {
       var t;
       var xt;
       var zoomPerformed = false;
-    
+
       function displayLineGraph(dataset) {
         //This statement is only necessary if we want to view a part of the data.
         // dataset = dataset.slice(dataset.length - 4000, dataset.length);
 
         //Not sure if I have to move this guy or change him for the update. We will see...          FIX! Maybe...
         var zoom = d3.zoom()
-        .scaleExtent([1, 400]) //how much I can zoom in
-        .translateExtent([[0, 0], [width, height]]) //for performing translations
-        .extent([[0, 0], [width, height]])
-        .on("zoom", zoomed); // refer to zoomed function
+          .scaleExtent([1, 400]) //how much I can zoom in
+          .translateExtent([[0, 0], [width, height]]) //for performing translations
+          .extent([[0, 0], [width, height]])
+          .on("zoom", zoomed); // refer to zoomed function
 
         //Time scaling for x axis
         const test = dataset.map(d => d.date);
 
         timeXScale // time scaling for the x axis.
           .domain([
-            d3.min(Object.values(test)), 
-            d3.max(Object.values(test)) 
+            d3.min(Object.values(test)),
+            d3.max(Object.values(test))
           ]);
 
         //Linear scaling for y axis
         lineYScale
-          .domain([0, d3.max(dataset, function(d) { return d.GHI; })]);
+          .domain([0, d3.max(dataset, function (d) { return d.GHI; })]);
 
         // //Add a group element, shift x axis to bottom.
         // gParent.append("g")
@@ -167,17 +169,17 @@ class SolarGraph extends Component {
 
         gParent.select(".axis--x").call(xAxis);
         gParent.select(".axis--y").call(yAxis);
-        
+
 
         //set value for line variable, set appropriate scaling.
         line = d3.line()
-        .x(function(d) { return timeXScale(d.date); })
-        .y(function(d) { return lineYScale(d.GHI); });
+          .x(function (d) { return timeXScale(d.date); })
+          .y(function (d) { return lineYScale(d.GHI); });
 
         //set value for analysis line using Prediction data
         analysisLine = d3.line()
-        .x(function(d) { return timeXScale(d.date); })
-        .y(function(d) { return lineYScale(d.Prediction); });
+          .x(function (d) { return timeXScale(d.date); })
+          .y(function (d) { return lineYScale(d.Prediction); });
 
 
         //May have to modify this to make seamless transition. For now, we can just remove previous .lines & add new ones
@@ -208,24 +210,24 @@ class SolarGraph extends Component {
         //Only do if zoom has been attempted before (otherwise, what's the point, and t and xt 
         //would not be defined).
         if (zoomPerformed) {
-            zoomAction();
+          zoomAction();
         }
       }
 
       //Function to scale the graph appropriately, alongside the x axis.
       //Particularly responds to a d3 event.
       function zoomed(event) {
-          zoomPerformed = true; //Do not make false again.
-          t = event.transform;
-          xt = t.rescaleX(timeXScale);
-          zoomAction();
+        zoomPerformed = true; //Do not make false again.
+        t = event.transform;
+        xt = t.rescaleX(timeXScale);
+        zoomAction();
       }
 
       //The actions that should result from zooming.
       function zoomAction() {
-          gParent.select("#GHIDataLine").attr("d", line.x(function(d) { return xt(d.date); }));
-          gParent.select("#GHIPredictionLine").attr("d", analysisLine.x(function(d) { return xt(d.date); }));
-          gParent.select(".axis--x").call(xAxis.scale(xt));
+        gParent.select("#GHIDataLine").attr("d", line.x(function (d) { return xt(d.date); }));
+        gParent.select("#GHIPredictionLine").attr("d", analysisLine.x(function (d) { return xt(d.date); }));
+        gParent.select(".axis--x").call(xAxis.scale(xt));
       }
 
       /*
@@ -235,7 +237,7 @@ class SolarGraph extends Component {
       Create Legend.
       */
 
-      function createButtons(){
+      function createButtons() {
         //Create 4 button on page.
         //Center it relative to the graph. Graph will be in center of page.
         //Thus, just two buttons left, two buttons right
@@ -248,7 +250,7 @@ class SolarGraph extends Component {
         merriweatherButton.type = "button";
         merriweatherButton.value = "Merriweather";
         merriweatherButton.className = "solarfarmbutton";
-        merriweatherButton.addEventListener('click', function(){
+        merriweatherButton.addEventListener('click', function () {
           farmButtonClick(datasetMerriweather, merriweatherButton);
         });
 
@@ -256,7 +258,7 @@ class SolarGraph extends Component {
         butlerButton.type = "button";
         butlerButton.value = "Butler";
         butlerButton.className = "solarfarmbutton";
-        butlerButton.addEventListener('click', function(){
+        butlerButton.addEventListener('click', function () {
           farmButtonClick(datasetButler, butlerButton);
         });
 
@@ -264,7 +266,7 @@ class SolarGraph extends Component {
         dublinButton.type = "button";
         dublinButton.value = "Dublin";
         dublinButton.className = "solarfarmbutton";
-        dublinButton.addEventListener('click', function(){
+        dublinButton.addEventListener('click', function () {
           farmButtonClick(datasetDublin, dublinButton);
         });
 
@@ -272,7 +274,7 @@ class SolarGraph extends Component {
         simonButton.type = "button";
         simonButton.value = "Simon";
         simonButton.className = "solarfarmbutton";
-        simonButton.addEventListener('click', function(){
+        simonButton.addEventListener('click', function () {
           farmButtonClick(datasetSimon, simonButton);
         });
 
@@ -292,13 +294,13 @@ class SolarGraph extends Component {
         tempLol = document.createElement('div');
         tempLol.className = "divider";
         groupButton.appendChild(tempLol);
-        
+
         groupButton.appendChild(dublinButton);
 
         tempLol = document.createElement('div');
         tempLol.className = "divider";
         groupButton.appendChild(tempLol);
-        
+
         groupButton.appendChild(simonButton);
         groupButton.style.textAlign = "center";
 
@@ -328,13 +330,13 @@ class SolarGraph extends Component {
         dublinButton.class = "solarfarmbutton";
         simonButton.class = "solarfarmbutton";
         butlerButton.class = "solarfarmbutton";
-        
+
 
         merriweatherButton.id = "";
         dublinButton.id = "";
         butlerButton.id = "";
         simonButton.id = "";
-        
+
         //set color for element that is on.
         // buttonEle.setAttribute("background-color", "#F76444");
         // buttonEle.style.backgroundColor = "#F76444";
@@ -344,30 +346,62 @@ class SolarGraph extends Component {
         // buttonEle.id = "clickedfarmbutton";
         displayLineGraph(data);
       }
-    }).catch(function(err) {
-        // handle error here
+    }).catch(function (err) {
+      // handle error here
     });
   }
-	render() {
-		return (
-			<div> 
-				<title 
-					style={
-						{
-							fontSize: 30,
-							fontWeight : 'bold',
-							textAlign: 'center',
-							width: "100%",	
-							backgroundColor: "orange",
-						}
-					} 
-					className="badge badge-primary">
-					Solar Graph and Map
+
+  drawSolarHeatMap = () => {
+    var w = window.innerWidth - 50;
+    var h = 800;
+    // Future ref - diff projection may need to be used, they affect scaling
+    // in different ways.
+
+    var projection = d3.geoAlbersUsa()
+      .scale(1200);
+    
+    var svg = d3.select("#heat-map")
+      .attr("width", w)
+      .attr("height", h);
+
+    var path = d3.geoPath()
+      .projection(projection);
+
+    var g = svg.append('g');
+
+    d3.json("/data/Counties_Georgia_Geo2.json").then(function (geoData) {
+      //Bind data and create one path per GeoJSON feature
+      console.log(geoData);
+      console.log(d3.max(geoData.features))
+      g.selectAll('path')
+        .data(geoData.features)
+        .enter()
+        .append('path')
+        .attr('d', path)
+        .attr('class', 'pathMap');
+    });
+  }
+  render() {
+    return (
+      <div>
+        <title
+          style={
+            {
+              fontSize: 30,
+              fontWeight: 'bold',
+              textAlign: 'center',
+              width: "100%",
+              backgroundColor: "orange",
+            }
+          }
+          className="badge badge-primary">
+          Solar Graph and Map
 				</title>
-				<svg id="solar-graph"></svg>
+        <svg id="solar-graph"></svg>
         <div id="button-group"></div>
-			</div>
-		);
-	}
+        <svg id="heat-map"></svg>
+      </div>
+    );
+  }
 }
 export default SolarGraph;

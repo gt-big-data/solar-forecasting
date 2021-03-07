@@ -57,9 +57,11 @@
     margin: auto;
 }
 
-/*.line {
-    fill: none;
-    stroke: blue;
-    stroke-width: 1;
-    clip-path: url(#clip);
-}*/
+.pathMap {
+  fill: none;
+  stroke: blue;
+}
+
+#heat-map {
+  border: 2px solid red;
+}
