@@ -5,6 +5,7 @@
         <title>D3 Page Template</title>
         <!-- <script src="https://d3js.org/d3.v4.js"></script> -->
         <script src="d3/d3.js"></script>
+        <script src="https://d3js.org/topojson.v1.min.js"></script>
         <link rel="stylesheet" type="text/css" href="/dataviz-style.css">
     </head>
     <body>
@@ -379,9 +380,11 @@
 
         // Future ref - diff projection may need to be used, they affect scaling
         // in different ways.
-        var path2 = d3.geoPath().projection(d3.geoAlbersUsa().translate([w/2, h/2])
-                                .scale([2000]))
-                                ;
+        // var path2 = d3.geoPath().projection(d3.geoAlbersUsa().translate([w/2, h/2])
+        //                         .scale([2000]))
+        //                         ;
+
+        
 
         var svgMap = d3.select("body")
                         .append("svg")
@@ -390,16 +393,29 @@
 
         d3.json("Counties_Georgia_Geo2.json", function(json) {
                 
-                //Bind data and create one path per GeoJSON feature
-                console.log("json file supposedly loaded in");
-                svgMap.selectAll("path")
-                   .data(json.features)
-                   .enter()
-                   .append("path")
-                   .attr('class', 'pathMap')
-                   .attr("d", path2);
+            //Bind data and create one path per GeoJSON feature
+            console.log("json file supposedly loaded in");
+
+
+
+            svgMap.selectAll("path")
+               .data(json.features)
+               .enter()
+               .append("path")
+               .attr('class', 'pathMap')
+               .attr("d", path2);
+
+
+            //faulty
+            var path2 = d3.geoPath()
+                .projection(d3.geoTransverseMercator()
+                .rotate([83 + 26 / 60, -33 - 14 / 60])
+                .fitExtent([[20, 20], [940, 1180]], data));
         
-            });
+        });
+
+
+
 
 
         </script>
