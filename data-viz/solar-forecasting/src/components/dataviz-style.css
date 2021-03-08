@@ -52,13 +52,8 @@
   display: inline-block;
 }
 
-.lineviz {
-  display: block;
-  margin: auto;
-}
-
-#heat-map {
-  border: 2px solid red;
+.lineviz, .heat-map {
+  width: 100%;
 }
 
 .pathMap {

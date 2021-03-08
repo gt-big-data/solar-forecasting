@@ -41,41 +41,50 @@ class SolarGraph extends Component {
       var yScale;
       var tempYScale;
 
-      //Specifications for svg element.
-      var w = window.innerWidth - 50;
-      var h = 800;
-      var padding = 100; //padding that goes around svg. Important!
-
+      
       //Scales to be used for line graph
       var timeXScale;
       var lineYScale;
-
+      
       //grouping element parent (to add elements into)
       var gParent;
-
+      
       //xAxis and yAxis- public for manuipulating by zooming.
       var xAxis;
       var yAxis;
-
+      
       //line from d3.line(), public for modifying with zooming
       var line;
       var analysisLine;
 
+      //Specifications for svg element.
+      var w = 1260;
+      var h = 640;
+      var padding = 100; //padding that goes around svg. Important!
+      
       //margin properties
-      var margin = { top: 40, right: 40, bottom: 40, left: 40 }
+      var margin = { top: 40, right: 10, bottom: 40, left: 10 }
 
       //width and height of actual graph
       var width = w - margin.left - margin.right;
       var height = h - margin.top - margin.bottom;
-
+      
       var svg;
-
+      
       //create new svg element for the graph. Has larger true width and height (w, h)
 
       svg = d3.select("#solar-graph")
-        .attr("width", w)
-        .attr("height", h)
+        .attr("width", width)
+        .attr("height", height)
+        .attr('viewBox', [0, 0, w, h])
+        .attr('preserveAspectRatio', 'xMidYMid meet')
+        .classed('svg-content', true)
         .attr("class", "lineviz");
+
+        // .attr('width', width)
+        // .attr('height', height)
+        // .attr('viewBox', [0, 0, width, height])
+        // .classed('svg-content', true);
 
       // Create rectangle for the clipping path. only graph parts inside rectangle will be shown.
       svg.append("defs").append("clipPath")
@@ -352,14 +361,23 @@ class SolarGraph extends Component {
   }
 
   drawSolarHeatMap = () => {
-    var w = window.innerWidth - 50;
-    var h = 800;
-    // Future ref - diff projection may need to be used, they affect scaling
-    // in different ways.
+    var w = 1260;
+    var h = 640;
+
+    //margin properties
+    var margin = { top: 40, right: 40, bottom: 40, left: 40 }
+
+    //width and height of actual graph
+    var width = w - margin.left - margin.right;
+    var height = h - margin.top - margin.bottom;
     
     var svg = d3.select("#heat-map")
-      .attr("width", w)
-      .attr("height", h);
+      .attr("width", width)
+      .attr("height", height)
+      .attr('viewBox', [0, 0, w, h])
+      .attr('preserveAspectRatio', 'xMidYMid meet')
+      .classed('svg-content', true)
+      .attr('class', 'heat-map');
 
     var g = svg.append('g');
 

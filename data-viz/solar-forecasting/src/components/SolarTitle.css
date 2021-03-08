@@ -17,7 +17,7 @@
   position: relative;
   padding: 1rem;
   border-radius: 15px;
-  background-color: rgba(240, 240, 240, .8);
+  background-color: rgba(250, 250, 250, .9);
 }
 
 .flex-container {
@@ -28,7 +28,7 @@
 .home-card {
   flex-basis: 32%;
   padding: 1rem;
-  background-color: var(--off-white);
+  background-color: rgba(250, 250, 250, .9);
 }
 
 .home-card, .title-blurb {
