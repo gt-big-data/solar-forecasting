@@ -13,10 +13,12 @@ function App() {
       <div className="App">
         <Navbar />
         <bf/>
-        <Route path="/" exact component={SolarTitle} />
-        <Route path="/solarmap" component={SolarMap}/>
-        <Route path="/solargraph" component={SolarGraph}/>
-        <Route path="/contact" component={Contact}/>
+        <div className="page-content">
+          <Route path="/" exact component={SolarTitle} />
+          <Route path="/solarmap" component={SolarMap}/>
+          <Route path="/solargraph" component={SolarGraph}/>
+          <Route path="/contact" component={Contact}/>
+        </div>
       </div>
     </Router>
 

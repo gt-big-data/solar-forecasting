@@ -405,19 +405,7 @@ class SolarGraph extends Component {
   render() {
     return (
       <div>
-        <title
-          style={
-            {
-              fontSize: 30,
-              fontWeight: 'bold',
-              textAlign: 'center',
-              width: "100%",
-              backgroundColor: "orange",
-            }
-          }
-          className="badge badge-primary">
-          Solar Graph and Map
-				</title>
+        <h2 style={{textAlign: 'center'}}>Solar Graph and Map</h2>
         <svg id="solar-graph"></svg>
         <div id="button-group"></div>
         <svg id="heat-map"></svg>

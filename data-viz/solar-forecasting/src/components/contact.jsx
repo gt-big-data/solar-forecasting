@@ -11,19 +11,7 @@ export default class Contact extends Component {
           <div className = "row">
             <div className="col-md-12">
               <div className="section-title">
-              <title 
-                style={
-                  {
-                    fontSize: 30,
-                    fontWeight : 'bold',
-                    textAlign: 'center',
-                    width: "100%",
-                    backgroundColor: "orange",	
-                  }
-                } 
-                className="badge badge-primary">
-                Contact Us
-              </title>
+                <h2 style={{textAlign: 'center'}}>Contact Us</h2>
                 <h2 style = 
                 {
                   {

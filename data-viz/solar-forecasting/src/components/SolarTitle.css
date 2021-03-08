@@ -1,6 +1,23 @@
+.content>img {
+  max-width: 60%;
+  position: absolute;
+  top: 40%;
+  right: 50px;
+  transform: translateY(-50%);
+  clip-path: polygon(100% 0%, 75% 50%, 100% 100%, 25% 100%, 0% 50%, 25% 0%);}
+
 .content {
-  margin: 0 10vw;
+  margin: 15vh 0 0 0;
   font-weight: 100;
+}
+
+.title-blurb {
+  margin-bottom: 50px;
+  max-width: 66%;
+  position: relative;
+  padding: 1rem;
+  border-radius: 15px;
+  background-color: rgba(240, 240, 240, .8);
 }
 
 .flex-container {
@@ -9,6 +26,18 @@
 }
 
 .home-card {
-  flex: 1;
-  padding: 0px 1vw;
+  flex-basis: 32%;
+  padding: 1rem;
+  background-color: var(--off-white);
+}
+
+.home-card, .title-blurb {
+  z-index: 2;
+  border-radius: 15px;
+}
+
+.home-card, .title-blurb, .content > img {
+  box-shadow: 4px 4px 8px 1px rgba(0, 0, 0, .2);
+  -webkit-box-shadow: 4px 4px 8px 1px rgba(0, 0, 0, .2);
+  -moz-box-shadow: 4px 4px 8px 1px rgba(0, 0, 0, .2);
 }
