@@ -59,11 +59,11 @@ class SolarGraph extends Component {
 
       //Specifications for svg element.
       var w = 1260;
-      var h = 640;
+      var h = 740;
       var padding = 100; //padding that goes around svg. Important!
       
       //margin properties
-      var margin = { top: 40, right: 10, bottom: 40, left: 10 }
+      var margin = { top: 60, right: 10, bottom: 40, left: 10 }
 
       //width and height of actual graph
       var width = w - margin.left - margin.right;
@@ -103,6 +103,12 @@ class SolarGraph extends Component {
       //Set the gParent variable (to group future elements inside of)
       gParent = svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      gParent.append('text')
+        .attr('class', 'graph-title')
+        .attr('text-anchor', 'middle')
+        .attr('transform', `translate(${w / 2}, ${-margin.top / 2})`)
+        .text('Solar Predictions');
 
       //Create x axis once, approximately estimate 20 ticks.
       xAxis = d3.axisBottom()
@@ -379,7 +385,14 @@ class SolarGraph extends Component {
       .classed('svg-content', true)
       .attr('class', 'heat-map');
 
-    var g = svg.append('g');
+    var g = svg.append('g')
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    g.append('text')
+      .attr('class', 'graph-title')
+      .attr('text-anchor', 'middle')
+      .attr('transform', `translate(${w / 2}, 0)`)
+      .text('Solar Heat Map of Georgia');
 
     d3.json("/data/Counties_Georgia_Topo.json").then(function (topoData) {
       const geoData = topojson.feature(topoData, {

@@ -1,3 +1,20 @@
+/* layout */
+.lineviz, .heat-map {
+  width: 100%;
+}
+
+#solar-graph, #heat-map {
+  border-radius: 15px;
+  box-shadow: 4px 4px 8px 1px rgba(0, 0, 0, .2);
+  -webkit-box-shadow: 4px 4px 8px 1px rgba(0, 0, 0, .2);
+  -moz-box-shadow: 4px 4px 8px 1px rgba(0, 0, 0, .2);
+}
+
+.graph-title {
+  font-size: 25px;
+  font-weight: 700;
+}
+
 @charset "UTF-8";
 #GHIDataLine {
   fill: none;
@@ -50,10 +67,6 @@
   width: 10px;
   height: auto;
   display: inline-block;
-}
-
-.lineviz, .heat-map {
-  width: 100%;
 }
 
 .pathMap {
