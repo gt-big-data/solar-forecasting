@@ -1,12 +1,12 @@
 html {
-  background-color: var(--off-white);
+  background-color: var(--offWhite);
 }
 
 .App {
-  background-color: var(--off-white);
+  background-color: var(--offWhite);
 }
 
 .page-content {
-  margin: 0 10vw;
+  margin: 0 var(--sideMargin);
 }
 

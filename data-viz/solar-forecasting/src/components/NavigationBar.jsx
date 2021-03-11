@@ -5,7 +5,7 @@ export default class Navbar extends Component {
 
   render() {
     return (
-      <nav className="navbar navbar-light bg-light navbar-expand-lg" style={{padding: '.5rem 10vw'}}>
+      <nav className="navbar navbar-light bg-light navbar-expand-sm" style={{padding: '.5rem var(--sideMargin)', zIndex: '2'}}>
         <Link to="/" className="navbar-brand mb-0 h1">Solar Forecasting</Link>
         <div className="collpase navbar-collapse">
           <ul className="navbar-nav mr-auto">
