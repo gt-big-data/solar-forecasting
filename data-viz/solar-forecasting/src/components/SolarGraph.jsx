@@ -407,24 +407,50 @@ class SolarGraph extends Component {
 
       var path = d3.geoPath()
         .projection(projection);
-      
+
+
+      //COLOR SCALE CODE
+
+      console.log("Going to create color generator");
+      //need to create scale for color - from scale chromatic add-on
+      //MAY NOT BE NEEDED
+      var colorGenerator = d3.scaleSequential(d3.interpolateRdYlBu);
+
+      //
+      console.log("Generating the county color hash func");
+      var countyColorHash = d3.scaleLinear()
+        .domain([0, 800])
+        .range([1, 0]);
+
+
+      console.log("Generating random array ghi vals");
+      //var generate random Array - array len appx 159. max ghi val = 800
+      var arrCountyGHI = Array.from({length: 160}, () => Math.floor(Math.random() * 800));
+      var arr = arrCountyGHI;
+
+      console.log("Testing if I can loop thru arr and get colors");
+
+      var i;
+      for (i = 0; i < 159; i++) {
+        console.log(arr[i]);
+        console.log(countyColorHash(arr[i]));
+        console.log("LOL");
+      }
+
+
+
+
+
+      console.log("Beginning g group path features")
       g.selectAll('path')
         .data(geoData.features)
         .enter()
         .append('path')
         .attr('d', path)
-        .attr('class', (county, i) => {
-          if (i < 30) {
-            return 'pathMap very-high';
-          } else if (i < 60) {
-            return 'pathmap high';
-          } else if (i < 90) {
-            return 'pathMap med';
-          } else if (i < 120) {
-            return 'pathMap low';
-          } else {
-            return 'pathMap very-low';
-          }
+        .attr('fill', (county, i) => {
+          console.log("Trying to return color value");
+          console.log(d3.interpolateRdYlBu(countyColorHash(arrCountyGHI[i])))
+          return d3.interpolateRdYlBu(countyColorHash(arrCountyGHI[i]));
         });
       
       g.append("path")
