@@ -449,8 +449,8 @@ class SolarGraph extends Component {
         .attr('d', path)
         .attr('fill', (county, i) => {
           console.log("Trying to return color value");
-          console.log(d3.interpolateRdYlBu(countyColorHash(arrCountyGHI[i])))
-          return d3.interpolateRdYlBu(countyColorHash(arrCountyGHI[i]));
+          console.log(d3.interpolateBlues(countyColorHash(arrCountyGHI[i])))
+          return d3.interpolateOrRd(countyColorHash(arrCountyGHI[i]));
         });
       
       g.append("path")
