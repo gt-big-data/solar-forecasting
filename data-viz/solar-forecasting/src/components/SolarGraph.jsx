@@ -16,6 +16,30 @@ class SolarGraph extends Component {
         Prediction: +d.Predictions
       };
     }
+    //Specifications for svg element.
+    var w = 1260;
+    var h = 740;
+    var padding = 100; //padding that goes around svg. Important!
+    
+    //margin properties
+    var margin = { top: 60, right: 10, bottom: 70, left: 50 }
+
+    //width and height of actual graph
+    var width = w - margin.left - margin.right;
+    var height = h - margin.top - margin.bottom;
+    
+    var svg;
+    
+    //create new svg element for the graph. Has larger true width and height (w, h)
+
+    svg = d3.select("#solar-graph")
+      .attr("width", width)
+      .attr("height", height)
+      .attr('viewBox', [0, 0, w, h])
+      .attr('preserveAspectRatio', 'xMidYMid meet')
+      .classed('svg-content', true)
+      .attr("class", "lineviz");
+    
     //ASYNCHRONOUS - Load CSV file (1st Day Jan 2019 Sample)
     Promise.all([
       d3.csv("/data/Merriweather_2019_wPreds.csv", rowConverter),
@@ -57,35 +81,6 @@ class SolarGraph extends Component {
       var line;
       var analysisLine;
 
-      //Specifications for svg element.
-      var w = 1260;
-      var h = 740;
-      var padding = 100; //padding that goes around svg. Important!
-      
-      //margin properties
-      var margin = { top: 60, right: 10, bottom: 40, left: 10 }
-
-      //width and height of actual graph
-      var width = w - margin.left - margin.right;
-      var height = h - margin.top - margin.bottom;
-      
-      var svg;
-      
-      //create new svg element for the graph. Has larger true width and height (w, h)
-
-      svg = d3.select("#solar-graph")
-        .attr("width", width)
-        .attr("height", height)
-        .attr('viewBox', [0, 0, w, h])
-        .attr('preserveAspectRatio', 'xMidYMid meet')
-        .classed('svg-content', true)
-        .attr("class", "lineviz");
-
-        // .attr('width', width)
-        // .attr('height', height)
-        // .attr('viewBox', [0, 0, width, height])
-        // .classed('svg-content', true);
-
       // Create rectangle for the clipping path. only graph parts inside rectangle will be shown.
       svg.append("defs").append("clipPath")
         .attr("id", "clip") //set id, referred to in css file.
@@ -107,8 +102,45 @@ class SolarGraph extends Component {
       gParent.append('text')
         .attr('class', 'graph-title')
         .attr('text-anchor', 'middle')
-        .attr('transform', `translate(${w / 2}, ${-margin.top / 2})`)
+        .attr('transform', `translate(${w / 2 - margin.left}, ${-margin.top / 2})`)
         .text('Solar Predictions');
+      
+      gParent.append('text')
+        .attr('class', 'axis-label')
+        .attr('text-anchor', 'middle')
+        .attr('transform', `translate(${w / 2 - margin.left}, ${height + margin.bottom / 2})`)
+        .text('Time');
+
+      gParent.append('text')
+        .attr('class', 'axis-label')
+        .attr('text-anchor', 'middle')
+        .attr('transform', `translate(${-margin.left}, ${height / 2})`)
+        .text('GHI');
+
+      var gLegend = gParent.append("g")
+        .attr("transform", `translate(${width - 100}, ${0})`);
+
+      gLegend.append('circle')
+        .attr("cx", 0)
+        .attr("cy", -6)
+        .attr("r", 6)
+        .attr("fill", "red");
+
+      gLegend.append('circle')
+        .attr("cx", 0)
+        .attr("cy", -6 + 20)
+        .attr("r", 6)
+        .attr("fill", "steelblue");
+
+      gLegend.append('text')
+        .attr('class', 'axis-label')
+        .attr('transform', `translate(${15}, ${0})`)
+        .text('Prediction');
+
+      gLegend.append('text')
+        .attr('class', 'axis-label')
+        .attr('transform', `translate(${15}, ${20})`)
+        .text('Actual');
 
       //Create x axis once, approximately estimate 20 ticks.
       xAxis = d3.axisBottom()

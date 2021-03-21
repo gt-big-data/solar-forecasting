@@ -12,7 +12,11 @@
 
 .graph-title {
   font-size: 25px;
-  font-weight: 700;
+  font-weight: 600;
+}
+
+.axis-label {
+  font-weight: 500;
 }
 
 @charset "UTF-8";
