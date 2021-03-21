@@ -97,3 +97,12 @@
   stroke: #303030;
   pointer-events: none;
 }
+
+.tooltip {
+  border: 1px solid black;
+  color: white;
+  background-color: #303030;
+  padding: 1rem;
+  border-radius: 15px;
+  pointer-events: none;
+}

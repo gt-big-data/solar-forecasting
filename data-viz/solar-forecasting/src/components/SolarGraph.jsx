@@ -376,6 +376,10 @@ class SolarGraph extends Component {
     //width and height of actual graph
     var width = w - margin.left - margin.right;
     var height = h - margin.top - margin.bottom;
+
+    var div = d3.select("#visualization-page").append("div")	
+      .attr("class", "tooltip")				
+      .style("opacity", 0);
     
     var svg = d3.select("#heat-map")
       .attr("width", width)
@@ -399,8 +403,7 @@ class SolarGraph extends Component {
         type: "GeometryCollection",
         geometries: topoData.objects.Counties_Georgia.geometries
       });
-      
-      console.log(geoData);
+
       var projection = d3.geoTransverseMercator()
         .rotate([83 + 26 / 60, -33 - 14 / 60])
         .fitExtent([[20, 20], [w, h]], geoData);
@@ -408,50 +411,37 @@ class SolarGraph extends Component {
       var path = d3.geoPath()
         .projection(projection);
 
-
-      //COLOR SCALE CODE
-
-      console.log("Going to create color generator");
-      //need to create scale for color - from scale chromatic add-on
-      //MAY NOT BE NEEDED
-      var colorGenerator = d3.scaleSequential(d3.interpolateRdYlBu);
-
-      //
-      console.log("Generating the county color hash func");
       var countyColorHash = d3.scaleLinear()
         .domain([0, 800])
         .range([1, 0]);
 
-
-      console.log("Generating random array ghi vals");
       //var generate random Array - array len appx 159. max ghi val = 800
       var arrCountyGHI = Array.from({length: 160}, () => Math.floor(Math.random() * 800));
-      var arr = arrCountyGHI;
+      geoData.features.forEach((county, i) => {
+        county.properties.GHI = arrCountyGHI[i];
+      });
 
-      console.log("Testing if I can loop thru arr and get colors");
-
-      var i;
-      for (i = 0; i < 159; i++) {
-        console.log(arr[i]);
-        console.log(countyColorHash(arr[i]));
-        console.log("LOL");
-      }
-
-
-
-
-
-      console.log("Beginning g group path features")
       g.selectAll('path')
         .data(geoData.features)
         .enter()
         .append('path')
         .attr('d', path)
         .attr('fill', (county, i) => {
-          console.log("Trying to return color value");
-          console.log(d3.interpolateBlues(countyColorHash(arrCountyGHI[i])))
-          return d3.interpolateOrRd(countyColorHash(arrCountyGHI[i]));
-        });
+          return d3.interpolateOrRd(countyColorHash(county.properties.GHI));
+        })
+        .on("mouseover", (event, county) => {
+          div.transition()		
+            .duration(200)		
+            .style("opacity", .9);		
+          div.html(`<span>${county.properties.NAMELSAD10}<br>GHI: ${county.properties.GHI}</span>`)	
+            .style("left", (event.pageX) + "px")		
+            .style("top", (event.pageY - 28) + "px");	
+          });
+      g.on("mouseout", (event, county) => {
+        div.transition()		
+          .duration(200)		
+          .style("opacity", 0);	
+      });
       
       g.append("path")
         .datum(topojson.mesh(topoData, topoData.objects.Counties_Georgia, function(a, b) { return a !== b; }))
@@ -461,7 +451,7 @@ class SolarGraph extends Component {
   }
   render() {
     return (
-      <div>
+      <div id="visualization-page">
         <h2 style={{textAlign: 'center'}}>Solar Graph and Map</h2>
         <svg id="solar-graph"></svg>
         <div id="button-group"></div>
