@@ -4,7 +4,7 @@ import * as topojson from "topojson-client";
 import './dataviz-style.css';
 class SolarGraph extends Component {
   componentDidMount() {
-    this.drawSolarGraph();
+    // this.drawSolarGraph();
     this.drawSolarHeatMap();
   }
 
@@ -366,9 +366,31 @@ class SolarGraph extends Component {
     });
   }
 
+
+
+
+
+
+
+
+
   drawSolarHeatMap = () => {
     var w = 1260;
-    var h = 640;
+    var h = 840;
+
+
+
+
+    //this gets range of colors in a specific domain
+    var colorScale = d3.scaleLinear()
+    .domain([0, 400, 800])       //remember, this is across 0 to the max GHI value. we have a pivot here as well
+    // .range(["#c6d8f5", "#edae4a", "#c40e0e"]) //very retro blue to orange to red color, eh
+    .range(["#f59542", "#f25050", "#370757"]) //a beautiful orange to red to purple. slight adjustments can be made in opacity (orange, red), but much nicer 
+
+
+
+
+    var hLegend = 250; //to give space for legend at bottom (at the bottom inside of the svg)
 
     //margin properties
     var margin = { top: 40, right: 40, bottom: 40, left: 40 }
@@ -380,7 +402,7 @@ class SolarGraph extends Component {
     var svg = d3.select("#heat-map")
       .attr("width", width)
       .attr("height", height)
-      .attr('viewBox', [0, 0, w, h])
+      .attr('viewBox', [0, 0, w, h + hLegend])
       .attr('preserveAspectRatio', 'xMidYMid meet')
       .classed('svg-content', true)
       .attr('class', 'heat-map');
@@ -393,6 +415,11 @@ class SolarGraph extends Component {
       .attr('text-anchor', 'middle')
       .attr('transform', `translate(${w / 2}, 0)`)
       .text('Solar Heat Map of Georgia');
+
+
+
+
+
 
     d3.json("/data/Counties_Georgia_Topo.json").then(function (topoData) {
       const geoData = topojson.feature(topoData, {
@@ -418,9 +445,9 @@ class SolarGraph extends Component {
 
       //
       console.log("Generating the county color hash func");
-      var countyColorHash = d3.scaleLinear()
-        .domain([0, 800])
-        .range([1, 0]);
+      // var countyColorHash = d3.scaleLinear()
+      //   .domain([0, 800])
+      //   .range([1, 0]);
 
 
       console.log("Generating random array ghi vals");
@@ -430,12 +457,16 @@ class SolarGraph extends Component {
 
       console.log("Testing if I can loop thru arr and get colors");
 
-      var i;
-      for (i = 0; i < 159; i++) {
-        console.log(arr[i]);
-        console.log(countyColorHash(arr[i]));
-        console.log("LOL");
-      }
+      // var i;
+      // for (i = 0; i < 159; i++) {
+      //   console.log(arr[i]);
+      //   console.log(countyColorHash(arr[i]));
+      //   console.log("LOL");
+      // }
+
+      // var coolColor = d3.scaleLinear()
+      // .domain([0, 400, 800])       //remember, this is across 0 to the max GHI value.
+      // .range(["#c6d8f5", "#edae4a", "#c40e0e"]);
 
 
 
@@ -447,10 +478,14 @@ class SolarGraph extends Component {
         .enter()
         .append('path')
         .attr('d', path)
+        .on("click", (event, county) => {
+          //something
+        })
         .attr('fill', (county, i) => {
-          console.log("Trying to return color value");
-          console.log(d3.interpolateBlues(countyColorHash(arrCountyGHI[i])))
-          return d3.interpolateOrRd(countyColorHash(arrCountyGHI[i]));
+          // console.log("Trying to return color value");
+          // console.log(d3.interpolateBlues(countyColorHash(arrCountyGHI[i])))
+          // return d3.interpolateOrRd(countyColorHash(arrCountyGHI[i]));
+          return colorScale(arrCountyGHI[i]);
         });
       
       g.append("path")
@@ -458,6 +493,118 @@ class SolarGraph extends Component {
         .attr("class", "county-border")
         .attr("d", path);
     });
+
+
+
+    //a better way of writing it out, but not needed for now. keep in code.
+    //A color scale
+    // var colorScale = d3.scaleLinear()
+    // .domain([0, 800])
+    // .range(["#2c7bb6", "#00a6ca","#00ccbc","#90eb9d","#ffff8c",
+    //         "#f9d057","#f29e2e","#e76818","#d7191c"]);
+
+    // //Append multiple color stops by using D3's data/enter step
+    // linearGradient.selectAll("stop")
+    // .data( colorScale.range() )
+    // .enter().append("stop")
+    // .attr("offset", function(d,i) { return i/(colorScale.range().length-1); })
+    // .attr("stop-color", function(d) { return d; });
+
+
+
+    
+    // .range(["#FFFFDD", "#3E9583", "#1F2D86"]) //so if you put more values in here, you need to place more values in domain. otherwise, it just takes min(len(domain, len(range)))
+
+
+    //and this guy we can use for actually placing values literally in the correct spot
+    var countScale = d3.scaleLinear()
+    .domain([0, 800])       //same thing, from 0 to max GHI value.
+    .range([0, width])
+
+    //Calculate the variables for the temp gradient
+    var numStops = colorScale.domain().length; //should ideally be dependent on the number of elements in the COLOR SCALE range. done
+    var countRange = countScale.domain(); //<- this gives me a 2-element array of the bounds of countScale [0, max GHI]
+    countRange[2] = countRange[1] - countRange[0]; //this just added an element (the difference between first 2 ele) as a third ele.
+    var countPoint = [];
+    for(var i = 0; i < numStops; i++) {
+      countPoint.push(i * countRange[2]/(numStops-1) + countRange[0]); //This is taking partial differences acorss [0 thru 800] by 9ths.
+    }//for i
+    //what we did here is get specific stops inside of the DOMAIN. Generated inside of countpoint.
+
+
+    //Create the gradient
+    svg.append("defs") //defs = definitions; we can use them to display graphical objects. objects are not directly rendered, you use an element to render it somehow
+      .append("linearGradient") //this is an actual element. defined via arrow (x1,x2, y1,y2)
+      .attr("id", "legend-bigmap") //ID = critical here. We need to be able to reference this somehow later.
+      .attr("x1", "0%").attr("y1", "0%") //%s determine how far along the arrow do you want to start color, and it scales it backwards ig to negative vals and whatev
+      .attr("x2", "100%").attr("y2", "0%")
+      .selectAll("stop") 
+      .data(d3.range(numStops))           //basically gives [0... 9]
+      .enter().append("stop")             //for all these guys, generate a stop element (defines offset + stop-color)
+      .attr("offset", function(d,i) {     
+        return countScale( countPoint[i] )/width; //I'm not sure why it is width here, instead of max GHI. may need fixing
+      })   
+      .attr("stop-color", function(d,i) { 
+        return colorScale( countPoint[i] );       //Ah - the interpreter of colorScale is here!. 
+      });
+
+
+    var legendWidth = 600; //the length in the x direction
+    //Color Legend container
+    var legendsvg = svg.append("g")             //into the svg, we add a g element, which will wrap around our legend.
+      .attr("class", "legendWrapper")
+      .attr("transform", "translate(" + (width/2 + 80) + "," + (h + hLegend/2) + ")"); //this part here is important, how much we move it down.
+
+      //FIX ^^, offset the rectangle BETTER (more "robustly" instead of + 80)!!!
+
+    //Draw the Rectangle
+    legendsvg.append("rect")          //using a rectangle element. We can adjust later on to beutify it ig
+      .attr("class", "legendRect")    //in case we need to CSS REFERENCE it.
+      .attr("x", -legendWidth/2)      //i have no idea why we should use negative value here.
+      .attr("y", 0)
+      //.attr("rx", hexRadius*1.25/2)
+      .attr("width", legendWidth)   //sure
+      .attr("height", 20)           //intuitive
+      .style("fill", "url(#legend-bigmap)"); //Now THIS IS CRITICAL. It calls the element we had placed inside def. This displays it. Very essential.
+
+    //Append title
+    legendsvg.append("text")
+    .attr("class", "legendTitle")
+    .attr("x", 0)
+    .attr("y", -20)
+    .style("text-anchor", "middle")
+    .text("Global Horizontal Irradiance (GHI)");
+
+    //Add desc about units
+    legendsvg.append("text")
+    .attr("class", "legendDesc")
+    .attr("x", 0)
+    .attr("y", 60)
+    .style("text-anchor", "middle")
+    .text("*Measured in Watts per square meter (W/m^2)");
+
+    var xScale = d3.scaleLinear()
+   .range([-legendWidth/2, legendWidth/2])
+   .domain([ 0, 800] );
+
+    //Define x-axis
+    var xAxis = d3.axisBottom()
+    .ticks(5)
+    //.tickFormat(formatPercent)
+    .scale(xScale);
+
+    //Set up X axis
+    legendsvg.append("g")
+    .attr("class", "map-legend-axis")
+    .attr("transform", "translate(0," + (20) + ")")
+    .call(xAxis);
+
+
+
+
+
+    console.log("Supposedly completed legend");
+
   }
   render() {
     return (
