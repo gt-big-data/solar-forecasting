@@ -4,7 +4,7 @@ import * as topojson from "topojson-client";
 import './dataviz-style.css';
 class SolarGraph extends Component {
   componentDidMount() {
-    this.drawSolarGraph();
+    //this.drawSolarGraph();
     this.drawSolarHeatMap();
   }
 
@@ -420,7 +420,7 @@ class SolarGraph extends Component {
       geoData.features.forEach((county, i) => {
         county.properties.GHI = arrCountyGHI[i];
       });
-
+      
       g.selectAll('path')
         .data(geoData.features)
         .enter()
@@ -447,6 +447,69 @@ class SolarGraph extends Component {
         .datum(topojson.mesh(topoData, topoData.objects.Counties_Georgia, function(a, b) { return a !== b; }))
         .attr("class", "county-border")
         .attr("d", path);
+
+      // drawing points
+      // NOTE: coordinates are [longitude, latitude]
+      const muscogeeData = [
+        [-85.06, 32.57], 
+        [-85.06, 32.53],
+        [-85.06, 32.49],
+        [-85.06, 32.45],
+        [-85.06, 32.41],
+        [-85.02, 32.41],
+        [-85.02, 32.45],
+        [-85.02, 32.53],
+        [-85.02, 32.57],
+        [-85.02, 32.49],
+        [-84.98, 32.57],
+        [-84.98, 32.53],
+        [-84.98, 32.49],
+        [-84.98, 32.45],
+        [-84.98, 32.41],
+        [-84.94, 32.41],
+        [-84.94, 32.49],
+        [-84.94, 32.53],
+        [-84.94, 32.57],
+        [-84.94, 32.45],
+        [-84.90, 32.53],
+        [-84.90, 32.49],
+        [-84.90, 32.41],
+        [-84.90, 32.45],
+        [-84.90, 32.57],
+        [-84.86, 32.45],
+        [-84.86, 32.41],
+        [-84.86, 32.57],
+        [-84.86, 32.53],
+        [-84.86, 32.49],
+        [-84.82, 32.45],
+        [-84.82, 32.53],
+        [-84.82, 32.57],
+        [-84.82, 32.49],
+        [-84.82, 32.41],
+        [-84.78, 32.49],
+        [-84.78, 32.45],
+        [-84.78, 32.41],
+        [-84.78, 32.53],
+        [-84.78, 32.57],
+        [-84.74, 32.49],
+        [-84.74, 32.41],
+        [-84.74, 32.53],
+        [-84.74, 32.57],
+        [-84.74, 32.45],
+        [-84.70, 32.45],
+        [-84.70, 32.53],
+        [-84.70, 32.41],
+        [-84.70, 32.57],
+        [-84.70, 32.49],
+      ];
+      g.selectAll("circle")
+        .data(muscogeeData)
+        .enter()
+        .append("circle")
+        .attr("cx", function (d) { return projection(d)[0]; })
+        .attr("cy", function (d) { return projection(d)[1]; })
+        .attr("r", "2px")
+        .attr("fill", "green");
     });
   }
   render() {

@@ -106,3 +106,8 @@
   border-radius: 15px;
   pointer-events: none;
 }
+
+.county-point {
+  fill: green;
+  stroke-width: 100;
+}
