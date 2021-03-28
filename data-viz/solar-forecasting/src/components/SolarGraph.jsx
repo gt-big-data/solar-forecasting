@@ -4,7 +4,7 @@ import * as topojson from "topojson-client";
 import './dataviz-style.css';
 class SolarGraph extends Component {
   componentDidMount() {
-    // this.drawSolarGraph();
+    this.drawSolarGraph();
     this.drawSolarHeatMap();
   }
 
@@ -398,6 +398,10 @@ class SolarGraph extends Component {
     //width and height of actual graph
     var width = w - margin.left - margin.right;
     var height = h - margin.top - margin.bottom;
+
+    var div = d3.select("#visualization-page").append("div")	
+      .attr("class", "tooltip")				
+      .style("opacity", 0);
     
     var svg = d3.select("#heat-map")
       .attr("width", width)
@@ -426,8 +430,7 @@ class SolarGraph extends Component {
         type: "GeometryCollection",
         geometries: topoData.objects.Counties_Georgia.geometries
       });
-      
-      console.log(geoData);
+
       var projection = d3.geoTransverseMercator()
         .rotate([83 + 26 / 60, -33 - 14 / 60])
         .fitExtent([[20, 20], [w, h]], geoData);
@@ -436,43 +439,16 @@ class SolarGraph extends Component {
         .projection(projection);
 
 
-      //COLOR SCALE CODE
-
-      console.log("Going to create color generator");
-      //need to create scale for color - from scale chromatic add-on
-      //MAY NOT BE NEEDED
-      var colorGenerator = d3.scaleSequential(d3.interpolateRdYlBu);
-
-      //
-      console.log("Generating the county color hash func");
-      // var countyColorHash = d3.scaleLinear()
-      //   .domain([0, 800])
-      //   .range([1, 0]);
 
 
-      console.log("Generating random array ghi vals");
+
       //var generate random Array - array len appx 159. max ghi val = 800
       var arrCountyGHI = Array.from({length: 160}, () => Math.floor(Math.random() * 800));
-      var arr = arrCountyGHI;
 
-      console.log("Testing if I can loop thru arr and get colors");
+      geoData.features.forEach((county, i) => {
+        county.properties.GHI = arrCountyGHI[i];
+      });
 
-      // var i;
-      // for (i = 0; i < 159; i++) {
-      //   console.log(arr[i]);
-      //   console.log(countyColorHash(arr[i]));
-      //   console.log("LOL");
-      // }
-
-      // var coolColor = d3.scaleLinear()
-      // .domain([0, 400, 800])       //remember, this is across 0 to the max GHI value.
-      // .range(["#c6d8f5", "#edae4a", "#c40e0e"]);
-
-
-
-
-
-      console.log("Beginning g group path features")
       g.selectAll('path')
         .data(geoData.features)
         .enter()
@@ -482,11 +458,21 @@ class SolarGraph extends Component {
           //something
         })
         .attr('fill', (county, i) => {
-          // console.log("Trying to return color value");
-          // console.log(d3.interpolateBlues(countyColorHash(arrCountyGHI[i])))
-          // return d3.interpolateOrRd(countyColorHash(arrCountyGHI[i]));
           return colorScale(arrCountyGHI[i]);
-        });
+        })
+        .on("mouseover", (event, county) => {
+          div.transition()		
+            .duration(200)		
+            .style("opacity", .9);		
+          div.html(`<span>${county.properties.NAMELSAD10}<br>GHI: ${county.properties.GHI}</span>`)	
+            .style("left", (event.pageX) + "px")		
+            .style("top", (event.pageY - 28) + "px");	
+          });
+      g.on("mouseout", (event, county) => {
+        div.transition()		
+          .duration(200)		
+          .style("opacity", 0);	
+      });
       
       g.append("path")
         .datum(topojson.mesh(topoData, topoData.objects.Counties_Georgia, function(a, b) { return a !== b; }))
@@ -512,40 +498,35 @@ class SolarGraph extends Component {
 
 
 
-    
-    // .range(["#FFFFDD", "#3E9583", "#1F2D86"]) //so if you put more values in here, you need to place more values in domain. otherwise, it just takes min(len(domain, len(range)))
-
-
     //and this guy we can use for actually placing values literally in the correct spot
     var countScale = d3.scaleLinear()
     .domain([0, 800])       //same thing, from 0 to max GHI value.
     .range([0, width])
 
     //Calculate the variables for the temp gradient
-    var numStops = colorScale.domain().length; //should ideally be dependent on the number of elements in the COLOR SCALE range. done
-    var countRange = countScale.domain(); //<- this gives me a 2-element array of the bounds of countScale [0, max GHI]
-    countRange[2] = countRange[1] - countRange[0]; //this just added an element (the difference between first 2 ele) as a third ele.
+    var numStops = colorScale.domain().length; //should be dependent on the number of elements in the COLOR SCALE range = # ele in color scale domain (ideally)
+    var countRange = countScale.domain(); 
+    countRange[2] = countRange[1] - countRange[0];
     var countPoint = [];
     for(var i = 0; i < numStops; i++) {
-      countPoint.push(i * countRange[2]/(numStops-1) + countRange[0]); //This is taking partial differences acorss [0 thru 800] by 9ths.
-    }//for i
-    //what we did here is get specific stops inside of the DOMAIN. Generated inside of countpoint.
+      countPoint.push(i * countRange[2]/(numStops-1) + countRange[0]); //Take partial differences (basically the stops and where they should be)
+    }
 
 
     //Create the gradient
-    svg.append("defs") //defs = definitions; we can use them to display graphical objects. objects are not directly rendered, you use an element to render it somehow
+    svg.append("defs") //objects are not directly rendered, called later to render
       .append("linearGradient") //this is an actual element. defined via arrow (x1,x2, y1,y2)
       .attr("id", "legend-bigmap") //ID = critical here. We need to be able to reference this somehow later.
       .attr("x1", "0%").attr("y1", "0%") //%s determine how far along the arrow do you want to start color, and it scales it backwards ig to negative vals and whatev
       .attr("x2", "100%").attr("y2", "0%")
       .selectAll("stop") 
-      .data(d3.range(numStops))           //basically gives [0... 9]
+      .data(d3.range(numStops))           
       .enter().append("stop")             //for all these guys, generate a stop element (defines offset + stop-color)
       .attr("offset", function(d,i) {     
-        return countScale( countPoint[i] )/width; //I'm not sure why it is width here, instead of max GHI. may need fixing
+        return countScale( countPoint[i] )/width;
       })   
       .attr("stop-color", function(d,i) { 
-        return colorScale( countPoint[i] );       //Ah - the interpreter of colorScale is here!. 
+        return colorScale( countPoint[i] );       //the interpreter of colorScale is here!.
       });
 
 
@@ -558,14 +539,13 @@ class SolarGraph extends Component {
       //FIX ^^, offset the rectangle BETTER (more "robustly" instead of + 80)!!!
 
     //Draw the Rectangle
-    legendsvg.append("rect")          //using a rectangle element. We can adjust later on to beutify it ig
-      .attr("class", "legendRect")    //in case we need to CSS REFERENCE it.
-      .attr("x", -legendWidth/2)      //i have no idea why we should use negative value here.
+    legendsvg.append("rect")          //using a rectangle element. We can adjust later on to beutify it
+      .attr("class", "legendRect")    //in case we need to CSS REFERENCE it for beautifying 
+      .attr("x", -legendWidth/2)
       .attr("y", 0)
-      //.attr("rx", hexRadius*1.25/2)
-      .attr("width", legendWidth)   //sure
-      .attr("height", 20)           //intuitive
-      .style("fill", "url(#legend-bigmap)"); //Now THIS IS CRITICAL. It calls the element we had placed inside def. This displays it. Very essential.
+      .attr("width", legendWidth)  
+      .attr("height", 20)          
+      .style("fill", "url(#legend-bigmap)"); //This calls and displays it. Very essential.
 
     //Append title
     legendsvg.append("text")
@@ -608,7 +588,7 @@ class SolarGraph extends Component {
   }
   render() {
     return (
-      <div>
+      <div id="visualization-page">
         <h2 style={{textAlign: 'center'}}>Solar Graph and Map</h2>
         <svg id="solar-graph"></svg>
         <div id="button-group"></div>
