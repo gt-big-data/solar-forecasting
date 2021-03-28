@@ -1,3 +1,8 @@
+:root {
+  --offWhite: #f8f9fa;
+  --sideMargin: 2vw;
+  --navBarOffset: 10vh;
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -10,4 +15,16 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+@media (min-width: 576px) {
+  :root {
+    --navBarOffset: 0vh;
+  }
+}
+
+@media (min-width: 1080px) {
+  :root {
+    --sideMargin: 10vw;
+  }
 }

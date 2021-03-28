@@ -11,7 +11,6 @@ class SolarMap extends Component {
 							fontWeight : 'bold',
 							textAlign: 'center',
 							width: "100%",
-							backgroundColor: "orange",	
 						}
 					} 
 					className="badge badge-primary">
