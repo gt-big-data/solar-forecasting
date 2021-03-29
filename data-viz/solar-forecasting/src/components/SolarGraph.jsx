@@ -4,7 +4,7 @@ import * as topojson from "topojson-client";
 import './dataviz-style.css';
 class SolarGraph extends Component {
   componentDidMount() {
-    //this.drawSolarGraph();
+    this.drawSolarGraph();
     this.drawSolarHeatMap();
   }
 
@@ -367,6 +367,22 @@ class SolarGraph extends Component {
   }
 
   drawSolarHeatMap = () => {
+    const loadPositionData = (fileName) => {
+      d3.csv(`/data/muscogee/${fileName}`).then(function (pointData) {
+        console.log(pointData);
+
+        const location = document.getElementById('location');
+        const longitude = document.getElementById('longitude');
+        const latitude = document.getElementById('latitude');
+        const elevation = document.getElementById('elevation');
+
+        location.innerText = `Location: ${pointData[0][`Location ID`]}`;
+        longitude.innerText = `Longitude: ${pointData[0][`Longitude`]}`;
+        latitude.innerText = `Latitude: ${pointData[0][`Latitude`]}`;
+        elevation.innerText = `Elevation: ${pointData[0][`Elevation`]}`;
+      });
+    }
+
     var w = 1260;
     var h = 640;
 
@@ -450,68 +466,83 @@ class SolarGraph extends Component {
 
       // drawing points
       // NOTE: coordinates are [longitude, latitude]
-      const muscogeeData = [
-        [-85.06, 32.57], 
-        [-85.06, 32.53],
-        [-85.06, 32.49],
-        [-85.06, 32.45],
-        [-85.06, 32.41],
-        [-85.02, 32.41],
-        [-85.02, 32.45],
-        [-85.02, 32.53],
-        [-85.02, 32.57],
-        [-85.02, 32.49],
-        [-84.98, 32.57],
-        [-84.98, 32.53],
-        [-84.98, 32.49],
-        [-84.98, 32.45],
-        [-84.98, 32.41],
-        [-84.94, 32.41],
-        [-84.94, 32.49],
-        [-84.94, 32.53],
-        [-84.94, 32.57],
-        [-84.94, 32.45],
-        [-84.90, 32.53],
-        [-84.90, 32.49],
-        [-84.90, 32.41],
-        [-84.90, 32.45],
-        [-84.90, 32.57],
-        [-84.86, 32.45],
-        [-84.86, 32.41],
-        [-84.86, 32.57],
-        [-84.86, 32.53],
-        [-84.86, 32.49],
-        [-84.82, 32.45],
-        [-84.82, 32.53],
-        [-84.82, 32.57],
-        [-84.82, 32.49],
-        [-84.82, 32.41],
-        [-84.78, 32.49],
-        [-84.78, 32.45],
-        [-84.78, 32.41],
-        [-84.78, 32.53],
-        [-84.78, 32.57],
-        [-84.74, 32.49],
-        [-84.74, 32.41],
-        [-84.74, 32.53],
-        [-84.74, 32.57],
-        [-84.74, 32.45],
-        [-84.70, 32.45],
-        [-84.70, 32.53],
-        [-84.70, 32.41],
-        [-84.70, 32.57],
-        [-84.70, 32.49],
+      const muscogee = [
+        {location: 955482, data: [-85.06, 32.57]}, 
+        {location: 955488, data: [-85.06, 32.53]},
+        {location: 955529, data: [-85.06, 32.49]},
+        {location: 955751, data: [-85.06, 32.45]},
+        {location: 955774, data: [-85.06, 32.41]},
+
+        {location: 956423, data: [-85.02, 32.41]},
+        {location: 956437, data: [-85.02, 32.45]},
+        {location: 956579, data: [-85.02, 32.53]},
+        {location: 956580, data: [-85.02, 32.57]},
+        {location: 956690, data: [-85.02, 32.49]},
+
+        {location: 957573, data: [-84.98, 32.57]},
+        {location: 957588, data: [-84.98, 32.53]},
+        {location: 957633, data: [-84.98, 32.49]},
+        {location: 957794, data: [-84.98, 32.45]},
+        {location: 957906, data: [-84.98, 32.41]},
+
+        {location: 958460, data: [-84.94, 32.41]},
+        {location: 958471, data: [-84.94, 32.49]},
+        {location: 958594, data: [-84.94, 32.53]},
+        {location: 958737, data: [-84.94, 32.57]},
+        {location: 958765, data: [-84.94, 32.45]},
+
+        {location: 959384, data: [-84.90, 32.53]},
+        {location: 959437, data: [-84.90, 32.49]},
+        {location: 959443, data: [-84.90, 32.41]},
+        {location: 959506, data: [-84.90, 32.45]},
+        {location: 959544, data: [-84.90, 32.57]},
+
+        {location: 959840, data: [-84.86, 32.45]},
+        {location: 959848, data: [-84.86, 32.41]},
+        {location: 960007, data: [-84.86, 32.57]},
+        {location: 960024, data: [-84.86, 32.53]}, 
+        {location: 960169, data: [-84.86, 32.49]},  
+ 
+
+        {location: 960495, data: [-84.82, 32.45]},
+        {location: 960725, data: [-84.82, 32.53]},
+        {location: 960728, data: [-84.82, 32.57]},
+        {location: 960735, data: [-84.82, 32.49]},
+        {location: 961233, data: [-84.82, 32.41]},
+
+        {location: 961301, data: [-84.78, 32.49]},
+        {location: 961537, data: [-84.78, 32.45]},
+        {location: 961638, data: [-84.78, 32.41]},
+        {location: 961759, data: [-84.78, 32.53]},  
+        {location: 961897, data: [-84.78, 32.57]},
+
+        {location: 962593, data: [-84.74, 32.49]},
+        {location: 962627, data: [-84.74, 32.41]},
+        {location: 962666, data: [-84.74, 32.53]},
+        {location: 962667, data: [-84.74, 32.57]},
+        {location: 962698, data: [-84.74, 32.45]},
+
+        {location: 962984, data: [-84.70, 32.45]},
+        {location: 963012, data: [-84.70, 32.53]},
+        {location: 963018, data: [-84.70, 32.41]},
+        {location: 963025, data: [-84.70, 32.57]},
+        {location: 963038, data: [-84.70, 32.49]},
       ];
       g.selectAll("circle")
-        .data(muscogeeData)
+        .data(muscogee)
         .enter()
         .append("circle")
-        .attr("cx", function (d) { return projection(d)[0]; })
-        .attr("cy", function (d) { return projection(d)[1]; })
+        .attr("cx", function (d) { return projection(d.data)[0]; })
+        .attr("cy", function (d) { return projection(d.data)[1]; })
         .attr("r", "2px")
-        .attr("fill", "green");
+        .attr("fill", "green")
+        .on("click", (event, point) => {
+          const fileName = `${point.location}_${point.data[1]}_${point.data[0]}_2019.csv`;
+          loadPositionData(fileName);
+        });
     });
   }
+
   render() {
     return (
       <div id="visualization-page">
@@ -519,6 +550,12 @@ class SolarGraph extends Component {
         <svg id="solar-graph"></svg>
         <div id="button-group"></div>
         <svg id="heat-map"></svg>
+        <div>
+          <p id="location"></p>
+          <p id="longitude"></p>
+          <p id="latitude"></p>
+          <p id="elevation"></p>
+        </div>
       </div>
     );
   }
