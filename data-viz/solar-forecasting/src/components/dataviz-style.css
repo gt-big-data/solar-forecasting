@@ -12,7 +12,11 @@
 
 .graph-title {
   font-size: 25px;
-  font-weight: 700;
+  font-weight: 600;
+}
+
+.axis-label {
+  font-weight: 500;
 }
 
 @charset "UTF-8";
@@ -96,4 +100,25 @@
   fill: none;
   stroke: #303030;
   pointer-events: none;
+}
+
+.tooltip {
+  border: 1px solid black;
+  color: white;
+  background-color: #303030;
+  padding: 1rem;
+  border-radius: 15px;
+  pointer-events: none;
+}
+
+.legendTitle {
+  font-size: 20px;
+}
+
+.legendDesc {
+  font-size: 15px;
+}
+
+.map-legend-axis {
+  font-size: 10px;
 }
