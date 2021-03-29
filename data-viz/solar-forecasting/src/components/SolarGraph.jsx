@@ -398,14 +398,6 @@ class SolarGraph extends Component {
     });
   }
 
-
-
-
-
-
-
-
-
   drawSolarHeatMap = () => {
     const loadPositionData = (fileName) => {
       d3.csv(`/data/muscogee/${fileName}`).then(function (pointData) {
@@ -426,17 +418,11 @@ class SolarGraph extends Component {
     var w = 1260;
     var h = 840;
 
-
-
-
     //this gets range of colors in a specific domain
     var colorScale = d3.scaleLinear()
     .domain([0, 400, 800])       //remember, this is across 0 to the max GHI value. we have a pivot here as well
     // .range(["#c6d8f5", "#edae4a", "#c40e0e"]) //very retro blue to orange to red color, eh
     .range(["#f59542", "#f25050", "#370757"]) //a beautiful orange to red to purple. slight adjustments can be made in opacity (orange, red), but much nicer 
-
-
-
 
     var hLegend = 250; //to give space for legend at bottom (at the bottom inside of the svg)
 
@@ -468,11 +454,6 @@ class SolarGraph extends Component {
       .attr('transform', `translate(${w / 2}, 0)`)
       .text('Solar Heat Map of Georgia');
 
-
-
-
-
-
     d3.json("/data/Counties_Georgia_Topo.json").then(function (topoData) {
       const geoData = topojson.feature(topoData, {
         type: "GeometryCollection",
@@ -485,10 +466,6 @@ class SolarGraph extends Component {
 
       var path = d3.geoPath()
         .projection(projection);
-
-
-
-
 
       //var generate random Array - array len appx 159. max ghi val = 800
       var arrCountyGHI = Array.from({length: 160}, () => Math.floor(Math.random() * 800));
@@ -703,13 +680,6 @@ class SolarGraph extends Component {
     .attr("class", "map-legend-axis")
     .attr("transform", "translate(0," + (20) + ")")
     .call(xAxis);
-
-
-
-
-
-    console.log("Supposedly completed legend");
-
   }
 
   render() {
