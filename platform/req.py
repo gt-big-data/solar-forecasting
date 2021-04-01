@@ -18,31 +18,6 @@ locations['Meriweather Solar Farm'] = [32.965, -84.543]
 locations['Dublin Solar Farm'] = [32.52, -82.944]
 
 
-def return_url(year, attributes, location):
-    lat, lon = locations[location]
-    url = ("https://developer.nrel.gov/api/solar/nsrdb_psm3_download.csv?wkt="
-           "POINT({lon}%20{lat})"
-           "&names={year}"
-           "&leap_day={leap}"
-           "&interval={interval}"
-           "&utc={utc}"
-           "&full_name={name}"
-           "&email={email}"
-           "&affiliation={affiliation}"
-           "&mailing_list={mailing_list}"
-           "&reason={reason}"
-           "&api_key={api_key}"
-           "&attributes={attr}").format(
-        year=year,
-        lat=lat, lon=lon,
-        leap=leap_year,
-        interval=interval,
-        utc=utc,
-        name=your_name,
-        email=your_email,
-        mailing_list=mailing_list,
-        affiliation=your_affiliation,
-        reason=reason_for_use,
-        api_key=api_key,
-        attr=attributes)
+def return_url(selected_year, selected_email, location):
+    url = "https://developer.nrel.gov/api/nsrdb/v2/solar/psm3-tmy-download.json?names=tmy-{year}&full_name=Pranav%20Khorana&email={email}&affiliation=Georgia%20Tech&api_key=MI2om3iIBdxXTE2NNVaXlErMTkZfQfvhzcE2v5v8&wkt=POLYGON(({top_left},{top_right},{bottom_left},{bottom_right},{five}))&attributes=ghi".format(year=selected_year, email = selected_email, top_left = location[0], top_right = location[1], bottom_right = location[2], bottom_left = location[3], five= location[4] )
     return url
