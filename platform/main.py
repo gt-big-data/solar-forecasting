@@ -1,17 +1,25 @@
 from flask import Flask
 from flask import request, send_file, render_template
 #json or geojason
-import pandas as pd
 import req
 app = Flask(__name__)
 app.config["DEBUG"] = True
+import db_connect.db as db
+
 
 @app.route('/', methods = ['GET'])
 def main_page():
     return render_template('input.html')
+@app.route('/data', methods = ['GET'])
+def data():
+    county_name = request.args.get('county','')
+    cursor = db.connect_get(county_name)
+    return str(cursor)
+
 @app.route('/test', methods = ['POST'])
 def test():
-    return "Hello"
+    return "Online"
+#############################################Deprecated########################################################################################
 @app.route('/data/csv', methods=['GET'])
 def csv_data():
     location = ([request.args.get('nwc',''), request.args.get('swc',''), request.args.get('nec',''), request.args.get('sec',''), request.args.get('five','')]);
@@ -38,5 +46,6 @@ def add():
         return "Success", 200
     else:
         return "Error", 400
+############################################################################################################################################
 
 app.run()

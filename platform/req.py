@@ -1,5 +1,3 @@
-import pandas as pd
-import numpy as np
 
 api_key = 'sAPoz5XEVqaCq30LmasEWKk0ZV81gi4Vlf4cwONW'
 leap_year = 'false'
