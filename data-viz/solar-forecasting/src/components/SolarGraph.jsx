@@ -56,15 +56,6 @@ class SolarGraph extends Component {
       var datasetButler = data[1];
       var datasetDublin = data[2];
       var datasetSimon = data[3];
-
-      //Array for only holding GHI data
-      var GHIArray = [];
-
-      //For console reference if needed (made them global)
-      var xScale;
-      var yScale;
-      var tempYScale;
-
       
       //Scales to be used for line graph
       var timeXScale;
@@ -401,8 +392,6 @@ class SolarGraph extends Component {
   drawSolarHeatMap = () => {
     const loadPositionData = (fileName) => {
       d3.csv(`/data/muscogee/${fileName}`).then(function (pointData) {
-        console.log(pointData);
-
         const location = document.getElementById('location');
         const longitude = document.getElementById('longitude');
         const latitude = document.getElementById('latitude');
@@ -413,16 +402,16 @@ class SolarGraph extends Component {
         latitude.innerText = `Latitude: ${pointData[0][`Latitude`]}`;
         elevation.innerText = `Elevation: ${pointData[0][`Elevation`]}`;
       });
-    }
+    };
 
     var w = 1260;
     var h = 840;
 
     //this gets range of colors in a specific domain
     var colorScale = d3.scaleLinear()
-    .domain([0, 400, 800])       //remember, this is across 0 to the max GHI value. we have a pivot here as well
-    // .range(["#c6d8f5", "#edae4a", "#c40e0e"]) //very retro blue to orange to red color, eh
-    .range(["#f59542", "#f25050", "#370757"]) //a beautiful orange to red to purple. slight adjustments can be made in opacity (orange, red), but much nicer 
+      .domain([0, 400, 800])       //remember, this is across 0 to the max GHI value. we have a pivot here as well
+      // .range(["#c6d8f5", "#edae4a", "#c40e0e"]) //very retro blue to orange to red color, eh
+      .range(["#f59542", "#f25050", "#370757"]) //a beautiful orange to red to purple. slight adjustments can be made in opacity (orange, red), but much nicer 
 
     var hLegend = 250; //to give space for legend at bottom (at the bottom inside of the svg)
 
@@ -474,17 +463,15 @@ class SolarGraph extends Component {
         county.properties.GHI = arrCountyGHI[i];
       });
       
-      g.selectAll('path')
+      const counties = g.selectAll('path')
         .data(geoData.features)
         .enter()
         .append('path')
         .attr('d', path)
-        .on("click", (event, county) => {
-          //something
-        })
         .attr('fill', (county, i) => {
           return colorScale(arrCountyGHI[i]);
         })
+        .attr('cursor', 'pointer')
         .on("mouseover", (event, county) => {
           div.transition()		
             .duration(200)		
@@ -492,8 +479,10 @@ class SolarGraph extends Component {
           div.html(`<span>${county.properties.NAMELSAD10}<br>GHI: ${county.properties.GHI}</span>`)	
             .style("left", (event.pageX) + "px")		
             .style("top", (event.pageY - 28) + "px");	
-          });
-      g.on("mouseout", (event, county) => {
+          })
+        .on("click", clicked);
+      
+        g.on("mouseout", (event, county) => {
         div.transition()		
           .duration(200)		
           .style("opacity", 0);	
@@ -503,6 +492,46 @@ class SolarGraph extends Component {
         .datum(topojson.mesh(topoData, topoData.objects.Counties_Georgia, function(a, b) { return a !== b; }))
         .attr("class", "county-border")
         .attr("d", path);
+
+        var zoom = d3.zoom()
+        .on('zoom', zoomed);
+
+      function zoomed(event) {
+        const {transform} = event;
+        g.attr("transform", transform);
+        g.attr("stroke-width", 1 / transform.k);
+      }
+
+      function clicked(event, d) {
+        // make all other counties grayed out
+        // color one in focus
+        counties.transition().style("fill", "#EFEFEF");
+        d3.select(this).transition(1000).style("fill", "#edd287");
+        const [[x0, y0], [x1, y1]] = path.bounds(d);
+        event.stopPropagation();
+        svg.transition().duration(750).call(
+          zoom.transform,
+          d3.zoomIdentity
+            .translate(width / 2, height / 2)
+            .scale(Math.min(8, 0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height)))
+            .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
+          d3.pointer(event, svg.node())
+        );
+      };
+
+      function reset() {
+        counties.transition(1000).style('fill', (county, i) => {
+          return colorScale(arrCountyGHI[i]);
+        })
+        svg.transition().duration(750).call(
+          zoom.transform,
+          d3.zoomIdentity,
+          d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
+        );
+      }
+      svg.call(zoom);
+      document.getElementById('reset-map').addEventListener("click", reset);
+
 
       // drawing points
       // NOTE: coordinates are [longitude, latitude]
@@ -568,6 +597,7 @@ class SolarGraph extends Component {
         {location: 963025, data: [-84.70, 32.57]},
         {location: 963038, data: [-84.70, 32.49]},
       ];
+
       g.selectAll("circle")
         .data(muscogee)
         .enter()
@@ -688,6 +718,7 @@ class SolarGraph extends Component {
         <h2 style={{textAlign: 'center'}}>Solar Graph and Map</h2>
         <svg id="solar-graph"></svg>
         <div id="button-group"></div>
+        <button id="reset-map">Reset Map</button>
         <svg id="heat-map"></svg>
         <div>
           <p id="location"></p>
