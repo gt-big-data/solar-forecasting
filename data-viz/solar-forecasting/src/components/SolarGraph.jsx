@@ -135,12 +135,12 @@ class SolarGraph extends Component {
       gLegend.append('text')
         .attr('class', 'axis-label')
         .attr('transform', `translate(${15}, ${0})`)
-        .text('Prediction');
+        .text('Actual');
 
       gLegend.append('text')
         .attr('class', 'axis-label')
         .attr('transform', `translate(${15}, ${20})`)
-        .text('Actual');
+        .text('Prediction');
 
       //Create x axis once, approximately estimate 20 ticks.
       xAxis = d3.axisBottom()
