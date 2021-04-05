@@ -13,7 +13,7 @@ export default class Navbar extends Component {
             <Link to="/" className="nav-link">Home</Link>
             </li>
             <li className="navbar-item">
-            <Link to="/solargraph" className="nav-link">Visualization</Link>
+            <Link to="/visualization" className="nav-link">Visualization</Link>
             </li>
             <li className="navbar-item">
             <Link to="/contact" className="nav-link">Contact Us</Link>

@@ -4,7 +4,7 @@ import './App.css';
 import SolarTitle from './components/SolarTitle';
 import SolarMap from './components/SolarMap';
 import Navbar from './components/NavigationBar';
-import SolarGraph from './components/SolarGraph';
+import Visualization from './components/Visualization';
 import Contact from './components/contact';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 function App() {
@@ -16,7 +16,7 @@ function App() {
         <div className="page-content">
           <Route path="/" exact component={SolarTitle} />
           <Route path="/solarmap" component={SolarMap}/>
-          <Route path="/solargraph" component={SolarGraph}/>
+          <Route path="/visualization" component={Visualization}/>
           <Route path="/contact" component={Contact}/>
         </div>
       </div>
