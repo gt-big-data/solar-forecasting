@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React from 'react';
 import SolarGraph from './SolarGraph';
 import SolarMap from './SolarMap';
@@ -14,8 +16,8 @@ function Visualization() {
 
   return (
     <div id="visualization-page">
-      <h2 style={{ textAlign: 'center' }}>Solar Graph and Map</h2>
-      <SolarGraph dataList={solarData} />
+      <h2 style={{textAlign: "center"}}>Solar Heat Map of Georgia</h2>
+      {/* <SolarGraph dataList={solarData} /> */}
       <SolarMap />
     </div>
   );

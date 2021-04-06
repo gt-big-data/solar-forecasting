@@ -4,7 +4,7 @@ import SolarTitle from './components/SolarTitle';
 import SolarMap from './components/SolarMap';
 import Navbar from './components/NavigationBar';
 import Visualization from './components/Visualization';
-import Contact from './components/Contact';
+import Contact from './components/contact';
 import './App.css';
 
 function App() {

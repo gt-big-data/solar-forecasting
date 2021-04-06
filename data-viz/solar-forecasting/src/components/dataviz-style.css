@@ -1,9 +1,10 @@
-/* layout */
-.lineviz, .heat-map {
+/* general layout CSS */
+
+.lineviz {
   width: 100%;
 }
 
-#solar-graph, #heat-map {
+#solar-graph, #map-container {
   border-radius: 15px;
   box-shadow: 4px 4px 8px 1px rgba(0, 0, 0, .2);
   -webkit-box-shadow: 4px 4px 8px 1px rgba(0, 0, 0, .2);
@@ -18,6 +19,8 @@
 .axis-label {
   font-weight: 500;
 }
+
+/* SOLAR GRAPH CSS */
 
 @charset "UTF-8";
 #GHIDataLine {
@@ -73,29 +76,12 @@
   display: inline-block;
 }
 
+/* SOLAR MAP CSS */
+
 .pathMap {
   stroke: #303030;
 }
 
-.very-high {
-  fill: #80042c;
-}
-
-.high {
-  fill: #ac4444;
-}
-
-.med {
-  fill: #d07444;
-}
-
-.low {
-  fill: #f09c54;
-}
-
-.very-low {
-  fill: #f8bc5c;
-}
 .county-border {
   fill: none;
   stroke: #303030;
@@ -121,4 +107,20 @@
 
 .map-legend-axis {
   font-size: 10px;
+}
+
+#map-container {
+  width: 100%;
+  height: 100%;
+}
+
+#heat-map {
+  width: 70%;
+}
+
+#side-bar {
+  float: right;
+  width: 30%;
+  height: 100%;
+  padding: 1rem;
 }
