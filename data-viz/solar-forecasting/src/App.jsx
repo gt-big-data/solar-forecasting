@@ -1,23 +1,23 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import SolarTitle from './components/SolarTitle';
 import SolarMap from './components/SolarMap';
 import Navbar from './components/NavigationBar';
 import Visualization from './components/Visualization';
-import Contact from './components/contact';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import Contact from './components/Contact';
+import './App.css';
+
 function App() {
   return (
-    <Router> 
+    <Router>
       <div className="App">
         <Navbar />
-        <bf/>
+        <bf />
         <div className="page-content">
           <Route path="/" exact component={SolarTitle} />
-          <Route path="/solarmap" component={SolarMap}/>
-          <Route path="/visualization" component={Visualization}/>
-          <Route path="/contact" component={Contact}/>
+          <Route path="/solarmap" component={SolarMap} />
+          <Route path="/visualization" component={Visualization} />
+          <Route path="/contact" component={Contact} />
         </div>
       </div>
     </Router>
