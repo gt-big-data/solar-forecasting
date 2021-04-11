@@ -422,7 +422,7 @@ class SolarGraph extends Component {
     var colorScale = d3.scaleLinear()
     .domain([0, 400, 800])       //remember, this is across 0 to the max GHI value. we have a pivot here as well
     // .range(["#c6d8f5", "#edae4a", "#c40e0e"]) //very retro blue to orange to red color, eh
-    .range(["#f59542", "#f25050", "#370757"]) //a beautiful orange to red to purple. slight adjustments can be made in opacity (orange, red), but much nicer 
+    .range(["#f7ba86", "#f25050", "#370757"]) //a beautiful orange to red to purple. slight adjustments can be made in opacity (orange, red), but much nicer 
 
     var hLegend = 250; //to give space for legend at bottom (at the bottom inside of the svg)
 
