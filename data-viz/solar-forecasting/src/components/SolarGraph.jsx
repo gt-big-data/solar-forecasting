@@ -5,7 +5,7 @@ import './dataviz-style.css';
 class SolarGraph extends Component {
   componentDidMount() {
     this.drawSolarGraph();
-    this.drawSolarHeatMap();
+    // this.drawSolarHeatMap();
   }
 
   drawSolarGraph = () => {
@@ -688,6 +688,7 @@ class SolarGraph extends Component {
         <h2 style={{textAlign: 'center'}}>Solar Graph and Map</h2>
         <svg id="solar-graph"></svg>
         <div id="button-group"></div>
+        {/*
         <svg id="heat-map"></svg>
         <div>
           <p id="location"></p>
@@ -695,6 +696,7 @@ class SolarGraph extends Component {
           <p id="latitude"></p>
           <p id="elevation"></p>
         </div>
+        */}
       </div>
     );
   }
