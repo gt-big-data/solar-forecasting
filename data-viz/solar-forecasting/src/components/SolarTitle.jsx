@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faCalendar, faBullseye } from '@fortawesome/free-solid-svg-icons';
 import solarImage from '../images/solar.jpg'
+import solarpanelsImage from '../images/solarpanels.jpg'
 import './SolarTitle.css';
 
 const Card = ({icon, subheading, content,}) => (
@@ -14,7 +15,7 @@ class SolarTitle extends Component {
 	render() {
 		return(
 			<div className="content">			
-        <img src={solarImage} alt="solar panel"/>
+        <img src={solarpanelsImage} alt="solar panel"/>
         <div className="title-blurb">
           <h3>Increased solar power usage means more challenges</h3>
           <p>
@@ -44,6 +45,15 @@ class SolarTitle extends Component {
             content="With the ability to make these predictions in numerous locations, one can also determine the 
             optimal placements for new solar farms. "
           />
+        </div>
+      {/* Just to add some space quickly */}
+        <h3>Solar Predictions</h3>
+        <h3>Solar Predictions</h3>
+        <div className="title-blurb" margin-top="50px">
+          <h3>Under construction!</h3>
+          <p>
+            More content to be added here. Under construction.
+          </p>
         </div>
       </div>
 		);
