@@ -19,7 +19,7 @@ class SolarMap extends Component {
     };
 
     const w = 1260;
-    const h = 840;
+    const h = 940;
 
     // this gets range of colors in a specific domain
     // remember, this is across 0 to the max GHI value. we have a pivot here as well
@@ -27,7 +27,7 @@ class SolarMap extends Component {
       .domain([0, 400, 800])
       .range(['#f59542', '#f25050', '#370757']); // a beautiful orange to red to purple. slight adjustments can be made in opacity (orange, red), but much nicer
 
-    const hLegend = 250; // to give space for legend at bottom (at the bottom inside of the svg)
+    const hLegend = 230; // to give space for legend at bottom (at the bottom inside of the svg)
 
     // margin properties
     const margin = {
@@ -47,17 +47,10 @@ class SolarMap extends Component {
       .attr('height', height)
       .attr('viewBox', [0, 0, w, h + hLegend])
       .attr('preserveAspectRatio', 'xMidYMid meet')
-      .classed('svg-content', true)
-      .attr('class', 'heat-map');
+      .classed('svg-content', true);
 
     const g = svg.append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
-
-    g.append('text')
-      .attr('class', 'graph-title')
-      .attr('text-anchor', 'middle')
-      .attr('transform', `translate(${w / 2}, 0)`)
-      .text('Solar Heat Map of Georgia');
 
     d3.json('/data/Counties_Georgia_Topo.json').then((topoData) => {
       const geoData = topojson.feature(topoData, {
@@ -115,26 +108,114 @@ class SolarMap extends Component {
       }
 
       const zoom = d3.zoom()
+        .scaleExtent([1, 9])
         .on('zoom', zoomed);
 
+      function renderCountyData() {
+        // drawing points
+        // NOTE: coordinates are [longitude, latitude]
+        const muscogee = [
+          { location: 955482, data: [-85.06, 32.57] },
+          { location: 955488, data: [-85.06, 32.53] },
+          { location: 955529, data: [-85.06, 32.49] },
+          { location: 955751, data: [-85.06, 32.45] },
+          { location: 955774, data: [-85.06, 32.41] },
+
+          { location: 956423, data: [-85.02, 32.41] },
+          { location: 956437, data: [-85.02, 32.45] },
+          { location: 956579, data: [-85.02, 32.53] },
+          { location: 956580, data: [-85.02, 32.57] },
+          { location: 956690, data: [-85.02, 32.49] },
+
+          { location: 957573, data: [-84.98, 32.57] },
+          { location: 957588, data: [-84.98, 32.53] },
+          { location: 957633, data: [-84.98, 32.49] },
+          { location: 957794, data: [-84.98, 32.45] },
+          { location: 957906, data: [-84.98, 32.41] },
+
+          { location: 958460, data: [-84.94, 32.41] },
+          { location: 958471, data: [-84.94, 32.49] },
+          { location: 958594, data: [-84.94, 32.53] },
+          { location: 958737, data: [-84.94, 32.57] },
+          { location: 958765, data: [-84.94, 32.45] },
+
+          { location: 959384, data: [-84.90, 32.53] },
+          { location: 959437, data: [-84.90, 32.49] },
+          { location: 959443, data: [-84.90, 32.41] },
+          { location: 959506, data: [-84.90, 32.45] },
+          { location: 959544, data: [-84.90, 32.57] },
+
+          { location: 959840, data: [-84.86, 32.45] },
+          { location: 959848, data: [-84.86, 32.41] },
+          { location: 960007, data: [-84.86, 32.57] },
+          { location: 960024, data: [-84.86, 32.53] },
+          { location: 960169, data: [-84.86, 32.49] },
+
+          { location: 960495, data: [-84.82, 32.45] },
+          { location: 960725, data: [-84.82, 32.53] },
+          { location: 960728, data: [-84.82, 32.57] },
+          { location: 960735, data: [-84.82, 32.49] },
+          { location: 961233, data: [-84.82, 32.41] },
+
+          { location: 961301, data: [-84.78, 32.49] },
+          { location: 961537, data: [-84.78, 32.45] },
+          { location: 961638, data: [-84.78, 32.41] },
+          { location: 961759, data: [-84.78, 32.53] },
+          { location: 961897, data: [-84.78, 32.57] },
+
+          { location: 962593, data: [-84.74, 32.49] },
+          { location: 962627, data: [-84.74, 32.41] },
+          { location: 962666, data: [-84.74, 32.53] },
+          { location: 962667, data: [-84.74, 32.57] },
+          { location: 962698, data: [-84.74, 32.45] },
+
+          { location: 962984, data: [-84.70, 32.45] },
+          { location: 963012, data: [-84.70, 32.53] },
+          { location: 963018, data: [-84.70, 32.41] },
+          { location: 963025, data: [-84.70, 32.57] },
+          { location: 963038, data: [-84.70, 32.49] },
+        ];
+
+        g.selectAll('rect')
+          .data(muscogee)
+          .enter()
+          .append('rect')
+          .attr('x', (d) => projection(d.data)[0])
+          .attr('y', (d) => projection(d.data)[1])
+          .attr('width', '6px')
+          .attr('height', '7px')
+          .attr('fill', () => colorScale(Math.floor(Math.random() * 400)))
+          .on('click', (event, point) => {
+            const fileName = `${point.location}_${point.data[1]}_${point.data[0]}_2019.csv`;
+            loadPositionData(fileName);
+          });
+      }
+
       function clicked(event, d) {
-        // make all other counties grayed out
-        // color one in focus
+        renderCountyData();
+
+        // style update
         counties.transition().style('fill', '#EFEFEF');
         d3.select(this).transition(1000).style('fill', '#edd287');
+
+        // zoom
         const [[x0, y0], [x1, y1]] = path.bounds(d);
         event.stopPropagation();
         svg.transition().duration(750).call(
           zoom.transform,
           d3.zoomIdentity
             .translate(width / 2, height / 2)
-            .scale(Math.min(8, 0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height)))
+            .scale(Math.min(9, 0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height)))
             .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
           d3.pointer(event, svg.node()),
         );
       }
 
       function reset() {
+        // remove county data
+        g.selectAll('rect').remove();
+
+        // un-zoom
         counties.transition(1000).style('fill', (county, i) => colorScale(arrCountyGHI[i]));
         svg.transition().duration(750).call(
           zoom.transform,
@@ -144,83 +225,6 @@ class SolarMap extends Component {
       }
       svg.call(zoom);
       document.getElementById('reset-map').addEventListener('click', reset);
-
-      // drawing points
-      // NOTE: coordinates are [longitude, latitude]
-      const muscogee = [
-        { location: 955482, data: [-85.06, 32.57] },
-        { location: 955488, data: [-85.06, 32.53] },
-        { location: 955529, data: [-85.06, 32.49] },
-        { location: 955751, data: [-85.06, 32.45] },
-        { location: 955774, data: [-85.06, 32.41] },
-
-        { location: 956423, data: [-85.02, 32.41] },
-        { location: 956437, data: [-85.02, 32.45] },
-        { location: 956579, data: [-85.02, 32.53] },
-        { location: 956580, data: [-85.02, 32.57] },
-        { location: 956690, data: [-85.02, 32.49] },
-
-        { location: 957573, data: [-84.98, 32.57] },
-        { location: 957588, data: [-84.98, 32.53] },
-        { location: 957633, data: [-84.98, 32.49] },
-        { location: 957794, data: [-84.98, 32.45] },
-        { location: 957906, data: [-84.98, 32.41] },
-
-        { location: 958460, data: [-84.94, 32.41] },
-        { location: 958471, data: [-84.94, 32.49] },
-        { location: 958594, data: [-84.94, 32.53] },
-        { location: 958737, data: [-84.94, 32.57] },
-        { location: 958765, data: [-84.94, 32.45] },
-
-        { location: 959384, data: [-84.90, 32.53] },
-        { location: 959437, data: [-84.90, 32.49] },
-        { location: 959443, data: [-84.90, 32.41] },
-        { location: 959506, data: [-84.90, 32.45] },
-        { location: 959544, data: [-84.90, 32.57] },
-
-        { location: 959840, data: [-84.86, 32.45] },
-        { location: 959848, data: [-84.86, 32.41] },
-        { location: 960007, data: [-84.86, 32.57] },
-        { location: 960024, data: [-84.86, 32.53] },
-        { location: 960169, data: [-84.86, 32.49] },
-
-        { location: 960495, data: [-84.82, 32.45] },
-        { location: 960725, data: [-84.82, 32.53] },
-        { location: 960728, data: [-84.82, 32.57] },
-        { location: 960735, data: [-84.82, 32.49] },
-        { location: 961233, data: [-84.82, 32.41] },
-
-        { location: 961301, data: [-84.78, 32.49] },
-        { location: 961537, data: [-84.78, 32.45] },
-        { location: 961638, data: [-84.78, 32.41] },
-        { location: 961759, data: [-84.78, 32.53] },
-        { location: 961897, data: [-84.78, 32.57] },
-
-        { location: 962593, data: [-84.74, 32.49] },
-        { location: 962627, data: [-84.74, 32.41] },
-        { location: 962666, data: [-84.74, 32.53] },
-        { location: 962667, data: [-84.74, 32.57] },
-        { location: 962698, data: [-84.74, 32.45] },
-
-        { location: 962984, data: [-84.70, 32.45] },
-        { location: 963012, data: [-84.70, 32.53] },
-        { location: 963018, data: [-84.70, 32.41] },
-        { location: 963025, data: [-84.70, 32.57] },
-        { location: 963038, data: [-84.70, 32.49] },
-      ];
-
-      g.selectAll('circle')
-        .data(muscogee)
-        .enter()
-        .append('circle')
-        .attr('cx', (d) => projection(d.data)[0])
-        .attr('cy', (d) => projection(d.data)[1])
-        .attr('r', '2px')
-        .attr('fill', 'green')
-        .on('click', (event, point) => {
-          const fileName = `${point.location}_${point.data[1]}_${point.data[0]}_2019.csv`;
-          loadPositionData(fileName);
-        });
     });
 
     // a better way of writing it out, but not needed for now. keep in code.
