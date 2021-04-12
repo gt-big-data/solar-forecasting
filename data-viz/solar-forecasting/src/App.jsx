@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import SolarTitle from './components/SolarTitle';
-import SolarMap from './components/SolarMap';
+import SolarGraphPage from './components/SolarGraphPage';
+import SolarMapPage from './components/SolarMapPage';
 import Navbar from './components/NavigationBar';
-import Visualization from './components/Visualization';
-import Contact from './components/Contact';
+import Contact from './components/contact';
 import './App.css';
 
 function App() {
@@ -15,8 +15,8 @@ function App() {
         <bf />
         <div className="page-content">
           <Route path="/" exact component={SolarTitle} />
-          <Route path="/solarmap" component={SolarMap} />
-          <Route path="/visualization" component={Visualization} />
+          <Route path="/solargraph" component={SolarGraphPage} />
+          <Route path="/solarmap" component={SolarMapPage} />
           <Route path="/contact" component={Contact} />
         </div>
       </div>

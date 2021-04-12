@@ -4,7 +4,12 @@ import './dataviz-style.css';
 
 class SolarGraph extends Component {
   componentDidMount() {
-    const { dataList } = this.props;
+    const dataList = [
+      '/data/Merriweather_2019_wPreds.csv',
+      '/data/Butler_2019_wPreds.csv',
+      '/data/Dublin_2019_wPreds.csv',
+      '/data/Simon_2019_wPreds.csv',
+    ];
 
     const rowConverter = (d) => ({
       date: new Date(+d.Year, (+d.Month - 1), +d.Day, +d.Hour, +d.Minute),
@@ -26,7 +31,7 @@ class SolarGraph extends Component {
 
     // create new svg element for the graph. Has larger true width and height (w, h)
     const svg = d3.select('#solar-graph')
-      .attr('width', width)
+      .attr('width', width - 300)
       .attr('height', height)
       .attr('viewBox', [0, 0, w, h])
       .attr('preserveAspectRatio', 'xMidYMid meet')
@@ -100,12 +105,12 @@ class SolarGraph extends Component {
       gLegend.append('text')
         .attr('class', 'axis-label')
         .attr('transform', `translate(${15}, ${0})`)
-        .text('Prediction');
+        .text('Actual');
 
       gLegend.append('text')
         .attr('class', 'axis-label')
         .attr('transform', `translate(${15}, ${20})`)
-        .text('Actual');
+        .text('Prediction');
 
       // xAxis and yAxis- public for manuipulating by zooming.
       // Create x axis once, approximately estimate 20 ticks.

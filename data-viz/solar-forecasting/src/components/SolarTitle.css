@@ -1,11 +1,14 @@
 .content>img {
-  max-width: 60%;
-  min-width: 400px;
+  /*max-width: 60%;*/
+  /*min-width: 400px;*/
+  min-width: 100%;
+  max-width:100%;
   position: absolute;
-  top: calc(40% + var(--navBarOffset));
-  right: calc(5vw - var(--navBarOffset) * 2);
+  top: calc(20% + var(--navBarOffset));
+  right: calc(0vw - var(--navBarOffset) * 2);
+  --sideMargin: 0vw;
   transform: translateY(-50%);
-  clip-path: polygon(100% 0%, 75% 50%, 100% 100%, 25% 100%, 0% 50%, 25% 0%);
+  /*clip-path: polygon(100% 0%, 75% 50%, 100% 100%, 25% 100%, 0% 50%, 25% 0%);*/
 }
 
 .content {
@@ -14,6 +17,7 @@
 }
 
 .title-blurb {
+  margin-top: 50px;
   margin-bottom: 50px;
   width: 66%;
   min-width: 300px;

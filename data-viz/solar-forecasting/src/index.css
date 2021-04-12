@@ -25,6 +25,6 @@ code {
 
 @media (min-width: 1080px) {
   :root {
-    --sideMargin: 10vw;
+    /*--sideMargin: 0vw;*/
   }
 }
