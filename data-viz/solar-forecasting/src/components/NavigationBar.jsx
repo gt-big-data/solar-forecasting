@@ -12,10 +12,10 @@ function Navbar() {
             <Link to="/" className="nav-link">Home</Link>
           </li>
           <li className="navbar-item">
-            <Link to="/solargraph" className="nav-link">Visualization Chart</Link>
+            <Link to="/solarmap" className="nav-link">Visualization Map</Link>
           </li>
           <li className="navbar-item">
-            <Link to="/solarmap" className="nav-link">Visualization Map</Link>
+            <Link to="/solargraph" className="nav-link">Visualization Chart</Link>
           </li>
           <li className="navbar-item">
             <Link to="/contact" className="nav-link">Contact Us</Link>
