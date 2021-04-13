@@ -9,8 +9,8 @@ import './App.css';
 
 function App() {
   return (
-    <Router>
-      <div className="App">
+    <div className="App">
+      <Router>
         <Navbar />
         <bf />
         <div className="page-content">
@@ -19,9 +19,8 @@ function App() {
           <Route path="/solarmap" component={SolarMapPage} />
           <Route path="/contact" component={Contact} />
         </div>
-      </div>
-    </Router>
-
+      </Router>
+    </div>
   );
 }
 

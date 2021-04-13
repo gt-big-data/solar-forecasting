@@ -1,6 +1,8 @@
 :root {
-  --offWhite: #f8f9fa;
-  --sideMargin: 2vw;
+  --black: #090C08;
+  --bgColor: #FFFCF9;
+  --seashell: #FCF5EE;
+  --sideMargin: 10vw;
   --navBarOffset: 10vh;
 }
 body {
@@ -17,7 +19,7 @@ code {
     monospace;
 }
 
-@media (min-width: 576px) {
+@media (min-width: 760px) {
   :root {
     --navBarOffset: 0vh;
   }

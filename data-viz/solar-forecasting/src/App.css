@@ -1,12 +1,13 @@
 html {
-  background-color: var(--offWhite);
+  background: rgb(255,252,249);
+  background: linear-gradient(121deg, rgba(255,252,249,1) 7%, rgba(255,250,247,1) 74%);
 }
 
 .App {
-  background-color: var(--offWhite);
+  background: rgb(255,252,249);
+  background: linear-gradient(121deg, rgba(255,252,249,1) 7%, rgba(255,250,247,1) 74%);
 }
 
 .page-content {
-  margin: 0 var(--sideMargin);
+  padding: 0 var(--sideMargin);
 }
-

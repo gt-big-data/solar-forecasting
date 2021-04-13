@@ -4,7 +4,7 @@ import './navbar.css';
 
 function Navbar() {
   return (
-    <nav className="navbar-custom navbar navbar-light navbar-expand-sm" style={{ padding: '.5rem var(--sideMargin)', zIndex: '2' }}>
+    <nav className="navbar-custom navbar navbar-light navbar-expand-sm" style={{ padding: '.5rem var(--sideMargin)' }}>
       <Link to="/" className="navbar-brand mb-0 h1">Solar Forecasting</Link>
       <div className="collpase navbar-collapse">
         <ul className="navbar-nav mr-auto">
