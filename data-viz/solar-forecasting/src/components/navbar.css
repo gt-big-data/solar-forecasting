@@ -1,4 +1,9 @@
 .navbar-custom {
   z-index: 2;
   position: sticky;
+  background-color: var(--seashell);
+  border-radius: 0 0 20px 20px;
+  box-shadow: var(--boxShadow);
+  -webkit-box-shadow: var(--boxShadow);
+  -moz-box-shadow: var(--boxShadow);
 }

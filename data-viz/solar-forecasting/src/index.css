@@ -2,8 +2,9 @@
   --black: #090C08;
   --bgColor: #FFFCF9;
   --seashell: #FCF5EE;
-  --sideMargin: 10vw;
+  --sideMargin: 4vw;
   --navBarOffset: 10vh;
+  --boxShadow: 5px 5px 18px 1px rgba(0,0,0,0.1);
 }
 body {
   margin: 0;
@@ -12,11 +13,18 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+@media (min-width: 560px) {
+  :root {
+    --sideMargin: 10vw;
+  }
 }
 
 @media (min-width: 760px) {

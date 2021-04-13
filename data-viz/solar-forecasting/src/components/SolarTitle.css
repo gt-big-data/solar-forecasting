@@ -24,7 +24,10 @@
   border-radius: 40px;
   background-color: var(--seashell);
   padding: 2em;
-  margin-bottom: 4em;
+  margin-bottom: 6em;
+  box-shadow: var(--boxShadow);
+  -webkit-box-shadow: var(--boxShadow);
+  -moz-box-shadow: var(--boxShadow);
 }
 
 .grid-container {
@@ -48,4 +51,8 @@
 
 .graph-image {
   width: 90%;
+}
+
+.forecasting-container {
+  text-align: center;
 }

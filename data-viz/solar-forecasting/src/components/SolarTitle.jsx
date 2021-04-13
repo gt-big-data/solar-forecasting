@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faCalendar, faBullseye } from '@fortawesome/free-solid-svg-icons';
 import cloud from '../images/cloud.svg';
@@ -19,7 +20,7 @@ const Card = ({ icon, subheading, content }) => (
 
 const GraphCard = ({subheading, content, image}) => (
   <div>
-    <h6>{subheading}</h6>
+    <h5>{subheading}</h5>
     <p>{content}</p>
     <img className="graph-image" src={image} alt="solar panel"/>
   </div>
@@ -36,6 +37,9 @@ function SolarTitle() {
           This makes it harder for operators to balance the input and output of electricity in an
           electric grid. If there is an imbalance, major issues like a blackout could occur.
         </p>
+        <Link to="/solarmap">
+          <button type="button">View Solar Map</button>
+        </Link>
       </div>
       <div className="predictions-container">
         <h3 className="subheading">Solar Predictions</h3>
@@ -61,8 +65,9 @@ function SolarTitle() {
           />
         </div>
       </div>
-      <h3 className="subheading">Solar Forecasting</h3>
-      <div className="grid-container">
+      <h3 className="subheading" style={{textAlign: 'center'}}>Solar Forecasting</h3>
+      <hr className=""/>
+      <div className="grid-container forecasting-container">
         <GraphCard
           subheading="Solar Map"
           content="hello, this is a description of the solar map"
