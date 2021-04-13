@@ -2,8 +2,174 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
 import './SolarMapPage.css';
+
+const countyList = [
+  "Appling",
+  "Atkinson",
+  "Bacon",
+  "Baker",
+  "Baldwin",
+  "Banks",
+  "Barrow",
+  "Bartow",
+  "Ben Hill",
+  "Berrien",
+  "Bibb",
+  "Bleckley",
+  "Brantley",
+  "Brooks",
+  "Bryan",
+  "Bulloch",
+  "Burke",
+  "Butts",
+  "Calhoun",
+  "Camden",
+  "Candler",
+  "Carroll",
+  "Catoosa",
+  "Charlton",
+  "Chatham",
+  "Chattahoochee",
+  "Chattooga",
+  "Cherokee",
+  "Clarke",
+  "Clay",
+  "Clayton",
+  "Clinch",
+  "Cobb",
+  "Coffee",
+  "Colquitt",
+  "Columbia",
+  "Cook",
+  "Coweta",
+  "Crawford",
+  "Crisp",
+  "Dade",
+  "Dawson",
+  "DeKalb",
+  "Decatur",
+  "Dodge",
+  "Dooly",
+  "Dougherty",
+  "Douglas",
+  "Early",
+  "Echols",
+  "Effingham",
+  "Elbert",
+  "Emanuel",
+  "Evans",
+  "Fannin",
+  "Fayette",
+  "Floyd",
+  "Forsyth",
+  "Franklin",
+  "Fulton",
+  "Gilmer",
+  "Glascock",
+  "Glynn",
+  "Gordon",
+  "Grady",
+  "Greene",
+  "Gwinnett",
+  "Habersham",
+  "Hall",
+  "Hancock",
+  "Haralson",
+  "Harris",
+  "Hart",
+  "Heard",
+  "Henry",
+  "Houston",
+  "Irwin",
+  "Jackson",
+  "Jasper",
+  "Jeff Davis",
+  "Jefferson",
+  "Jenkins",
+  "Johnson",
+  "Jones",
+  "Lamar",
+  "Lanier",
+  "Laurens",
+  "Lee",
+  "Liberty",
+  "Lincoln",
+  "Long",
+  "Lowndes",
+  "Lumpkin",
+  "Macon",
+  "Madison",
+  "Marion",
+  "McDuffie",
+  "McIntosh",
+  "Meriwether",
+  "Miller",
+  "Mitchell",
+  "Monroe",
+  "Montgomery",
+  "Morgan",
+  "Murray",
+  "Muscogee",
+  "Newton",
+  "Oconee",
+  "Oglethorpe",
+  "Paulding",
+  "Peach",
+  "Pickens",
+  "Pierce",
+  "Pike",
+  "Polk",
+  "Pulaski",
+  "Putnam",
+  "Quitman",
+  "Rabun",
+  "Randolph",
+  "Richmond",
+  "Rockdale",
+  "Schley",
+  "Screven",
+  "Seminole",
+  "Spalding",
+  "Stephens",
+  "Stewart",
+  "Sumter",
+  "Talbot",
+  "Taliaferro",
+  "Tattnall",
+  "Taylor",
+  "Telfair",
+  "Terrell",
+  "Thomas",
+  "Tift",
+  "Toombs",
+  "Towns",
+  "Treutlen",
+  "Troup",
+  "Turner",
+  "Twiggs",
+  "Union",
+  "Upson",
+  "Walker",
+  "Walton",
+  "Ware",
+  "Warren",
+  "Washington",
+  "Wayne",
+  "Webster",
+  "Wheeler",
+  "White",
+  "Whitfield",
+  "Wilcox",
+  "Wilkes",
+  "Wilkinson",
+  "Worth"
+];
 class SolarMap extends Component {
   componentDidMount() {
+    this.drawSolarMap();
+  }
+
+  drawSolarMap = () => {
     const loadPositionData = (fileName) => {
       d3.csv(`/data/muscogee/${fileName}`).then((pointData) => {
         const location = document.getElementById('location');
@@ -80,6 +246,7 @@ class SolarMap extends Component {
         .attr('d', path)
         .attr('fill', (county, i) => colorScale(arrCountyGHI[i]))
         .attr('cursor', 'pointer')
+        .attr('id', county => county.properties.NAME10)
         .on('mouseover', (event, county) => {
           div.transition()
             .duration(200)
@@ -88,8 +255,8 @@ class SolarMap extends Component {
             .style('left', `${event.pageX}px`)
             .style('top', `${event.pageY - 28}px`);
         })
-        .on('click', clicked); // eslint-disable-line
-
+        .on('click', clicked);
+      
       g.on('mouseout', () => {
         div.transition()
           .duration(200)
@@ -194,8 +361,8 @@ class SolarMap extends Component {
       function clicked(event, d) {
         renderCountyData();
 
-        // update county name
-        document.getElementById('county-name').innerText = d.properties.NAMELSAD10;
+        // update select value
+        document.getElementById('county-list').value = d.properties.NAME10;
 
         // style update
         counties.transition().style('fill', '#EFEFEF');
@@ -217,9 +384,6 @@ class SolarMap extends Component {
       function reset() {
         // remove county data
         g.selectAll('rect').remove();
-
-        // clear county name
-        document.getElementById('county-name').innerText = '';
 
         // un-zoom
         counties.transition(1000).style('fill', (county, i) => colorScale(arrCountyGHI[i]));
@@ -327,6 +491,13 @@ class SolarMap extends Component {
       .call(xAxis);
   }
 
+  updateCounty = () => {
+    const county = document.getElementById('county-list').value;
+    if (county === '') return;
+    const countyObject = d3.select(`#${county}`);
+    countyObject.dispatch('click');
+  }
+
   render() {
     return (
       <div className="solar-map-page">
@@ -340,8 +511,16 @@ class SolarMap extends Component {
             nobis ea eum laudantium dolore aut laboriosam aspernatur, officiis cupiditate, officia
             laborum quas quasi reprehenderit. Nihil, corrupti possimus!
           </p>
+          <div>
+            <label for="county-list">County: </label>
+            <select name="county-list" id="county-list" onChange={this.updateCounty}>
+              <option selected="selected" value="">--Select a county--</option>
+              {countyList.map(county => (
+                <option value={county}>{county}</option>
+              ))}
+            </select>
+          </div>
           <button type="button" id="reset-map">Reset Map</button>
-          <h6 id="county-name">Click a county!</h6>
           <div>
             <p id="longitude"></p>
             <p id="latitude"></p>
