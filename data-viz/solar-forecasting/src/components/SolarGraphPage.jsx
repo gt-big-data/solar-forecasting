@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
-import './dataviz-style.css';
+import './SolarGraphPage.css';
 
 class SolarGraph extends Component {
   componentDidMount() {
@@ -327,10 +327,10 @@ class SolarGraph extends Component {
 
   render() {
     return (
-      <>
+      <div className="solar-graph-page">
         <svg id="solar-graph" />
         <div id="button-group" />
-      </>
+      </div>
     );
   }
 }

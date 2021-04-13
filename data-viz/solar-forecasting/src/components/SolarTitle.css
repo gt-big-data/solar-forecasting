@@ -7,7 +7,7 @@
   transform: translateY(-40%);
 }
 
-.content {
+.home-page {
   margin: calc(15vh - var(--navBarOffset)) 0 0 0;
   font-weight: 100;
 }

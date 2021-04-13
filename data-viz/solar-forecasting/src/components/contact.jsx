@@ -2,7 +2,7 @@ import React from 'react';
 
 function Contact() {
   return (
-    <div className="section">
+    <div className="contact-page">
       <div className="container">
         <div className="row">
           <div className="col-md-12">

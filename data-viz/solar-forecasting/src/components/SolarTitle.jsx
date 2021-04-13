@@ -28,7 +28,7 @@ const GraphCard = ({subheading, content, image}) => (
 
 function SolarTitle() {
   return (
-    <div className="content">
+    <div className="home-page">
       <img className="home-image" src={cloud} alt="solar panel"></img>
       <div className="title-blurb">
         <h3>Increased solar power usage means more challenges</h3>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
-
+import './SolarMapPage.css';
 class SolarMap extends Component {
   componentDidMount() {
     const loadPositionData = (fileName) => {
@@ -19,7 +19,7 @@ class SolarMap extends Component {
     };
 
     const w = 1260;
-    const h = 940;
+    const h = 740;
 
     // this gets range of colors in a specific domain
     // remember, this is across 0 to the max GHI value. we have a pivot here as well
@@ -27,7 +27,7 @@ class SolarMap extends Component {
       .domain([0, 400, 800])
       .range(['#f59542', '#f25050', '#370757']); // a beautiful orange to red to purple. slight adjustments can be made in opacity (orange, red), but much nicer
 
-    const hLegend = 230; // to give space for legend at bottom (at the bottom inside of the svg)
+    const hLegend = 300; // to give space for legend at bottom (at the bottom inside of the svg)
 
     // margin properties
     const margin = {
@@ -194,6 +194,9 @@ class SolarMap extends Component {
       function clicked(event, d) {
         renderCountyData();
 
+        // update county name
+        document.getElementById('county-name').innerText = d.properties.NAMELSAD10;
+
         // style update
         counties.transition().style('fill', '#EFEFEF');
         d3.select(this).transition(1000).style('fill', '#edd287');
@@ -214,6 +217,9 @@ class SolarMap extends Component {
       function reset() {
         // remove county data
         g.selectAll('rect').remove();
+
+        // clear county name
+        document.getElementById('county-name').innerText = '';
 
         // un-zoom
         counties.transition(1000).style('fill', (county, i) => colorScale(arrCountyGHI[i]));
@@ -323,16 +329,27 @@ class SolarMap extends Component {
 
   render() {
     return (
-      <>
-        <button type="button" id="reset-map">Reset Map</button>
-        <svg id="heat-map" />
-        <div>
-          <p id="location" />
-          <p id="longitude" />
-          <p id="latitude" />
-          <p id="elevation" />
+      <div className="solar-map-page">
+        <div className="map-container">
+          <svg id="heat-map" />
         </div>
-      </>
+        <div className="sidebar">
+          <h5>Solar Map</h5>
+          <p>
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sapiente in magnam labore
+            nobis ea eum laudantium dolore aut laboriosam aspernatur, officiis cupiditate, officia
+            laborum quas quasi reprehenderit. Nihil, corrupti possimus!
+          </p>
+          <button type="button" id="reset-map">Reset Map</button>
+          <h6 id="county-name">Click a county!</h6>
+          <div>
+            <p id="longitude"></p>
+            <p id="latitude"></p>
+            <p id="location" />
+            <p id="elevation" />
+          </div>
+        </div>
+      </div>
     );
   }
 }
