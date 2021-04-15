@@ -31,10 +31,10 @@ class SolarGraph extends Component {
 
     // create new svg element for the graph. Has larger true width and height (w, h)
     const svg = d3.select('#solar-graph')
-      .attr('width', width - 300)
+      .attr('width', width)
       .attr('height', height)
       .attr('viewBox', [0, 0, w, h])
-      .attr('preserveAspectRatio', 'xMidYMid meet')
+      .attr('preserveAspectRatio', 'xMidYMin meet')
       .classed('svg-content', true)
       .attr('class', 'lineviz');
 
@@ -156,6 +156,8 @@ class SolarGraph extends Component {
       // Function to scale the graph appropriately, alongside the x axis.
       // Particularly responds to a d3 event.
       function zoomed(event) {
+        // console.log("X " + event.transform.x);
+        // console.log("Y " + event.transform.y);
         zoomPerformed = true; // Do not make false again.
         t = event.transform;
         xt = t.rescaleX(timeXScale);
@@ -322,12 +324,21 @@ class SolarGraph extends Component {
 
       createButtons();
       farmButtonClick(datasetMerriweather, merriweatherButton);
+
+      //another thing that needs to be done - add the dropdown selections: list the specific tasks to be done:
+      //Add County list dropdown
+      //Add dropdown that is based on the county list, and should have a list of lattitudes.
+
+
+
+
+      //the id for that div may not be needed (check the css file for something separate to manage the div if needed.)
     });
   }
 
   render() {
     return (
-      <div className="solar-graph-page">
+      <div className="solar-graph-page" >
         <svg id="solar-graph" />
         <div id="button-group" />
       </div>

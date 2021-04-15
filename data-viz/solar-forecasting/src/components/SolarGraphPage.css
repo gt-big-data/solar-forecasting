@@ -1,5 +1,7 @@
 .lineviz {
-  width: 100%;
+  /*width: 100%;*/
+  display: block;
+  margin: auto;
 }
 
 .graph-title {
@@ -62,4 +64,13 @@
   font: 15px Arial, sans-serif;
   border-color: #F76444;
   color: white;
+}
+
+#solar-graph {
+  overflow: auto;
+}
+
+#solar-graph-div {
+  display: block;
+  margin: auto;
 }
