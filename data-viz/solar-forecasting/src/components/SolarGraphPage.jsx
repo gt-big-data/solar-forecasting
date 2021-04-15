@@ -341,6 +341,15 @@ class SolarGraph extends Component {
       <div className="solar-graph-page" >
         <svg id="solar-graph" />
         <div id="button-group" />
+        <div id="location-selector-linechart">
+          <select className="dropdown" name="county-selector" id="county-selector">
+            <option selected disabled hidden>Select a County</option>
+          </select>
+          <select className="dropdown" name="latlong-selector" id="latlong-selector">
+            <option selected disabled hidden>Select a County Sublocation</option>
+          </select>
+        </div>
+
       </div>
     );
   }
