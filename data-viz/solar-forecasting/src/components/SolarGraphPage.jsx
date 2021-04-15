@@ -2,6 +2,168 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 import './SolarGraphPage.css';
 
+const countyList = [
+  "Appling",
+  "Atkinson",
+  "Bacon",
+  "Baker",
+  "Baldwin",
+  "Banks",
+  "Barrow",
+  "Bartow",
+  "Ben Hill",
+  "Berrien",
+  "Bibb",
+  "Bleckley",
+  "Brantley",
+  "Brooks",
+  "Bryan",
+  "Bulloch",
+  "Burke",
+  "Butts",
+  "Calhoun",
+  "Camden",
+  "Candler",
+  "Carroll",
+  "Catoosa",
+  "Charlton",
+  "Chatham",
+  "Chattahoochee",
+  "Chattooga",
+  "Cherokee",
+  "Clarke",
+  "Clay",
+  "Clayton",
+  "Clinch",
+  "Cobb",
+  "Coffee",
+  "Colquitt",
+  "Columbia",
+  "Cook",
+  "Coweta",
+  "Crawford",
+  "Crisp",
+  "Dade",
+  "Dawson",
+  "DeKalb",
+  "Decatur",
+  "Dodge",
+  "Dooly",
+  "Dougherty",
+  "Douglas",
+  "Early",
+  "Echols",
+  "Effingham",
+  "Elbert",
+  "Emanuel",
+  "Evans",
+  "Fannin",
+  "Fayette",
+  "Floyd",
+  "Forsyth",
+  "Franklin",
+  "Fulton",
+  "Gilmer",
+  "Glascock",
+  "Glynn",
+  "Gordon",
+  "Grady",
+  "Greene",
+  "Gwinnett",
+  "Habersham",
+  "Hall",
+  "Hancock",
+  "Haralson",
+  "Harris",
+  "Hart",
+  "Heard",
+  "Henry",
+  "Houston",
+  "Irwin",
+  "Jackson",
+  "Jasper",
+  "Jeff Davis",
+  "Jefferson",
+  "Jenkins",
+  "Johnson",
+  "Jones",
+  "Lamar",
+  "Lanier",
+  "Laurens",
+  "Lee",
+  "Liberty",
+  "Lincoln",
+  "Long",
+  "Lowndes",
+  "Lumpkin",
+  "Macon",
+  "Madison",
+  "Marion",
+  "McDuffie",
+  "McIntosh",
+  "Meriwether",
+  "Miller",
+  "Mitchell",
+  "Monroe",
+  "Montgomery",
+  "Morgan",
+  "Murray",
+  "Muscogee",
+  "Newton",
+  "Oconee",
+  "Oglethorpe",
+  "Paulding",
+  "Peach",
+  "Pickens",
+  "Pierce",
+  "Pike",
+  "Polk",
+  "Pulaski",
+  "Putnam",
+  "Quitman",
+  "Rabun",
+  "Randolph",
+  "Richmond",
+  "Rockdale",
+  "Schley",
+  "Screven",
+  "Seminole",
+  "Spalding",
+  "Stephens",
+  "Stewart",
+  "Sumter",
+  "Talbot",
+  "Taliaferro",
+  "Tattnall",
+  "Taylor",
+  "Telfair",
+  "Terrell",
+  "Thomas",
+  "Tift",
+  "Toombs",
+  "Towns",
+  "Treutlen",
+  "Troup",
+  "Turner",
+  "Twiggs",
+  "Union",
+  "Upson",
+  "Walker",
+  "Walton",
+  "Ware",
+  "Warren",
+  "Washington",
+  "Wayne",
+  "Webster",
+  "Wheeler",
+  "White",
+  "Whitfield",
+  "Wilcox",
+  "Wilkes",
+  "Wilkinson",
+  "Worth"
+];
+
 class SolarGraph extends Component {
   componentDidMount() {
     const dataList = [
@@ -326,11 +488,24 @@ class SolarGraph extends Component {
       farmButtonClick(datasetMerriweather, merriweatherButton);
 
       //another thing that needs to be done - add the dropdown selections: list the specific tasks to be done:
-      //Add County list dropdown
-      //Add dropdown that is based on the county list, and should have a list of lattitudes.
+      //Add County list dropdown - alright good to go.
+      //Add dropdown that is based on the county list, and should have a list of lattitudes. - should be somewhat ok, just displaying them (options there in inspector)
 
+      //we need to append county names here. we also are dependent on the locations that platform gives us, so right now, cannot give info on the second dropdown box.
+      function buildDropdowns() {
+        var countyDropdown = document.getElementById("county-selector");
+        countyList.forEach(function (item, index) {
+          var tempOption = document.createElement("OPTION"); //put a class here if needed, later for css stuff
+          tempOption.value = item + " County";
+          tempOption.hidden = false;
+          tempOption.disabled = false;
+          console.log(tempOption.value);
 
-
+          console.log(countyDropdown.appendChild(tempOption));
+        })
+      }
+      
+      buildDropdowns();
 
       //the id for that div may not be needed (check the css file for something separate to manage the div if needed.)
     });
