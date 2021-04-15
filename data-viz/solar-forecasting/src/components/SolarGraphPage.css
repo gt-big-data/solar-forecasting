@@ -93,6 +93,19 @@
 
 }
 
+.solar-graph-page {
+  margin-top: 2em;
+}
+
+.solar-text {
+  margin: 0 18em 0 18em;
+}
+
+.solar-header {
+  text-align: center;
+  margin-bottom: 1em;
+}
+
 /*.dropdown {
   just messin around with some css, we need to make the dropdowns look nice (with no css btw, mac makes it look p good)
   background: orange;

@@ -504,7 +504,7 @@ class SolarGraph extends Component {
           console.log(countyDropdown.appendChild(tempOption));
         })
       }
-      
+
       buildDropdowns();
 
       //the id for that div may not be needed (check the css file for something separate to manage the div if needed.)
@@ -514,6 +514,13 @@ class SolarGraph extends Component {
   render() {
     return (
       <div className="solar-graph-page" >
+        <div className="solar-text">
+          <h1 className="solar-header">Line Chart Visualization</h1>
+          <p className = "solar-graph-explanation">You can use this tool to observe Global Horizontal Irradiance (GHI) data for any particular location. GHI measures the total solar radiation received on a theoretical horizontal surface.</p>
+          <p>
+            Scroll to zoom in or out and drag-click to shift the chart!
+          </p>
+        </div>
         <svg id="solar-graph" />
         <div id="button-group" />
         <div id="location-selector-linechart">
