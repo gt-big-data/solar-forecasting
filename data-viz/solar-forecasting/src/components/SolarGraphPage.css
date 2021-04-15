@@ -79,7 +79,7 @@
 #location-selector-linechart *{
   /*This margin is space between the dropdowns*/
   margin: 0 4em 0 4em;
-  text-align: center;
+  text-align: left;
   width: 15em;
 
 }
