@@ -10,12 +10,19 @@ import db_connect.db as db
 @app.route('/', methods = ['GET'])
 def main_page():
     return render_template('input.html')
-@app.route('/data', methods = ['GET'])
-def data():
-    county_name = request.args.get('county','')
-    cursor = db.connect_get(county_name)
+ 
+@app.route('/data/all/<county>', methods = ['GET'])
+@app.route('/data/all/<county>/<start>/<end>', methods = ['GET'])
+def data_all(county, start = None, end=None):
+    cursor = db.get_all_data(county, start, end)
     return str(cursor)
 
+@app.route('/data/ghi/<county>', methods = ['GET'])
+@app.route('/data/all/<county>/<start>/<end>', methods = ['GET'])
+def data_ghi(county, start = None, end=None):
+    cursor = db.get_ghi(county, start, end)
+    return str(cursor);
+ 
 @app.route('/test', methods = ['POST'])
 def test():
     return "Online"
