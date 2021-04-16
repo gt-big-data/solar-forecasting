@@ -95,6 +95,7 @@
 
 .solar-graph-page {
   margin-top: 2em;
+  margin-bottom: 5em;
 }
 
 .solar-text {
@@ -105,6 +106,36 @@
   text-align: center;
   margin-bottom: 1em;
 }
+/*
+#date-range *{
+  margin: 0 4em 0 4em;
+  text-align: left;
+  /*width: 15em;*
+}
+
+#date-range {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  text-align: center;
+  /*display: inline-block*
+}
+*/
+
+
+#date-range form input{
+  /*display: inline-block;*/
+  vertical-align: middle;
+  margin: 5px 15px 10px 0;
+  padding: 10px;
+}
+
+form {
+  flex-direction: column;
+  align-items: stretch;
+  /*display: inline-block;*/
+  text-align: center;
+}
+
 
 /*.dropdown {
   just messin around with some css, we need to make the dropdowns look nice (with no css btw, mac makes it look p good)

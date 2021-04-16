@@ -191,7 +191,7 @@ class SolarMap extends Component {
     // remember, this is across 0 to the max GHI value. we have a pivot here as well
     const colorScale = d3.scaleLinear()
       .domain([0, 400, 800])
-      .range(['#f59542', '#f25050', '#370757']); // a beautiful orange to red to purple. slight adjustments can be made in opacity (orange, red), but much nicer
+      .range(["#f7ba86", '#f25050', '#370757']); // a beautiful orange to red to purple. slight adjustments can be made in opacity (orange, red), but much nicer
 
     const hLegend = 300; // to give space for legend at bottom (at the bottom inside of the svg)
 
@@ -371,7 +371,7 @@ class SolarMap extends Component {
         // zoom
         const [[x0, y0], [x1, y1]] = path.bounds(d);
         event.stopPropagation();
-        svg.transition().duration(750).call(
+        svg.transition().duration(75).call(
           zoom.transform,
           d3.zoomIdentity
             .translate(width / 2, height / 2)

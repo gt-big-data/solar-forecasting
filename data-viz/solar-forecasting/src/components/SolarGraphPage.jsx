@@ -494,15 +494,25 @@ class SolarGraph extends Component {
       //we need to append county names here. we also are dependent on the locations that platform gives us, so right now, cannot give info on the second dropdown box.
       function buildDropdowns() {
         var countyDropdown = document.getElementById("county-selector");
-        countyList.forEach(function (item, index) {
-          var tempOption = document.createElement("OPTION"); //put a class here if needed, later for css stuff
-          tempOption.value = item + " County";
-          tempOption.hidden = false;
-          tempOption.disabled = false;
-          console.log(tempOption.value);
 
-          console.log(countyDropdown.appendChild(tempOption));
-        })
+        // Add options
+        for (var i in countyList) {
+            countyDropdown.append('<option value=' + countyList[i] + " County" + '>' + countyList[i] + " County" + '</option>');
+        }
+
+
+
+
+        // console.log(countyDropdown);
+        // countyList.forEach(function (item, index) {
+        //   var tempOption = document.createElement("OPTION"); //put a class here if needed, later for css stuff
+        //   tempOption.value = item + " County";
+        //   // tempOption.hidden = false;
+        //   // tempOption.disabled = false;
+        //   console.log(tempOption.value);
+
+        //   console.log(countyDropdown.append(tempOption));
+        // })
       }
 
       buildDropdowns();
@@ -530,6 +540,16 @@ class SolarGraph extends Component {
           <select className="dropdown" name="latlong-selector" id="latlong-selector">
             <option selected disabled hidden>Select a County Sublocation</option>
           </select>
+        </div> 
+
+        <div id="date-range">
+          <form>
+            <label for="start">Start Date:</label>
+              <input type="date" name="start" min="2015-01-01" max="2019-12-31" value="2019-01-01" />
+            <label for="start">End Date:</label>
+              <input type="date" name="start" min="2015-01-01" max="2019-12-31" value="2019-12-31"/>
+            <button className="solarfarmbutton" type="submit">Submit</button>
+          </form>
         </div>
 
       </div>
