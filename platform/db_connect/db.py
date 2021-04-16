@@ -28,9 +28,9 @@ def get_all_data(county_name, start, end):
         + '%"'
     )
     if start is not None:
-        query_string += " AND GHI_DATA.time_stamp _>_= " + start
+        query_string += " AND GHI_DATA.time_stamp >= " + start
     if end is not None:
-        query_string += "AND GHI_DATA.time_stamp _<_= " + start
+        query_string += "AND GHI_DATA.time_stamp <= " + start
     cursor = connect_get(query_string)
     list = []
     list2 = []
