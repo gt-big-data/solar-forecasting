@@ -16,8 +16,9 @@ import os
 import pandas as pd
 from pandas import DataFrame
 import numpy as np
+
 #read counties and the county ID that is in csv and DB
-rootdir = './CountiesGHI'
+rootdir = './TableData'
 
 counties = pd.read_csv(r'CountiesTable.csv', header=None, usecols=[0,1], names=["ID", "County"]) 
 counties.reset_index(drop=True, inplace=True)
@@ -27,6 +28,8 @@ counties["County"] = counties["County"].str.strip()
 
 
 i = 0
+OverallData = pd.DataFrame()
+TotalData = pd.DataFrame()
 for subdir, dirs, files in os.walk(rootdir):
     for file in files:
 
@@ -81,8 +84,22 @@ for subdir, dirs, files in os.walk(rootdir):
         i += 1
 
         #place in CSV
-        TotalData.to_csv("./TableData/" + CountyName + str(i)+".csv", header=None, index=False)
-        
+        TotalData.to_csv("./GCPReadyCountyData/" + CountyName + str(i)+".csv", header=None, index=False)
+    
+        if (i == 1):
+            OverallData = TotalData.copy(deep=True)
+        elif (i > 1):
+            # if(CountyName != prevCountyName):
+            #     OverallData.to_csv("./GCPReadyCountyData/" + "OverallData/" + prevCountyName + ".csv", header=None, index=False)
+            #     OverallData = TotalData.copy(deep=True)
+            #     print(prevCountyName + " -> " + CountyName)
+                
+            # else: 
+            OverallData = pd.concat([OverallData, TotalData])
+
+        prevCountyName = CountyName
+#OverallData.to_csv("./GCPReadyCountyData/" + "OverallData/" + prevCountyName + ".csv", header=None, index=False)
+OverallData.to_pickle("./GCPReadyCountyData/" + "OverallData.pickle")
     
         
     
