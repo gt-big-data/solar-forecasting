@@ -16,4 +16,4 @@ for name in names:
   subprocess.run(var, input=b"y")
   #sleep to give time for it to finish uploading before uploading next file
   time.sleep(50)
-  
+  #test
