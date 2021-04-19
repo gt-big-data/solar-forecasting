@@ -1,23 +1,38 @@
 :root {
-  --offWhite: #f8f9fa;
-  --sideMargin: 2vw;
+  --black: #090C08;
+  --bgColor: #FFFEFD;
+  --seashell: #FCF5EE;
+  --sideMargin: 4vw;
   --navBarOffset: 10vh;
+  --boxShadow: 5px 5px 18px 1px rgba(0, 0, 0, 0.1);
 }
+
 body {
+  height: 100vh;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  background: rgb(255, 254, 253);
+  background: linear-gradient(121deg, rgba(255, 254, 253, 1) 30%, rgba(255, 252, 248, 1) 85%);
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-@media (min-width: 576px) {
+.home-page, .solar-map-page, .solar-graph-page, .contact-page {
+  padding: 0 var(--sideMargin);
+}
+
+@media (min-width: 560px) {
+  :root {
+    --sideMargin: 10vw;
+  }
+}
+
+@media (min-width: 760px) {
   :root {
     --navBarOffset: 0vh;
   }
@@ -25,6 +40,6 @@ code {
 
 @media (min-width: 1080px) {
   :root {
-    --sideMargin: 10vw;
+    /*--sideMargin: 0vw;*/
   }
 }

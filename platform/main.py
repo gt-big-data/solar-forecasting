@@ -22,6 +22,12 @@ def data_all(county, start = None, end=None):
 def data_ghi(county, start = None, end=None):
     cursor = db.get_ghi(county, start, end)
     return str(cursor);
+
+@app.route('/counties/all' , methods = ['GET'])
+def counties():
+    cursor = db.get_all_counties()
+    return str(cursor)
+
  
 @app.route('/test', methods = ['POST'])
 def test():
