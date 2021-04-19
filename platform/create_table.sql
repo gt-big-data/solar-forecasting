@@ -20,7 +20,7 @@ CREATE TABLE GHI_DATA(
 	time_zone INT NOT NULL,
 	elevation INT NOT NULL,
 	local_time_zone INT NOT NULL,
-	time_stamp date NOT NULL,
+	time_stamp datetime NOT NULL,
 	DHI INT NOT NULL,
 	DNI INT NOT NULL,
 	GHI INT NOT NULL,
