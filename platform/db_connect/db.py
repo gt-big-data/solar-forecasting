@@ -23,14 +23,14 @@ def connect_get(query):
 
 def get_all_data(county_name, start, end):
     query_string = (
-        'SELECT GHI_DATA.*, COUNTIES.county_name FROM GHI_DATA INNER JOIN COUNTIES ON GHI_DATA.county_id=COUNTIES.county_id WHERE COUNTIES.county_name like "%'
+        'SELECT GHI_DATA.*, COUNTIES.name FROM GHI_DATA INNER JOIN COUNTIES ON GHI_DATA.county_id=COUNTIES.county_id WHERE COUNTIES.name like "%'
         + county_name
         + '%"'
     )
     if start is not None:
-        query_string += " AND GHI_DATA.time_stamp >= " + start
+        query_string += " AND GHI_DATA.time_stamp >= '" + start + "'"
     if end is not None:
-        query_string += "AND GHI_DATA.time_stamp <= " + start
+        query_string += "AND GHI_DATA.time_stamp <=  '" + end + "'"
     cursor = connect_get(query_string)
     list = []
     list2 = []
@@ -73,16 +73,14 @@ def get_all_data(county_name, start, end):
 
 def get_ghi(county_name, start, end):
     query_string = (
-        'SELECT GHI_DATA.*, COUNTIES.county_name FROM GHI_DATA INNER JOIN COUNTIES ON GHI_DATA.county_id=COUNTIES.county_id WHERE COUNTIES.county_name like "%'
+        'SELECT GHI_DATA.*, COUNTIES.county_name FROM GHI_DATA INNER JOIN COUNTIES ON GHI_DATA.county_id=COUNTIES.county_id WHERE COUNTIES.name like "%'
         + county_name
         + '%"'
     )
     if start is not None:
-        start = datetime.strptime(start, "%m-%d-%Y")
-        query_string += " AND GHI_DATA.time_stamp >= " + start
+        query_string += " AND GHI_DATA.time_stamp >= '" + start + "'"
     if end is not None:
-        end = datetime.strptime(end, '%m-%d-%Y')
-        query_string += "AND GHI_DATA.time_stamp <= " + start
+        query_string += "AND GHI_DATA.time_stamp <=  '" + end + "'"
     cursor = connect_get(query_string)
 
     list = []
@@ -105,3 +103,14 @@ def get_ghi(county_name, start, end):
             }
         )
     return list2
+
+def get_all_counties():
+    query_string = 'SELECT DISTINCT COUNTIES.name, GHI_DATA.latitude, GHI_DATA.longitude FROM GHI_DATA INNER JOIN COUNTIES ON GHI_DATA.county_id=COUNTIES.county_id'
+    cursor = connect_get(query_string)
+    l = {}
+    for r in cursor:
+        county_name = r[0][:-1]
+        if county_name not in l.keys():
+            l[county_name] = []
+        l[county_name].append({'latitude':float(r[1]), 'longitude':float(r[2])})
+    return l
