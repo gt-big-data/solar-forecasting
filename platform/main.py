@@ -34,8 +34,18 @@ def counties():
     cursor = db.get_all_counties()
     return str(cursor)
 
- 
-@app.route('/test', methods = ['POST'])
+@app.route('/data/time/<date>/<time>', methods = ['GET'])
+def data_by_time(date, time):
+    time_stamp = "'" + date + " " + time + "'"
+    cursor = db.get_all_data_by_time(time_stamp)
+    return cursor
+
+@app.route('/data/location/<lat>/<long>',methods = ['GET','POST'])
+def data_by_location(lat, long):
+    cursor = db.get_all_date_by_location(lat, long)
+    return cursor
+
+@app.route('/test', methods = ['GET','POST'])
 def test():
     return "Online"
 #############################################Deprecated########################################################################################

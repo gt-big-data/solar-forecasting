@@ -123,12 +123,6 @@ def get_avg_ghi(county_name):
         + '%"' + " AND TIME(GHI_DATA.time_stamp) = \"12:00:00\" GROUP BY latitude, longitude, COUNTIES.name"   
     )
     cursor = connect_get(query_string)
-    # if start is not None:
-    #     query_string += " AND GHI_DATA.time_stamp >= '" + start + "'"
-    # if end is not None:
-    #     query_string += "AND GHI_DATA.time_stamp <=  '" + end + "'"
-    # cursor = connect_get(query_string)
-
     list = []
     list2 = []
     for row in cursor:
@@ -144,3 +138,22 @@ def get_avg_ghi(county_name):
             }
         )
     return list2
+
+def get_all_data_by_time(time_stamp):
+    query_string = "SELECT DISTINCT COUNTIES.name, GHI_DATA.latitude, GHI_DATA.longitude, GHI_DATA.ghi, GHI_DATA.time_stamp FROM GHI_DATA INNER JOIN COUNTIES ON GHI_DATA.county_id=COUNTIES.county_id WHERE GHI_DATA.time_stamp = " + time_stamp
+    cursor = connect_get(query_string)
+    l = {}
+    for r in cursor:
+        county_name = r[0][:-1]
+        if county_name not in l.keys():
+            l[county_name] = []
+        l[county_name].append({'latitude':float(r[1]), 'longitude':float(r[2]), 'ghi':float(r[3])})
+    return l
+
+def get_all_date_by_location(lat, long):
+    query_string = "SELECT DISTINCT COUNTIES.name, GHI_DATA.ghi, GHI_DATA.time_stamp FROM GHI_DATA INNER JOIN COUNTIES ON GHI_DATA.county_id=COUNTIES.county_id WHERE GHI_DATA.latitude = '" + lat + "' AND GHI_DATA.longitude = '" + long + "'"
+    cursor = connect_get(query_string)
+    string = ""
+    for r in cursor:
+        string += str(r[2].month) + "," + str(r[2].day) + "," +str(r[2].hour) + "," +str(r[2].minute) + ","+ str(r[1]) + "\n"
+    return string
