@@ -73,7 +73,7 @@ def get_all_data(county_name, start, end):
 
 def get_ghi(county_name, start, end):
     query_string = (
-        'SELECT GHI_DATA.*, COUNTIES.county_name FROM GHI_DATA INNER JOIN COUNTIES ON GHI_DATA.county_id=COUNTIES.county_id WHERE COUNTIES.name like "%'
+        'SELECT GHI_DATA.*, COUNTIES.name FROM GHI_DATA INNER JOIN COUNTIES ON GHI_DATA.county_id=COUNTIES.county_id WHERE COUNTIES.name like "%'
         + county_name
         + '%"'
     )
@@ -114,3 +114,33 @@ def get_all_counties():
             l[county_name] = []
         l[county_name].append({'latitude':float(r[1]), 'longitude':float(r[2])})
     return l
+
+#get avg noon data for a specified county
+def get_avg_ghi(county_name):
+    query_string = (
+        'SELECT latitude, longitude, AVG(GHI_DATA.GHI), COUNTIES.name FROM GHI_DATA INNER JOIN COUNTIES ON GHI_DATA.county_id=COUNTIES.county_id WHERE COUNTIES.name like "%'
+        + county_name
+        + '%"' + " AND TIME(GHI_DATA.time_stamp) = \"12:00:00\" GROUP BY latitude, longitude, COUNTIES.name"   
+    )
+    cursor = connect_get(query_string)
+    # if start is not None:
+    #     query_string += " AND GHI_DATA.time_stamp >= '" + start + "'"
+    # if end is not None:
+    #     query_string += "AND GHI_DATA.time_stamp <=  '" + end + "'"
+    # cursor = connect_get(query_string)
+
+    list = []
+    list2 = []
+    for row in cursor:
+        list.append(row)
+    for r in range(0, len(list)):
+        list2.append(
+            {
+                "county_name": (list[r][3][:-1]),
+                "latitude": float(list[r][0]),
+                "longitude": float(list[r][1]),
+                "Average Noon GHI": float(list[r][2]),
+                
+            }
+        )
+    return list2

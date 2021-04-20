@@ -23,6 +23,12 @@ def data_ghi(county, start = None, end=None):
     cursor = db.get_ghi(county, start, end)
     return str(cursor);
 
+@app.route('/data/avg_noon_ghi/<county>', methods = ['GET'])
+def get_avg_noon_data(county):
+    cursor = db.get_avg_ghi(county)
+    return str(cursor)
+
+
 @app.route('/counties/all' , methods = ['GET'])
 def counties():
     cursor = db.get_all_counties()
