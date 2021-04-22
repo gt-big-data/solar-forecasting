@@ -1,6 +1,7 @@
 import mysql.connector
 import key
 import json
+import flask
 import datetime
 
 
@@ -136,11 +137,11 @@ def get_avg_ghi(county_name):
     for r in range(0, len(list)):
         list2.append(
             {
-                "county_name": (list[r][3][:-1]),
+                "county_name": str((list[r][3][:-1])),
                 "latitude": float(list[r][0]),
                 "longitude": float(list[r][1]),
                 "Average Noon GHI": float(list[r][2]),
                 
             }
         )
-    return list2
+    return json.dumps(list2)
