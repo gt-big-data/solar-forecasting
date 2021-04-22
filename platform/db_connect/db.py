@@ -69,7 +69,7 @@ def get_all_data(county_name, start, end):
                 "county_name": (list[r][26][:-1]),
             }
         )
-    return list2
+    return json.dump(list2)
 
 
 def get_ghi(county_name, start, end):
@@ -103,7 +103,7 @@ def get_ghi(county_name, start, end):
                 "county_name": (list[r][9][:-1]),
             }
         )
-    return list2
+    return json.dump(list2)
 
 def get_all_counties():
     query_string = 'SELECT DISTINCT COUNTIES.name, GHI_DATA.latitude, GHI_DATA.longitude FROM GHI_DATA INNER JOIN COUNTIES ON GHI_DATA.county_id=COUNTIES.county_id'
