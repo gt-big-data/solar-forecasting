@@ -239,6 +239,10 @@ class SolarMap extends Component {
         currentCounty.properties.GHI = arrCountyGHI[i];
       });
 
+      fetch('http://127.0.0.1:5000/data/avg_noon_ghi/harris')
+        .then(response => response.json())
+        .then(data => console.log(data))
+
       const counties = g.selectAll('path')
         .data(geoData.features)
         .enter()

@@ -1,10 +1,12 @@
 from flask import Flask
 from flask import request, send_file, render_template
+from flask_cors import CORS
 
-# json or geojason
+#json or geojason
 import req
 
 app = Flask(__name__)
+CORS(app)
 app.config["DEBUG"] = True
 import db_connect.db as db
 

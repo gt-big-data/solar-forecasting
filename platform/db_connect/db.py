@@ -1,6 +1,7 @@
 import mysql.connector
 import key
 import json
+import flask
 import datetime
 
 
@@ -68,7 +69,7 @@ def get_all_data(county_name, start, end):
                 "county_name": (list[r][26][:-1]),
             }
         )
-    return list2
+    return json.dump(list2)
 
 
 def get_ghi(county_name, start, end):
@@ -102,7 +103,7 @@ def get_ghi(county_name, start, end):
                 "county_name": (list[r][9][:-1]),
             }
         )
-    return list2
+    return json.dump(list2)
 
 def get_all_counties():
     query_string = 'SELECT DISTINCT COUNTIES.name, GHI_DATA.latitude, GHI_DATA.longitude FROM GHI_DATA INNER JOIN COUNTIES ON GHI_DATA.county_id=COUNTIES.county_id'
@@ -130,14 +131,14 @@ def get_avg_ghi(county_name):
     for r in range(0, len(list)):
         list2.append(
             {
-                "county_name": (list[r][3][:-1]),
+                "county_name": str((list[r][3][:-1])),
                 "latitude": float(list[r][0]),
                 "longitude": float(list[r][1]),
                 "Average Noon GHI": float(list[r][2]),
                 
             }
         )
-    return list2
+    return json.dumps(list2)
 
 def get_all_data_by_time(time_stamp):
     query_string = "SELECT DISTINCT COUNTIES.name, GHI_DATA.latitude, GHI_DATA.longitude, GHI_DATA.ghi, GHI_DATA.time_stamp FROM GHI_DATA INNER JOIN COUNTIES ON GHI_DATA.county_id=COUNTIES.county_id WHERE GHI_DATA.time_stamp = " + time_stamp
