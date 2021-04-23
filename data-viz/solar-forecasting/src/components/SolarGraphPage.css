@@ -1,5 +1,7 @@
 .lineviz {
-  width: 100%;
+  /*width: 100%;*/
+  display: block;
+  margin: auto;
 }
 
 .graph-title {
@@ -63,3 +65,80 @@
   border-color: #F76444;
   color: white;
 }
+
+#solar-graph {
+  overflow: auto;
+}
+
+#solar-graph-div {
+  display: block;
+  margin: auto;
+}
+
+/*Elements inside the div for dropdowns and whatnot*/
+#location-selector-linechart *{
+  /*This margin is space between the dropdowns*/
+  margin: 0 4em 0 4em;
+  text-align: left;
+  width: 15em;
+
+}
+
+/*The actual div and its properties (this div holds the dropdowns*/
+#location-selector-linechart {
+  /*and fyi this guy is for the actual general div*/
+  margin-top: 1em;
+  margin-bottom: 1em;
+  text-align: center;
+
+}
+
+.solar-graph-page {
+  margin-top: 2em;
+  margin-bottom: 5em;
+}
+
+.solar-text {
+  margin: 0 18em 0 18em;
+}
+
+.solar-header {
+  text-align: center;
+  margin-bottom: 1em;
+}
+/*
+#date-range *{
+  margin: 0 4em 0 4em;
+  text-align: left;
+  /*width: 15em;*
+}
+
+#date-range {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  text-align: center;
+  /*display: inline-block*
+}
+*/
+
+
+#date-range form input{
+  /*display: inline-block;*/
+  vertical-align: middle;
+  margin: 5px 15px 10px 0;
+  padding: 10px;
+}
+
+form {
+  flex-direction: column;
+  align-items: stretch;
+  /*display: inline-block;*/
+  text-align: center;
+}
+
+
+/*.dropdown {
+  just messin around with some css, we need to make the dropdowns look nice (with no css btw, mac makes it look p good)
+  background: orange;
+  color: black;
+}*/
