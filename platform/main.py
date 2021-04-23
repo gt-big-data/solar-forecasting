@@ -61,6 +61,14 @@ def data_by_location(lat, long):
     return cursor
 
 
+# Returns all data for a certain data location point
+# Call by 127.0.0.1:5000/lat/long
+@app.route("/data/location/json/<lat>/<long>", methods=["GET", "POST"])
+def data_by_location_json(lat, long):
+    cursor = db.get_all_date_by_location_json(lat, long)
+    return cursor
+
+
 @app.route("/test", methods=["GET", "POST"])
 def test():
     return "Online"

@@ -154,3 +154,17 @@ def get_all_date_by_location(lat, long):
     for r in cursor:
         string += str(r[2].month) + "," + str(r[2].day) + "," +str(r[2].hour) + "," +str(r[2].minute) + ","+ str(r[1]) + "\n"
     return string
+
+def get_all_date_by_location_json(lat, long):
+    query_string = "SELECT DISTINCT COUNTIES.name, GHI_DATA.ghi, GHI_DATA.time_stamp FROM GHI_DATA INNER JOIN COUNTIES ON GHI_DATA.county_id=COUNTIES.county_id WHERE GHI_DATA.latitude = '" + lat + "' AND GHI_DATA.longitude = '" + long + "'"
+    cursor = connect_get(query_string)
+    string = ""
+    l = {}
+    num = 0
+    for r in (cursor):
+        l[num] = {'month':str(r[2].month),'day':str(r[2].day), 'hour':str(r[2].hour), 'minute':str(r[2].minute), 'ghi':str(r[1])}
+        num += 1
+        #string += str(r[2].month) + "," + str(r[2].day) + "," +str(r[2].hour) + "," +str(r[2].minute) + ","+ str(r[1]) + "\n"
+    return json.dumps(l)
+#integration
+#improvements
