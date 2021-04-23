@@ -105,6 +105,36 @@ def get_ghi(county_name, start, end):
         )
     return json.dump(list2)
 
+def get_predicted_ghi(county_name, start=None, end=None):
+        query_string = (
+        'SELECT PREDICTED_GHI_DATA.*, COUNTIES.name FROM PREDICTED_GHI_DATA INNER JOIN COUNTIES ON PREDICTED_GHI_DATA.county_id=COUNTIES.county_id WHERE COUNTIES.name like "%'
+        + county_name
+        + '%"'
+    )
+    if start is not None:
+        query_string += " AND PREDICTED_GHI_DATA.time_stamp >= '" + start + "'"
+    if end is not None:
+        query_string += "AND PREDICTED_GHI_DATA.time_stamp <=  '" + end + "'"
+    cursor = connect_get(query_string)
+
+    list = []
+    list2 = []
+    for row in cursor:
+        list.append(row)
+    for r in range(0, len(list)):
+        list2.append(
+            {
+                "county_id": list[r][0],
+                "latitude": float(list[r][1]),
+                "longitude": float(list[r][2]),
+                "time_stamp": list[r][3].strftime("%Y/%m/%d"),
+                "GHI": list[r][4],
+                "Predicted GHI": list[r][5],
+                "county_name": (list[r][6][:-1]),
+            }
+        )
+    return json.dump(list2)
+
 def get_all_counties():
     query_string = 'SELECT DISTINCT COUNTIES.name, GHI_DATA.latitude, GHI_DATA.longitude FROM GHI_DATA INNER JOIN COUNTIES ON GHI_DATA.county_id=COUNTIES.county_id'
     cursor = connect_get(query_string)

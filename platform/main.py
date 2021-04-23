@@ -34,6 +34,14 @@ def data_ghi(county, start=None, end=None):
     cursor = db.get_ghi(county, start, end)
     return str(cursor)
 
+# Returns ghi data and predicted ghi data at a certain county and the date filters are optional
+# Call by 127.0.0.1:5000/data/predicted_ghi/countyname/YYYY:DD:MM/YYYY:DD:MM
+@app.route("/data/predicted_ghi/<county>", methods=["GET"])
+@app.route("/data/predicted_ghi/<county>/<start>/<end>", methods=["GET"])
+def data_predicted_ghi(county, start=None, end=None):
+    cursor = db.get_predicted_ghi(county, start, end)
+    return str(cursor)
+
 # Returns ghi data at a certain county for every day at noon
 # Call by 127.0.0.1:5000/data/avg_noon_ghi/countyname/
 @app.route("/data/avg_noon_ghi/<county>", methods=["GET"])
