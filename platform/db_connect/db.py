@@ -69,12 +69,12 @@ def get_all_data(county_name, start, end):
                 "county_name": (list[r][26][:-1]),
             }
         )
-    return json.dump(list2)
+    return json.dumps(list2)
 
 
 def get_ghi(county_name, start, end):
     query_string = (
-        'SELECT GHI_DATA.*, COUNTIES.name FROM GHI_DATA INNER JOIN COUNTIES ON GHI_DATA.county_id=COUNTIES.county_id WHERE COUNTIES.name like "%'
+        'SELECT GHI_DATA.latitude, GHI_DATA.longitude, GHI_DATA.elevation, GHI_DATA.time_stamp, GHI_DATA.GHI, COUNTIES.name FROM GHI_DATA INNER JOIN COUNTIES ON GHI_DATA.county_id=COUNTIES.county_id WHERE COUNTIES.name like "%'
         + county_name
         + '%"'
     )
@@ -91,19 +91,15 @@ def get_ghi(county_name, start, end):
     for r in range(0, len(list)):
         list2.append(
             {
-                "county_id": list[r][0],
-                "location_id": list[r][1],
-                "latitude": float(list[r][2]),
-                "longitude": float(list[r][3]),
-                "time_zone": float(list[r][4]),
-                "elevation": float(list[r][5]),
-                "local_time_zone": float(list[r][6]),
-                "time_stamp": list[r][7].strftime("%Y/%m/%d"),
-                "GHI": list[r][8],
-                "county_name": (list[r][9][:-1]),
+                "latitude": float(list[r][0]),
+                "longitude": float(list[r][1]),
+                "elevation": float(list[r][2]),
+                "time_stamp": list[r][3].strftime("%Y/%m/%d"),
+                "GHI": list[r][4],
+                "county_name": (list[r][5][:-1]),
             }
         )
-    return json.dump(list2)
+    return json.dumps(list2)
 
 def get_all_counties():
     query_string = 'SELECT DISTINCT COUNTIES.name, GHI_DATA.latitude, GHI_DATA.longitude FROM GHI_DATA INNER JOIN COUNTIES ON GHI_DATA.county_id=COUNTIES.county_id'
