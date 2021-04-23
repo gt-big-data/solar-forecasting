@@ -285,10 +285,11 @@ class SolarMap extends Component {
         .on('zoom', zoomed);
 
       function renderCountyData(county) {
-        const countySublocationData = countySubLocationList[county]
-        // drawing points
-        // NOTE: coordinates are [longitude, latitude]
+        try {
+        const countySublocationData = countySubLocationList[county];
+        document.getElementById('error-message').style.opacity = 0;
 
+        // drawing points
         g.selectAll('.sublocation')
           .data(countySublocationData)
           .enter()
@@ -302,6 +303,9 @@ class SolarMap extends Component {
             const fileName = `${point.location}_${point.data[1]}_${point.data[0]}_2019.csv`;
             loadPositionData(fileName);
           });
+        } catch(error) {
+          document.getElementById('error-message').style.opacity = 1;
+        }
       }
 
       function clicked(event, d) {
@@ -332,6 +336,12 @@ class SolarMap extends Component {
       }
 
       function reset() {
+        // hide warning
+        document.getElementById('error-message').style.opacity = 0;
+
+        // reset select menu
+        document.getElementById('county-list').value = '';
+
         // remove county data
         g.selectAll('.sublocation').remove();
 
@@ -471,6 +481,7 @@ class SolarMap extends Component {
             </select>
           </div>
           <button type="button" id="reset-map">Reset Map</button>
+          <div id="error-message"><strong>No data for that county.</strong></div>
           <div>
             <p id="longitude"></p>
             <p id="latitude"></p>

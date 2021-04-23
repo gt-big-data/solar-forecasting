@@ -1,7 +1,8 @@
 :root {
-  --black: #090C08;
-  --bgColor: #FFFEFD;
-  --seashell: #FCF5EE;
+  --black: hsl(105, 20%, 4%);
+  --bgColor: hsl(30, 100%, 100%);
+  --seashell: hsl(30, 70%, 96%);
+  --lightYellow: hsl(61, 70%, 91%);
   --sideMargin: 4vw;
   --navBarOffset: 10vh;
   --boxShadow: 5px 5px 18px 1px rgba(0, 0, 0, 0.1);
