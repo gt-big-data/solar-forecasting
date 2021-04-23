@@ -218,7 +218,13 @@ class SolarMap extends Component {
     const g = svg.append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    d3.json('/data/Counties_Georgia_Topo.json').then((topoData) => {
+    Promise.all([
+      d3.json('/data/Counties_Georgia_Topo.json'),
+      d3.json('/data/latlong-list.json')
+    ]).then(data => {
+      const topoData = data[0];
+      const countySubLocationList = data[1];
+
       const geoData = topojson.feature(topoData, {
         type: 'GeometryCollection',
         geometries: topoData.objects.Counties_Georgia.geometries,
@@ -238,10 +244,6 @@ class SolarMap extends Component {
         const currentCounty = county;
         currentCounty.properties.GHI = arrCountyGHI[i];
       });
-
-      fetch('http://127.0.0.1:5000/data/avg_noon_ghi/harris')
-        .then(response => response.json())
-        .then(data => console.log(data))
 
       const counties = g.selectAll('path')
         .data(geoData.features)
@@ -282,80 +284,20 @@ class SolarMap extends Component {
         .scaleExtent([1, 9])
         .on('zoom', zoomed);
 
-      function renderCountyData() {
+      function renderCountyData(county) {
+        const countySublocationData = countySubLocationList[county]
         // drawing points
         // NOTE: coordinates are [longitude, latitude]
-        const muscogee = [
-          { location: 955482, data: [-85.06, 32.57] },
-          { location: 955488, data: [-85.06, 32.53] },
-          { location: 955529, data: [-85.06, 32.49] },
-          { location: 955751, data: [-85.06, 32.45] },
-          { location: 955774, data: [-85.06, 32.41] },
 
-          { location: 956423, data: [-85.02, 32.41] },
-          { location: 956437, data: [-85.02, 32.45] },
-          { location: 956579, data: [-85.02, 32.53] },
-          { location: 956580, data: [-85.02, 32.57] },
-          { location: 956690, data: [-85.02, 32.49] },
-
-          { location: 957573, data: [-84.98, 32.57] },
-          { location: 957588, data: [-84.98, 32.53] },
-          { location: 957633, data: [-84.98, 32.49] },
-          { location: 957794, data: [-84.98, 32.45] },
-          { location: 957906, data: [-84.98, 32.41] },
-
-          { location: 958460, data: [-84.94, 32.41] },
-          { location: 958471, data: [-84.94, 32.49] },
-          { location: 958594, data: [-84.94, 32.53] },
-          { location: 958737, data: [-84.94, 32.57] },
-          { location: 958765, data: [-84.94, 32.45] },
-
-          { location: 959384, data: [-84.90, 32.53] },
-          { location: 959437, data: [-84.90, 32.49] },
-          { location: 959443, data: [-84.90, 32.41] },
-          { location: 959506, data: [-84.90, 32.45] },
-          { location: 959544, data: [-84.90, 32.57] },
-
-          { location: 959840, data: [-84.86, 32.45] },
-          { location: 959848, data: [-84.86, 32.41] },
-          { location: 960007, data: [-84.86, 32.57] },
-          { location: 960024, data: [-84.86, 32.53] },
-          { location: 960169, data: [-84.86, 32.49] },
-
-          { location: 960495, data: [-84.82, 32.45] },
-          { location: 960725, data: [-84.82, 32.53] },
-          { location: 960728, data: [-84.82, 32.57] },
-          { location: 960735, data: [-84.82, 32.49] },
-          { location: 961233, data: [-84.82, 32.41] },
-
-          { location: 961301, data: [-84.78, 32.49] },
-          { location: 961537, data: [-84.78, 32.45] },
-          { location: 961638, data: [-84.78, 32.41] },
-          { location: 961759, data: [-84.78, 32.53] },
-          { location: 961897, data: [-84.78, 32.57] },
-
-          { location: 962593, data: [-84.74, 32.49] },
-          { location: 962627, data: [-84.74, 32.41] },
-          { location: 962666, data: [-84.74, 32.53] },
-          { location: 962667, data: [-84.74, 32.57] },
-          { location: 962698, data: [-84.74, 32.45] },
-
-          { location: 962984, data: [-84.70, 32.45] },
-          { location: 963012, data: [-84.70, 32.53] },
-          { location: 963018, data: [-84.70, 32.41] },
-          { location: 963025, data: [-84.70, 32.57] },
-          { location: 963038, data: [-84.70, 32.49] },
-        ];
-
-        g.selectAll('rect')
-          .data(muscogee)
+        g.selectAll('.sublocation')
+          .data(countySublocationData)
           .enter()
-          .append('rect')
-          .attr('x', (d) => projection(d.data)[0])
-          .attr('y', (d) => projection(d.data)[1])
-          .attr('width', '6px')
-          .attr('height', '7px')
+          .append('circle')
+          .attr('cx', (d) => projection([d.longitude, d.latitude])[0])
+          .attr('cy', (d) => projection([d.longitude, d.latitude])[1])
+          .attr('r', '.6px')
           .attr('fill', () => colorScale(Math.floor(Math.random() * 400)))
+          .attr('class', 'sublocation')
           .on('click', (event, point) => {
             const fileName = `${point.location}_${point.data[1]}_${point.data[0]}_2019.csv`;
             loadPositionData(fileName);
@@ -363,10 +305,14 @@ class SolarMap extends Component {
       }
 
       function clicked(event, d) {
-        renderCountyData();
+        // remove current rects
+        g.selectAll('.sublocation').remove();
+
+        const countyName = d.properties.NAME10;
+        renderCountyData(countyName);
 
         // update select value
-        document.getElementById('county-list').value = d.properties.NAME10;
+        document.getElementById('county-list').value = countyName;
 
         // style update
         counties.transition().style('fill', '#EFEFEF');
@@ -387,7 +333,7 @@ class SolarMap extends Component {
 
       function reset() {
         // remove county data
-        g.selectAll('rect').remove();
+        g.selectAll('.sublocation').remove();
 
         // un-zoom
         counties.transition(1000).style('fill', (county, i) => colorScale(arrCountyGHI[i]));
