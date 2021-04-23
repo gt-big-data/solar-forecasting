@@ -170,20 +170,6 @@ class SolarMap extends Component {
   }
 
   drawSolarMap = () => {
-    const loadPositionData = (fileName) => {
-      d3.csv(`/data/muscogee/${fileName}`).then((pointData) => {
-        const location = document.getElementById('location');
-        const longitude = document.getElementById('longitude');
-        const latitude = document.getElementById('latitude');
-        const elevation = document.getElementById('elevation');
-
-        location.innerText = `Location: ${pointData[0]['Location ID']}`;
-        longitude.innerText = `Longitude: ${pointData[0].Longitude}`;
-        latitude.innerText = `Latitude: ${pointData[0].Latitude}`;
-        elevation.innerText = `Elevation: ${pointData[0].Elevation}`;
-      });
-    };
-
     const w = 1260;
     const h = 740;
 
@@ -288,26 +274,60 @@ class SolarMap extends Component {
         try {
         const countySublocationData = countySubLocationList[county];
         document.getElementById('error-message').style.opacity = 0;
-
-        // drawing points
-        g.selectAll('.sublocation')
-          .data(countySublocationData)
-          .enter()
-          .append('circle')
-          .attr('cx', (d) => projection([d.longitude, d.latitude])[0])
-          .attr('cy', (d) => projection([d.longitude, d.latitude])[1])
-          .attr('r', '.6px')
-          .attr('fill', () => colorScale(Math.floor(Math.random() * 400)))
-          .attr('class', 'sublocation')
-          .on('click', (event, point) => {
-            const fileName = `${point.location}_${point.data[1]}_${point.data[0]}_2019.csv`;
-            loadPositionData(fileName);
+        
+        fetch(`http://127.0.0.1:5000/data/avg_noon_ghi/${county}`)
+          .then(response => response.json())
+          .then(sublocationData => {
+            // drawing points
+            g.selectAll('.sublocation')
+            .data(countySublocationData)
+            .enter()
+            .append('circle')
+            .attr('cx', (d) => projection([d.longitude, d.latitude])[0])
+            .attr('cy', (d) => projection([d.longitude, d.latitude])[1])
+            .attr('r', '.6px')
+            .attr('fill', (d) => {
+              for (let i = 0; i < sublocationData.length; i++) {
+                if (sublocationData[i].latitude === d.latitude && sublocationData[i].longitude === d.longitude) {
+                  return colorScale(sublocationData[i]['Average Noon GHI']);
+                }
+              }
+            })
+            .attr('class', 'sublocation')
+            .on('click', (event, point) => {
+              fetch(`http://127.0.0.1:5000/data/location/${point.latitude}/${point.longitude}`)
+                .then(response => response.text())
+                .then(stringData => {
+                  console.log(d3.csvParseRows(stringData, (d, i) => {
+                    return {
+                      test1: d[0],
+                      test2: d[1],
+                      test3: d[2],
+                      test4: d[3],
+                      test5: d[4],
+                    }
+                  }));
+                  clickSublocation(point);
+                });
+            });
           });
         } catch(error) {
           document.getElementById('error-message').style.opacity = 1;
         }
       }
+      
+      /**
+       * Handles the click of the sublocation of a county
+       */
+      function clickSublocation(point) {
+        document.getElementById('coordinates').innerText = `Lat: ${point.latitude}, Long: ${point.longitude}`;
+      }
 
+      /**
+       * Handles the click of a county
+       * @param {*} event 
+       * @param {*} d 
+       */
       function clicked(event, d) {
         // remove current rects
         g.selectAll('.sublocation').remove();
@@ -335,6 +355,9 @@ class SolarMap extends Component {
         );
       }
 
+      /**
+       * Handles reset
+       */
       function reset() {
         // hide warning
         document.getElementById('error-message').style.opacity = 0;
@@ -483,8 +506,7 @@ class SolarMap extends Component {
           <button type="button" id="reset-map">Reset Map</button>
           <div id="error-message"><strong>No data for that county.</strong></div>
           <div>
-            <p id="longitude"></p>
-            <p id="latitude"></p>
+            <p id="coordinates"></p>
             <p id="location" />
             <p id="elevation" />
           </div>
