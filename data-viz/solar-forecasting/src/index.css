@@ -1,6 +1,6 @@
 :root {
   --black: hsl(105, 20%, 4%);
-  --bgColor: hsl(30, 100%, 100%);
+  --bgColor: red;
   --seashell: hsl(30, 70%, 96%);
   --lightYellow: hsl(61, 70%, 91%);
   --countyGray: hsl(0, 0%, 94%);

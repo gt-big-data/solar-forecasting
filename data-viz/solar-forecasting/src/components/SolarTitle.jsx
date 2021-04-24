@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faCalendar, faBullseye } from '@fortawesome/free-solid-svg-icons';
 import cloud from '../images/cloud.svg';
-import solarImage from '../images/solar.jpg';
+import solarMapImage from '../images/solarmap.png';
+import solarGraphImage from '../images/solargraph.png';
 import './SolarTitle.css';
 
 const Card = ({ icon, subheading, content }) => (
@@ -70,13 +71,13 @@ function SolarTitle() {
       <div className="grid-container forecasting-container">
         <GraphCard
           subheading="Solar Map"
-          content="hello, this is a description of the solar map"
-          image={solarImage}
+          content="Visualizing the average GHI data across Georgia"
+          image={solarMapImage}
         />
         <GraphCard
           subheading="Solar Chart"
-          content="hello, this is a description of the solar chart"
-          image={solarImage}
+          content="Graphing the actual and prediction data"
+          image={solarGraphImage}
         />
       </div>
     </div>
