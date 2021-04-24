@@ -178,6 +178,13 @@ class SolarGraph extends Component {
       GHI: parseFloat(d.GHI),
       Prediction: +d.Predictions,
     });
+
+    const apiConverter = (d) => ({
+      date: new Date(+2019, (+d[0] - 1), +d[1], +d[2], +d[3]),
+      GHI: parseFloat(d[4]),
+      Prediction: +5,
+    });
+
     // Specifications for svg element.
     const w = 1260;
     const h = 740;
@@ -203,20 +210,6 @@ class SolarGraph extends Component {
     // ASYNCHRONOUS - Load CSV file (1st Day Jan 2019 Sample)
     // http://127.0.0.1:5000//data/location/32.61/-85.14.csv
 
-    d3.csv("http://127.0.0.1:5000//data/location/32.61/-85.14.csv", function(data) {
-      // console.log(data);
-      console.log(data[0]);
-      console.log("yo");
-      console.log(data[1]);
-      console.log("yo");
-      console.log(data[2]);
-      console.log("yo");
-      console.log(data[3]);
-      console.log("yo");
-      console.log(data[4]);
-      console.log("yo");
-
-    });
 
     Promise.all(dataList.map((filePath) => d3.csv(filePath, rowConverter))).then((data) => {
       const datasetMerriweather = data[0];
@@ -224,6 +217,8 @@ class SolarGraph extends Component {
       const datasetDublin = data[2];
       const datasetSimon = data[3];
 
+      console.log("This is the Merriweather dataset!");
+      console.log(datasetMerriweather);
       // line from d3.line(), public for modifying with zooming
       let line;
       let analysisLine;
@@ -346,6 +341,13 @@ class SolarGraph extends Component {
       function displayLineGraph(dataset) {
         // This statement is only necessary if we want to view a part of the data.
         // dataset = dataset.slice(dataset.length - 4000, dataset.length);
+
+        //lets try to access vars appropriately
+        console.log("Do i have access to dataset locally? Here it is");
+        console.log(dataset);
+
+        console.log("Can I access dataset GHI? here it is");
+        console.log()
 
         const zoom = d3.zoom()
           .scaleExtent([1, 400]) // how much I can zoom in
@@ -504,6 +506,57 @@ class SolarGraph extends Component {
       createButtons();
       farmButtonClick(datasetMerriweather, merriweatherButton);
 
+      function apiLocationCall(lat, long) {
+        //make sure order of the parameters is correct
+        fetch(`http://127.0.0.1:5000/data/location/${lat}/${long}`)
+          .then(response => response.text())
+          .then(stringData => {
+            console.log(d3.csvParseRows(stringData, (d, i) => {
+              return {
+                test1: d[0],
+                test2: d[1],
+                test3: d[2],
+                test4: d[3],
+                test5: d[4],
+              }
+            }));
+            
+
+
+            console.log("Successfully called apiLocationCall function");
+
+            //we are assuming now we can make a call with the proper parameters
+            // console.log(stringData);
+
+// date: new Date(+2019, (+d[0] - 1), +d[1], +d[2], +d[3]),
+//       GHI: parseFloat(d[4]),
+//       Prediction: +5,
+
+            //need to append headers to the file to parse properly?
+            // var apidata = d3.csvParseRows(stringData, d => {
+            //   d.date = new Date(+2019, (+d[0] - 1), +d[1], +d[2], +d[3]);
+            //   d.GHI = d[4];
+            //   d.Prediction = 10;
+            //   return d;
+            // });
+
+            var apidata = d3.csvParseRows(stringData, (d, i) => {
+              return {
+                date: new Date(+2019, (+d[0] - 1), +d[1], +d[2], +d[3]),
+                GHI: d[4],
+                Prediction: 10,
+              }
+            })
+
+            console.log("Here's the parsed API data supposedly, needs to be array of objecs")
+            console.log(apidata);
+            displayLineGraph(apidata);
+
+          });
+      }
+      // http://127.0.0.1:5000//data/location/32.61/-85.14
+      apiLocationCall(32.61, -85.14);
+
       //another thing that needs to be done - add the dropdown selections: list the specific tasks to be done:
       //Add County list dropdown - alright good to go.
       //Add dropdown that is based on the county list, and should have a list of lattitudes. - should be somewhat ok, just displaying them (options there in inspector)
@@ -532,7 +585,7 @@ class SolarGraph extends Component {
         // })
       }
 
-      buildDropdowns();
+      // buildDropdowns();
 
       //the id for that div may not be needed (check the css file for something separate to manage the div if needed.)
     });
@@ -553,6 +606,9 @@ class SolarGraph extends Component {
         <div id="location-selector-linechart">
           <select className="dropdown" name="county-selector" id="county-selector">
             <option selected disabled hidden>Select a County</option>
+             {countyList.map(county => (
+                <option value={county}>{county}</option>
+              ))}
           </select>
           <select className="dropdown" name="latlong-selector" id="latlong-selector">
             <option selected disabled hidden>Select a County Sublocation</option>
@@ -565,7 +621,7 @@ class SolarGraph extends Component {
               <input type="date" name="start" min="2015-01-01" max="2019-12-31" value="2019-01-01" />
             <label for="start">End Date:</label>
               <input type="date" name="start" min="2015-01-01" max="2019-12-31" value="2019-12-31"/>
-            <button className="solarfarmbutton" type="submit">Submit</button>
+            <button className="solarfarmbutton" onClick={console.log("sup dawg")} type="submit">Submit</button>
           </form>
         </div>
 
