@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
 import './SolarMapPage.css';
@@ -510,7 +511,9 @@ class SolarMap extends Component {
           <div id="error-message"><strong>No data for that county.</strong></div>
           <div>
             <p id="coordinates"></p>
-            <button id="view-detailed">View Detailed Data</button>
+            <Link to="/solargraph">
+              <button id="view-detailed">View Detailed Data</button>
+            </Link>
           </div>
         </div>
       </div>
