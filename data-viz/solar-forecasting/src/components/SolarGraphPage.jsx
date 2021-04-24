@@ -95,13 +95,13 @@ class SolarGraph extends Component {
         .attr('cx', 0)
         .attr('cy', -6)
         .attr('r', 6)
-        .attr('fill', 'var(--cinnabarRed)');
+        .attr('fill', 'var(--tealBlue)');
 
       gLegend.append('circle')
         .attr('cx', 0)
         .attr('cy', -6 + 20)
         .attr('r', 6)
-        .attr('fill', 'var(--tealBlue)');
+        .attr('fill', 'var(--cinnabarRed)');
 
       gLegend.append('text')
         .attr('class', 'axis-label')
@@ -205,15 +205,6 @@ class SolarGraph extends Component {
 
         gParent.selectAll('.line').remove();
 
-        // Create line
-        gParent.append('path')
-          // Bind the data appropriately
-          .datum(dataset)
-
-          .attr('class', 'line') // for later CSS purposes to reformat line
-          .attr('id', 'GHIDataLine')
-          .attr('d', line); // refer to previous line generator defined.
-
         // Create line - same thing, but for prediction!
         gParent.append('path')
           // Bind the data appropriately
@@ -221,6 +212,15 @@ class SolarGraph extends Component {
           .attr('class', 'line') // for later CSS purposes to reformat line
           .attr('id', 'GHIPredictionLine')
           .attr('d', analysisLine); // refer to previous line generator defined.
+
+         // Create line
+        gParent.append('path')
+          // Bind the data appropriately
+          .datum(dataset)
+
+          .attr('class', 'line') // for later CSS purposes to reformat line
+          .attr('id', 'GHIDataLine')
+          .attr('d', line); // refer to previous line generator defined.
 
         // Needed for zooming capabilities
         svg.call(zoom);

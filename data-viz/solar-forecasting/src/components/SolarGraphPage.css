@@ -32,7 +32,7 @@
 @charset "UTF-8";
 #GHIDataLine {
   fill: none;
-  stroke: var(--cinnabarRed);
+  stroke: var(--tealBlue);
   stroke-width: 1.5;
   clip-path: url(#clip);
   -webkit-transform: translate3d(0, 0, 0);
@@ -40,8 +40,7 @@
 
 #GHIPredictionLine {
   fill: none;
-  /*stroke: #3452a2;*/
-  stroke: var(--tealBlue);
+  stroke:var(--cinnabarRed);
   stroke-width: 1.5;
   clip-path: url(#clip);
   -webkit-transform: translate3d(0, 0, 0);
