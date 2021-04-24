@@ -19,7 +19,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    d3.json('/data/latlong-list.json')
+    d3.json('/data/latlong-new.json')
       .then(data => {
         this.setState({sublocationList: data, dataLoaded: true})
       });
