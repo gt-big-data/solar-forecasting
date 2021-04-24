@@ -506,56 +506,6 @@ class SolarGraph extends Component {
       createButtons();
       farmButtonClick(datasetMerriweather, merriweatherButton);
 
-      function apiLocationCall(lat, long) {
-        //make sure order of the parameters is correct
-        fetch(`http://127.0.0.1:5000/data/location/${lat}/${long}`)
-          .then(response => response.text())
-          .then(stringData => {
-            console.log(d3.csvParseRows(stringData, (d, i) => {
-              return {
-                test1: d[0],
-                test2: d[1],
-                test3: d[2],
-                test4: d[3],
-                test5: d[4],
-              }
-            }));
-            
-
-
-            console.log("Successfully called apiLocationCall function");
-
-            //we are assuming now we can make a call with the proper parameters
-            // console.log(stringData);
-
-// date: new Date(+2019, (+d[0] - 1), +d[1], +d[2], +d[3]),
-//       GHI: parseFloat(d[4]),
-//       Prediction: +5,
-
-            //need to append headers to the file to parse properly?
-            // var apidata = d3.csvParseRows(stringData, d => {
-            //   d.date = new Date(+2019, (+d[0] - 1), +d[1], +d[2], +d[3]);
-            //   d.GHI = d[4];
-            //   d.Prediction = 10;
-            //   return d;
-            // });
-
-            var apidata = d3.csvParseRows(stringData, (d, i) => {
-              return {
-                date: new Date(+2019, (+d[0] - 1), +d[1], +d[2], +d[3]),
-                GHI: d[4],
-                Prediction: 10,
-              }
-            })
-
-            console.log("Here's the parsed API data supposedly, needs to be array of objecs")
-            console.log(apidata);
-            displayLineGraph(apidata);
-
-          });
-      }
-      // http://127.0.0.1:5000//data/location/32.61/-85.14
-      apiLocationCall(32.61, -85.14);
 
       //another thing that needs to be done - add the dropdown selections: list the specific tasks to be done:
       //Add County list dropdown - alright good to go.
@@ -587,9 +537,61 @@ class SolarGraph extends Component {
 
       // buildDropdowns();
 
+
+
+      function makeAPICall() {
+        console.log("makeAPICall() has just been called!");
+
+        var regex = /[+-]?\d+(\.\d+)?/g;
+
+        var latLong = document.getElementById("latlong-selector");
+        var latLongText = latLong.options[latLong.selectedIndex].text;
+
+        var latLongArr = latLongText.match(regex).map(function(v) {
+          return parseFloat(v);
+        });
+
+        console.log(latLongArr);
+
+        console.log("Hopefully, lat long arr is good to go!")
+
+
+
+        //1. do csv stuff copy paste
+
+        fetch(`http://127.0.0.1:5000/data/location/${latLongArr[0]}/${latLongArr[1]}`)
+          .then(response => response.text())
+          .then(stringData => {
+            console.log("Successfully called apiLocationCall function");
+
+            //please change prediction value accordingly! 10 is just for testing purposes to see if Prediction data is displaying properly.
+            var apidata = d3.csvParseRows(stringData, (d, i) => {
+              return {
+                date: new Date(+2019, (+d[0] - 1), +d[1], +d[2], +d[3]),
+                GHI: d[4],
+                Prediction: 10,
+              }
+            })
+
+            console.log("Here's the parsed API data supposedly, needs to be array of objecs")
+            console.log(apidata);
+            displayLineGraph(apidata);
+
+          });
+
+        //2. call displayLineGraph(data);
+     
+
+      // http://127.0.0.1:5000//data/location/32.61/-85.14
+        // Lat: 32, Long: -80
+      }
+
+      document.getElementById("submit-linechart").onclick =() => makeAPICall();
       //the id for that div may not be needed (check the css file for something separate to manage the div if needed.)
     });
   }
+
+  
 
   render() {
     return (
@@ -612,6 +614,7 @@ class SolarGraph extends Component {
           </select>
           <select className="dropdown" name="latlong-selector" id="latlong-selector">
             <option selected disabled hidden>Select a County Sublocation</option>
+            <option value='Something'>Lat: 32.61 Long: -85.14</option>
           </select>
         </div> 
 
@@ -621,7 +624,8 @@ class SolarGraph extends Component {
               <input type="date" name="start" min="2015-01-01" max="2019-12-31" value="2019-01-01" />
             <label for="start">End Date:</label>
               <input type="date" name="start" min="2015-01-01" max="2019-12-31" value="2019-12-31"/>
-            <button className="solarfarmbutton" onClick={console.log("sup dawg")} type="submit">Submit</button>
+              {/*Change the class name! The class should be something similar, but can't be solarfarmbutton since the farm buttons are dependent on it I believe*/}
+            <button className="coolbutton" type="button" id="submit-linechart">Submit</button>
           </form>
         </div>
 
