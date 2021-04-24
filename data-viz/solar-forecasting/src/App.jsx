@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import * as d3 from 'd3';
 import SolarTitle from './components/SolarTitle';
 import SolarGraphPage from './components/SolarGraphPage';
 import SolarMapPage from './components/SolarMapPage';
@@ -13,11 +14,21 @@ class App extends Component {
     this.state = {
       latitude: null,
       longitude: null,
+      sublocationList: [],
     }
   }
 
-  updateCoordinates = (lat, long) => {
-    this.setState({latitude: lat, longitude: long})
+  componentDidMount() {
+    d3.json('/data/latlong-list.json')
+      .then(data => this.setState({sublocationList: data}));
+  }
+
+  updateCoordinates = (lat, long, sublocationList) => {
+    this.setState({latitude: lat, longitude: long});
+  }
+
+  setSublocationList = (list) => {
+    this.setState({sublocationList: list});
   }
 
   render() {
@@ -31,13 +42,13 @@ class App extends Component {
             <Route 
               path="/solargraph" 
               render={(props) => (
-                <SolarGraphPage latitude={this.state.latitude} longitude={this.state.longitude}/>
+                <SolarGraphPage latitude={this.state.latitude} longitude={this.state.longitude} sublocationList={this.state.sublocationList}/>
               )}
             />
             <Route 
               path="/solarmap"
               render={(props) => (
-                <SolarMapPage updateCoordinates={this.updateCoordinates}/>
+                <SolarMapPage updateCoordinates={this.updateCoordinates} sublocationList={this.state.sublocationList}/>
               )}
             />
             <Route path="/contact" component={Contact} />

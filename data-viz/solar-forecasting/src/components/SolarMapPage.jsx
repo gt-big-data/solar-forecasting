@@ -175,6 +175,7 @@ class SolarMap extends Component {
     const h = 740;
 
     const updateCoordinates = this.props.updateCoordinates;
+    const countySublocationList = this.props.sublocationList;
 
     // this gets range of colors in a specific domain
     // remember, this is across 0 to the max GHI value. we have a pivot here as well
@@ -209,10 +210,8 @@ class SolarMap extends Component {
 
     Promise.all([
       d3.json('/data/Counties_Georgia_Topo.json'),
-      d3.json('/data/latlong-list.json')
     ]).then(data => {
       const topoData = data[0];
-      const countySubLocationList = data[1];
 
       const geoData = topojson.feature(topoData, {
         type: 'GeometryCollection',
@@ -241,7 +240,7 @@ class SolarMap extends Component {
         .attr('d', path)
         .attr('fill', (county, i) => {
           const countyName = county.properties.NAME10;
-          if (countySubLocationList[countyName]) {
+          if (countySublocationList[countyName]) {
             return colorScale(arrCountyGHI[i])
           }
           return 'var(--countyGray)';
@@ -282,30 +281,34 @@ class SolarMap extends Component {
 
       function renderCountyData(county) {
         try {
-        const countySublocationData = countySubLocationList[county];
-        document.getElementById('error-message').style.opacity = 0;
-        
-        fetch(`http://127.0.0.1:5000/data/avg_noon_ghi/${county}`)
-          .then(response => response.json())
-          .then(sublocationData => {
-            // drawing points
-            g.selectAll('.sublocation')
-            .data(countySublocationData)
-            .enter()
-            .append('circle')
-            .attr('cx', (d) => projection([d.longitude, d.latitude])[0])
-            .attr('cy', (d) => projection([d.longitude, d.latitude])[1])
-            .attr('r', '.6px')
-            .attr('fill', (d) => {
-              for (let i = 0; i < sublocationData.length; i++) {
-                if (sublocationData[i].latitude === d.latitude && sublocationData[i].longitude === d.longitude) {
-                  return colorScale(sublocationData[i]['Average Noon GHI']);
+          const countySublocationData = countySublocationList[county];
+          if (countySublocationData === undefined) {
+            throw `No data for ${county} county.`;
+          }
+          document.getElementById('error-message').style.opacity = 0;
+          
+          fetch(`http://127.0.0.1:5000/data/avg_noon_ghi/${county}`)
+            .then(response => response.json())
+            .then(sublocationData => {
+              // drawing points
+              g.selectAll('.sublocation')
+              .data(countySublocationData)
+              .enter()
+              .append('circle')
+              .attr('cx', (d) => projection([d.longitude, d.latitude])[0])
+              .attr('cy', (d) => projection([d.longitude, d.latitude])[1])
+              .attr('r', '.6px')
+              .attr('fill', (d) => {
+                for (let i = 0; i < sublocationData.length; i++) {
+                  if (sublocationData[i].latitude === d.latitude && sublocationData[i].longitude === d.longitude) {
+                    return colorScale(sublocationData[i]['Average Noon GHI']);
+                  }
                 }
-              }
+              })
+              .attr('class', 'sublocation')
+              .on('click', (event, point) => clickSublocation(point));
             })
-            .attr('class', 'sublocation')
-            .on('click', (event, point) => clickSublocation(point));
-          });
+            .catch(error => console.log(error));
         } catch(error) {
           document.getElementById('error-message').style.opacity = 1;
         }
@@ -316,7 +319,7 @@ class SolarMap extends Component {
        */
       function clickSublocation(point) {
         document.getElementById('coordinates').innerText = `Lat: ${point.latitude}, Long: ${point.longitude}`;
-        updateCoordinates(point.latitude, point.longitude)
+        updateCoordinates(point.latitude, point.longitude);
       }
 
       /**
@@ -367,7 +370,7 @@ class SolarMap extends Component {
         // reset color
         counties.transition(1000).attr('fill', (county, i) => {
           const countyName = county.properties.NAME10;
-          if (countySubLocationList[countyName]) {
+          if (countySublocationList[countyName]) {
             return colorScale(arrCountyGHI[i])
           }
           return 'var(--countyGray)';

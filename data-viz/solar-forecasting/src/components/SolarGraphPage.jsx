@@ -2,176 +2,14 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 import './SolarGraphPage.css';
 
-const countyList = [
-  "Appling",
-  "Atkinson",
-  "Bacon",
-  "Baker",
-  "Baldwin",
-  "Banks",
-  "Barrow",
-  "Bartow",
-  "Ben Hill",
-  "Berrien",
-  "Bibb",
-  "Bleckley",
-  "Brantley",
-  "Brooks",
-  "Bryan",
-  "Bulloch",
-  "Burke",
-  "Butts",
-  "Calhoun",
-  "Camden",
-  "Candler",
-  "Carroll",
-  "Catoosa",
-  "Charlton",
-  "Chatham",
-  "Chattahoochee",
-  "Chattooga",
-  "Cherokee",
-  "Clarke",
-  "Clay",
-  "Clayton",
-  "Clinch",
-  "Cobb",
-  "Coffee",
-  "Colquitt",
-  "Columbia",
-  "Cook",
-  "Coweta",
-  "Crawford",
-  "Crisp",
-  "Dade",
-  "Dawson",
-  "DeKalb",
-  "Decatur",
-  "Dodge",
-  "Dooly",
-  "Dougherty",
-  "Douglas",
-  "Early",
-  "Echols",
-  "Effingham",
-  "Elbert",
-  "Emanuel",
-  "Evans",
-  "Fannin",
-  "Fayette",
-  "Floyd",
-  "Forsyth",
-  "Franklin",
-  "Fulton",
-  "Gilmer",
-  "Glascock",
-  "Glynn",
-  "Gordon",
-  "Grady",
-  "Greene",
-  "Gwinnett",
-  "Habersham",
-  "Hall",
-  "Hancock",
-  "Haralson",
-  "Harris",
-  "Hart",
-  "Heard",
-  "Henry",
-  "Houston",
-  "Irwin",
-  "Jackson",
-  "Jasper",
-  "Jeff Davis",
-  "Jefferson",
-  "Jenkins",
-  "Johnson",
-  "Jones",
-  "Lamar",
-  "Lanier",
-  "Laurens",
-  "Lee",
-  "Liberty",
-  "Lincoln",
-  "Long",
-  "Lowndes",
-  "Lumpkin",
-  "Macon",
-  "Madison",
-  "Marion",
-  "McDuffie",
-  "McIntosh",
-  "Meriwether",
-  "Miller",
-  "Mitchell",
-  "Monroe",
-  "Montgomery",
-  "Morgan",
-  "Murray",
-  "Muscogee",
-  "Newton",
-  "Oconee",
-  "Oglethorpe",
-  "Paulding",
-  "Peach",
-  "Pickens",
-  "Pierce",
-  "Pike",
-  "Polk",
-  "Pulaski",
-  "Putnam",
-  "Quitman",
-  "Rabun",
-  "Randolph",
-  "Richmond",
-  "Rockdale",
-  "Schley",
-  "Screven",
-  "Seminole",
-  "Spalding",
-  "Stephens",
-  "Stewart",
-  "Sumter",
-  "Talbot",
-  "Taliaferro",
-  "Tattnall",
-  "Taylor",
-  "Telfair",
-  "Terrell",
-  "Thomas",
-  "Tift",
-  "Toombs",
-  "Towns",
-  "Treutlen",
-  "Troup",
-  "Turner",
-  "Twiggs",
-  "Union",
-  "Upson",
-  "Walker",
-  "Walton",
-  "Ware",
-  "Warren",
-  "Washington",
-  "Wayne",
-  "Webster",
-  "Wheeler",
-  "White",
-  "Whitfield",
-  "Wilcox",
-  "Wilkes",
-  "Wilkinson",
-  "Worth"
-];
-
 class SolarGraph extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      coordList: [],
+    }
+  }
   componentDidMount() {
-    const dataList = [
-      '/data/Merriweather_2019_wPreds.csv',
-      '/data/Butler_2019_wPreds.csv',
-      '/data/Dublin_2019_wPreds.csv',
-      '/data/Simon_2019_wPreds.csv',
-    ];
 
     const rowConverter = (d) => ({
       date: new Date(+d.Year, (+d.Month - 1), +d.Day, +d.Hour, +d.Minute),
@@ -204,8 +42,12 @@ class SolarGraph extends Component {
     // ASYNCHRONOUS - Load CSV file (1st Day Jan 2019 Sample)
     // http://127.0.0.1:5000//data/location/32.61/-85.14.csv
 
-
-    Promise.all(dataList.map((filePath) => d3.csv(filePath, rowConverter))).then((data) => {
+    Promise.all([
+      d3.csv('/data/Merriweather_2019_wPreds.csv', rowConverter),
+      d3.csv('/data/Butler_2019_wPreds.csv', rowConverter), 
+      d3.csv('/data/Dublin_2019_wPreds.csv', rowConverter), 
+      d3.csv('/data/Simon_2019_wPreds.csv', rowConverter), 
+    ]).then((data) => {
       const datasetMerriweather = data[0];
       const datasetButler = data[1];
       const datasetDublin = data[2];
@@ -494,37 +336,6 @@ class SolarGraph extends Component {
       farmButtonClick(datasetMerriweather, merriweatherButton);
 
 
-      //another thing that needs to be done - add the dropdown selections: list the specific tasks to be done:
-      //Add County list dropdown - alright good to go.
-      //Add dropdown that is based on the county list, and should have a list of lattitudes. - should be somewhat ok, just displaying them (options there in inspector)
-
-      //we need to append county names here. we also are dependent on the locations that platform gives us, so right now, cannot give info on the second dropdown box.
-      function buildDropdowns() {
-        var countyDropdown = document.getElementById("county-selector");
-
-        // Add options
-        for (var i in countyList) {
-            countyDropdown.append('<option value=' + countyList[i] + " County" + '>' + countyList[i] + " County" + '</option>');
-        }
-
-
-
-
-        // console.log(countyDropdown);
-        // countyList.forEach(function (item, index) {
-        //   var tempOption = document.createElement("OPTION"); //put a class here if needed, later for css stuff
-        //   tempOption.value = item + " County";
-        //   // tempOption.hidden = false;
-        //   // tempOption.disabled = false;
-        //   console.log(tempOption.value);
-
-        //   console.log(countyDropdown.append(tempOption));
-        // })
-      }
-
-      // buildDropdowns();
-
-
 
       function makeAPICall(latLongArr) {
         //1. do csv stuff copy paste
@@ -543,15 +354,10 @@ class SolarGraph extends Component {
           });
       }
 
-      function submitGetQueryArgs() {
-        var regex = /[+-]?\d+(\.\d+)?/g;
-
-        var latLong = document.getElementById("latlong-selector");
-        var latLongText = latLong.options[latLong.selectedIndex].text;
-        var latLongArr = latLongText.match(regex).map(function(v) {
-          return parseFloat(v);
-        });
-        makeAPICall(latLongArr)
+      function submitSearch() {
+        const latLongString = document.getElementById("latlong-selector").value;
+        const latLongArr = latLongString.split(',');
+        makeAPICall(latLongArr);
       }
 
       if (this.props.latitude !== null) {
@@ -559,16 +365,18 @@ class SolarGraph extends Component {
         makeAPICall([this.props.latitude, this.props.longitude]);
       }
 
-      document.getElementById("submit-linechart").onclick =() => submitGetQueryArgs();
+      document.getElementById("submit-linechart").onclick =() => submitSearch();
       //the id for that div may not be needed (check the css file for something separate to manage the div if needed.)
     });
   }
 
-  
+  updateSelectOptions = (event) => {
+    const county = event.target.value;
+    this.setState({coordList: this.props.sublocationList[county]});
+  }
 
   render() {
-    // this.props.latitude
-    // this.props.longitude
+    const { sublocationList } = this.props;
     return (
       <div className="solar-graph-page" >
         <div className="solar-text">
@@ -581,15 +389,17 @@ class SolarGraph extends Component {
         <svg id="solar-graph" />
         <div id="button-group" />
         <div id="location-selector-linechart">
-          <select className="dropdown" name="county-selector" id="county-selector">
+          <select className="dropdown" name="county-selector" id="county-selector" onChange={this.updateSelectOptions}>
             <option selected disabled hidden>Select a County</option>
-             {countyList.map(county => (
+             {Object.keys(sublocationList).map(county => (
                 <option value={county}>{county}</option>
               ))}
           </select>
           <select className="dropdown" name="latlong-selector" id="latlong-selector">
             <option selected disabled hidden>Select a County Sublocation</option>
-            <option value='Something'>Lat: 32.61 Long: -85.14</option>
+            {this.state.coordList.map(coord => (
+              <option value={`${coord.latitude},${coord.longitude}`}>Lat: {coord.latitude}, Long: {coord.longitude}</option>
+            ))}
           </select>
         </div> 
 
