@@ -14,12 +14,15 @@ class App extends Component {
     this.state = {
       selectedCoordinate: null,
       sublocationList: [],
+      dataLoaded: false,
     }
   }
 
   componentDidMount() {
     d3.json('/data/latlong-list.json')
-      .then(data => this.setState({sublocationList: data}));
+      .then(data => {
+        this.setState({sublocationList: data, dataLoaded: true})
+      });
   }
 
   updateCoordinates = (lat, long, county) => {
@@ -46,15 +49,23 @@ class App extends Component {
             <Route path="/" exact component={SolarTitle} />
             <Route 
               path="/solargraph" 
-              render={(props) => (
-                <SolarGraphPage selectedCoordinate={this.state.selectedCoordinate} sublocationList={this.state.sublocationList}/>
-              )}
+              render={(props) => {
+                if (this.state.dataLoaded) {
+                  return (
+                    <SolarGraphPage selectedCoordinate={this.state.selectedCoordinate} sublocationList={this.state.sublocationList}/>
+                  )
+                }
+              }}
             />
             <Route 
               path="/solarmap"
-              render={(props) => (
-                <SolarMapPage updateCoordinates={this.updateCoordinates} sublocationList={this.state.sublocationList}/>
-              )}
+              render={(props) => {
+                if (this.state.dataLoaded) {
+                  return (
+                    <SolarMapPage updateCoordinates={this.updateCoordinates} sublocationList={this.state.sublocationList}/>
+                  )
+                }
+               }}
             />
             <Route path="/contact" component={Contact} />
           </div>
