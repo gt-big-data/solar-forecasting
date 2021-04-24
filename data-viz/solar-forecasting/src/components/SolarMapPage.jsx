@@ -316,7 +316,7 @@ class SolarMap extends Component {
             .append('circle')
             .attr('cx', (d) => projection([d.longitude, d.latitude])[0])
             .attr('cy', (d) => projection([d.longitude, d.latitude])[1])
-            .attr('r', '.6px')
+            .attr('r', '.9px')
             .attr('fill', (d) => {
               for (let i = 0; i < sublocationData.length; i++) {
                 if (sublocationData[i].latitude === d.latitude && sublocationData[i].longitude === d.longitude) {
@@ -386,6 +386,20 @@ class SolarMap extends Component {
 
         // remove county data
         g.selectAll('.sublocation').remove();
+
+        var minArr1 = arrCountyGHI[0];
+        var maxArr1 = arrCountyGHI[0];
+
+        for (let i = 0; i < arrCountyGHI.length; i++) {
+          var temp1 = arrCountyGHI[i];
+          if (temp1 < minArr1) {
+            minArr1 = temp1;
+          } else if (temp1 > maxArr1) {
+            maxArr1 = temp1;
+          }
+        }
+
+        redoLegend(minArr1, maxArr1);
 
         // reset color
         counties.transition(1000).attr('fill', (county, i) => {
@@ -511,6 +525,9 @@ class SolarMap extends Component {
     }
 
     function redoLegend(minDomain, maxDomain) {
+      minDomain = d3.min([600, minDomain]);
+      maxDomain = d3.max([650, maxDomain]);
+
       console.log(minDomain);
       console.log(maxDomain);
       //need to redo the color scale, before we move to call the legend function again.
