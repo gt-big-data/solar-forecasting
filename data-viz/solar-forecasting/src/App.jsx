@@ -12,8 +12,7 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      latitude: null,
-      longitude: null,
+      selectedCoordinate: null,
       sublocationList: [],
     }
   }
@@ -23,8 +22,14 @@ class App extends Component {
       .then(data => this.setState({sublocationList: data}));
   }
 
-  updateCoordinates = (lat, long, sublocationList) => {
-    this.setState({latitude: lat, longitude: long});
+  updateCoordinates = (lat, long, county) => {
+    this.setState({
+      selectedCoordinate: {
+        latitude: lat,
+        longitude: long,
+        county: county,
+      }
+    });
   }
 
   setSublocationList = (list) => {
@@ -42,7 +47,7 @@ class App extends Component {
             <Route 
               path="/solargraph" 
               render={(props) => (
-                <SolarGraphPage latitude={this.state.latitude} longitude={this.state.longitude} sublocationList={this.state.sublocationList}/>
+                <SolarGraphPage selectedCoordinate={this.state.selectedCoordinate} sublocationList={this.state.sublocationList}/>
               )}
             />
             <Route 

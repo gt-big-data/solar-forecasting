@@ -306,7 +306,17 @@ class SolarMap extends Component {
                 }
               })
               .attr('class', 'sublocation')
-              .on('click', (event, point) => clickSublocation(point));
+              .on('click', (event, d) => clickSublocation(d, county))
+              .on('mouseover', function(d) {
+                d3.select(this)
+                  .transition(500)
+                  .attr('r', '1.5px');
+              })
+              .on('mouseout', function(d) {
+                d3.select(this)
+                  .transition(500)
+                  .attr('r', '.6px');
+              });
             })
             .catch(error => console.log(error));
         } catch(error) {
@@ -317,9 +327,9 @@ class SolarMap extends Component {
       /**
        * Handles the click of the sublocation of a county
        */
-      function clickSublocation(point) {
+      function clickSublocation(point, county) {
         document.getElementById('coordinates').innerText = `Lat: ${point.latitude}, Long: ${point.longitude}`;
-        updateCoordinates(point.latitude, point.longitude);
+        updateCoordinates(point.latitude, point.longitude, county);
       }
 
       /**
@@ -339,7 +349,8 @@ class SolarMap extends Component {
 
         // style update
         counties.transition().attr('fill', 'var(--countyGray)');
-        d3.select(this).transition(1000).attr('fill', 'var(--countyYellow)');
+        d3.select(this).transition(1000)
+          .attr('fill', 'var(--countyYellow)');
 
         // zoom
         const [[x0, y0], [x1, y1]] = path.bounds(d);

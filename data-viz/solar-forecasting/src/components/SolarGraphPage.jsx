@@ -353,12 +353,19 @@ class SolarGraph extends Component {
         makeAPICall(latLongArr);
       }
 
-      if (this.props.latitude !== null) {
+
+      const { selectedCoordinate } = this.props;
+      if (selectedCoordinate !== null) {
         // load chart with prop data
-        makeAPICall([this.props.latitude, this.props.longitude]);
+        // update select menu display
+        const countySelector = document.getElementById('county-selector')
+        countySelector.value = selectedCoordinate.county;
+
+        // document.getElementById('latlong-selector').value = ;
+        makeAPICall([selectedCoordinate.latitude, selectedCoordinate.longitude]);
       }
 
-      document.getElementById("submit-linechart").onclick =() => submitSearch();
+      document.getElementById('submit-linechart').onclick =() => submitSearch();
       //the id for that div may not be needed (check the css file for something separate to manage the div if needed.)
     });
   }
