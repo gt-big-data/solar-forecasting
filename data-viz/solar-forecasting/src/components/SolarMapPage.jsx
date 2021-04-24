@@ -305,33 +305,37 @@ class SolarMap extends Component {
               }
               redoLegend(minArr, maxArr);
               
+
+              const coordGHIMap = new Map();
               // drawing points
               g.selectAll('.sublocation')
-              .data(countySublocationData)
-              .enter()
-              .append('circle')
-              .attr('cx', (d) => projection([d.longitude, d.latitude])[0])
-              .attr('cy', (d) => projection([d.longitude, d.latitude])[1])
-              .attr('r', '.9px')
-              .attr('fill', (d) => {
-                for (let i = 0; i < sublocationData.length; i++) {
-                  if (sublocationData[i].latitude === d.latitude && sublocationData[i].longitude === d.longitude) {
-                    return colorScale(sublocationData[i]['Average Noon GHI']);
+                .data(countySublocationData)
+                .enter()
+                .append('circle')
+                .attr('cx', (d) => projection([d.longitude, d.latitude])[0])
+                .attr('cy', (d) => projection([d.longitude, d.latitude])[1])
+                .attr('r', '.9px')
+                .attr('fill', (d) => {
+                  for (let i = 0; i < sublocationData.length; i++) {
+                    if (sublocationData[i].latitude === d.latitude && sublocationData[i].longitude === d.longitude) {
+                      const sublocationGHI = sublocationData[i]['Average Noon GHI'];
+                      coordGHIMap.set(`${d.latitude},${d.longitude}}`, sublocationGHI);
+                      return colorScale(sublocationGHI);
+                    }
                   }
-                }
-              })
-              .attr('class', 'sublocation')
-              .on('click', (event, d) => clickSublocation(d, county))
-              .on('mouseover', function(d) {
-                d3.select(this)
-                  .transition(500)
-                  .attr('r', '1.5px');
-              })
-              .on('mouseout', function(d) {
-                d3.select(this)
-                  .transition(500)
-                  .attr('r', '.9px');
-              });
+                })
+                .attr('class', 'sublocation')
+                .on('click', (e, d) => clickSublocation(d, county, coordGHIMap.get(`${d.latitude},${d.longitude}}`)))
+                .on('mouseover', function(d) {
+                  d3.select(this)
+                    .transition(500)
+                    .attr('r', '1.5px');
+                })
+                .on('mouseout', function(d) {
+                  d3.select(this)
+                    .transition(500)
+                    .attr('r', '.9px');
+                });
             })
             .catch(error => console.log(error));
         } catch(error) {
@@ -342,8 +346,10 @@ class SolarMap extends Component {
       /**
        * Handles the click of the sublocation of a county
        */
-      function clickSublocation(point, county) {
-        document.getElementById('coordinates').innerText = `Lat: ${point.latitude}, Long: ${point.longitude}`;
+      function clickSublocation(point, county, GHI) {
+        // display GHI data
+        document.getElementById('sublocation-coordinates').innerText = `Lat: ${point.latitude}, Long: ${point.longitude}`;
+        document.getElementById('sublocation-ghi').innerText = `GHI: ${GHI}`;
         updateCoordinates(point.latitude, point.longitude, county);
       }
 
@@ -607,7 +613,8 @@ For more details (line chart) of a particular location, click the particular are
           <button type="button" id="reset-map" className="button">Reset Map</button>
           <div id="error-message"><strong>No data for that county.</strong></div>
           <div>
-            <p id="coordinates"></p>
+            <p id="sublocation-coordinates"></p>
+            <p id="sublocation-ghi"></p>
             <Link to="/solargraph">
               <button id="view-detailed" className="button">View Detailed Data</button>
             </Link>
