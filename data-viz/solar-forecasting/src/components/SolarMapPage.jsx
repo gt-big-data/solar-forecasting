@@ -510,12 +510,12 @@ class SolarMap extends Component {
               ))}
             </select>
           </div>
-          <button type="button" id="reset-map">Reset Map</button>
+          <button type="button" id="reset-map" className="button">Reset Map</button>
           <div id="error-message"><strong>No data for that county.</strong></div>
           <div>
             <p id="coordinates"></p>
             <Link to="/solargraph">
-              <button id="view-detailed">View Detailed Data</button>
+              <button id="view-detailed" className="button">View Detailed Data</button>
             </Link>
           </div>
         </div>

@@ -8,6 +8,7 @@
   --leafGreen: #9ECE9A;
   --tealBlue: #077187;
   --cinnabarRed: #F24333;
+  --peach: #F76444;
   --sideMargin: 4vw;
   --navBarOffset: 10vh;
   --boxShadow: 5px 5px 18px 1px rgba(0, 0, 0, 0.1);
@@ -22,6 +23,22 @@ body {
   overflow-x: hidden;
   background: rgb(255, 254, 253);
   background: linear-gradient(121deg, rgba(255, 254, 253, 1) 30%, rgba(255, 252, 248, 1) 85%);
+}
+
+.button {
+  border-radius: 10px;
+  background-color: white;
+  /*background-color: #EDC8C8;*/
+  color: black;
+  transition-duration: 0.3s;
+  padding: 2px 10px;
+  font: 15px Arial, sans-serif;
+  border-color: var(--peach);
+}
+
+.button:hover {
+  background-color: var(--peach);
+  color: white;
 }
 
 code {

@@ -267,7 +267,7 @@ class SolarGraph extends Component {
         merriweatherButton = document.createElement('input');
         merriweatherButton.type = 'button';
         merriweatherButton.value = 'Merriweather';
-        merriweatherButton.className = 'solarfarmbutton';
+        merriweatherButton.className = 'solarfarmbutton button';
         merriweatherButton.addEventListener('click', () => {
           farmButtonClick(datasetMerriweather, merriweatherButton);
         });
@@ -275,7 +275,7 @@ class SolarGraph extends Component {
         butlerButton = document.createElement('input');
         butlerButton.type = 'button';
         butlerButton.value = 'Butler';
-        butlerButton.className = 'solarfarmbutton';
+        butlerButton.className = 'solarfarmbutton button';
         butlerButton.addEventListener('click', () => {
           farmButtonClick(datasetButler, butlerButton);
         });
@@ -283,7 +283,7 @@ class SolarGraph extends Component {
         dublinButton = document.createElement('input');
         dublinButton.type = 'button';
         dublinButton.value = 'Dublin';
-        dublinButton.className = 'solarfarmbutton';
+        dublinButton.className = 'solarfarmbutton button';
         dublinButton.addEventListener('click', () => {
           farmButtonClick(datasetDublin, dublinButton);
         });
@@ -291,7 +291,7 @@ class SolarGraph extends Component {
         simonButton = document.createElement('input');
         simonButton.type = 'button';
         simonButton.value = 'Simon';
-        simonButton.className = 'solarfarmbutton';
+        simonButton.className = 'solarfarmbutton button';
         simonButton.addEventListener('click', () => {
           farmButtonClick(datasetSimon, simonButton);
         });
@@ -411,7 +411,7 @@ class SolarGraph extends Component {
                 <label for="start">End Date: </label>
                 <input type="date" name="start" min="2015-01-01" max="2019-12-31" value="2019-12-31"/>
               </div> */}
-              <button className="submit-button" type="button" id="submit-linechart">Submit</button>
+              <button className="button" type="button" id="submit-linechart">Submit</button>
             </form>
           </div>
         </div>

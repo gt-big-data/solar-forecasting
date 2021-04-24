@@ -38,7 +38,7 @@ function SolarTitle() {
           electric grid. If there is an imbalance, major issues like a blackout could occur.
         </p>
         <Link to="/solarmap">
-          <button type="button">View Solar Map</button>
+          <button type="button" className="button">View Solar Map</button>
         </Link>
       </div>
       <div className="predictions-container">
