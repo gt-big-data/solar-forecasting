@@ -5,7 +5,9 @@
   --lightYellow: hsl(61, 70%, 91%);
   --countyGray: hsl(0, 0%, 94%);
   --countyYellow: hsl(44, 74%, 73%);
-  --leafGreen: hsl(119, 74%, 73%);
+  --leafGreen: #9ECE9A;
+  --tealBlue: #077187;
+  --cinnabarRed: #F24333;
   --sideMargin: 4vw;
   --navBarOffset: 10vh;
   --boxShadow: 5px 5px 18px 1px rgba(0, 0, 0, 0.1);

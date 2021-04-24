@@ -1,29 +1,38 @@
-.lineviz {
-  /*width: 100%;*/
-  display: block;
-  margin: auto;
+/* Layout */
+
+.solar-graph-page {
+  width: 100%;
+  padding: 0;
 }
 
-.graph-title {
-  font-size: 25px;
-  font-weight: 600;
+#solar-graph {
+  height: 100vh;
+  width: 100%;
 }
+
+.graph-container {
+  height: 100vh;
+  width: 70%;
+  float: left;
+}
+
+.graph-sidebar {
+  height: 100vh;
+  width: 30%;
+  float: right;
+  padding: 2em;
+}
+
+/* Graph Style */
 
 .axis-label {
   font-weight: 500;
 }
 
-.explanation {
-  margin-left: 400px;
-  margin-right: 400px;
-}
-
 @charset "UTF-8";
 #GHIDataLine {
   fill: none;
-  /*stroke: #3452a2;*/
-  /*stroke: red;*/
-  stroke: red;
+  stroke: var(--cinnabarRed);
   stroke-width: 1.5;
   clip-path: url(#clip);
   -webkit-transform: translate3d(0, 0, 0);
@@ -32,19 +41,19 @@
 #GHIPredictionLine {
   fill: none;
   /*stroke: #3452a2;*/
-  stroke: steelblue;
+  stroke: var(--tealBlue);
   stroke-width: 1.5;
   clip-path: url(#clip);
   -webkit-transform: translate3d(0, 0, 0);
 }
 
-.solarfarmbutton {
-  border-radius: 16px;
+.solarfarmbutton, .submit-button {
+  border-radius: 10px;
   background-color: white;
   /*background-color: #EDC8C8;*/
   color: black;
   transition-duration: 0.3s;
-  padding: 8px 28px;
+  padding: 2px 10px;
   font: 15px Arial, sans-serif;
   border-color: #F76444;
 }
@@ -57,105 +66,22 @@
 }
 
 #clickedfarmbutton {
-  border-radius: 16px;
+  border-radius: 10px;
   background-color: #F76444;
   transition-duration: 0.3s;
-  padding: 8px 28px;
+  padding: 6px 20px;
   font: 15px Arial, sans-serif;
   border-color: #F76444;
   color: white;
 }
 
-.coolbutton {
-  border-radius: 16px;
-  background-color: white;
-  /*background-color: #EDC8C8;*/
-  color: black;
-  transition-duration: 0.3s;
-  padding: 8px 28px;
-  font: 15px Arial, sans-serif;
-  border-color: #F76444;
-}
-
-/*.coolbutton:hover {
-  background-color: #F76444;
-  color: white;
-}*/
-
-
-#solar-graph {
-  overflow: auto;
-}
-
-#solar-graph-div {
+.dropdown {
   display: block;
-  margin: auto;
+  margin: .5em 0;
+  padding: 1px 3px;
+  border-radius: 10px;
 }
 
-/*Elements inside the div for dropdowns and whatnot*/
-#location-selector-linechart *{
-  /*This margin is space between the dropdowns*/
-  margin: 0 4em 0 4em;
-  text-align: left;
-  width: 15em;
-
-}
-
-/*The actual div and its properties (this div holds the dropdowns*/
 #location-selector-linechart {
-  /*and fyi this guy is for the actual general div*/
-  margin-top: 1em;
-  margin-bottom: 1em;
-  text-align: center;
-
+  margin: 2em 0;
 }
-
-.solar-graph-page {
-  margin-top: 2em;
-  margin-bottom: 5em;
-}
-
-.solar-text {
-  margin: 0 18em 0 18em;
-}
-
-.solar-header {
-  text-align: center;
-  margin-bottom: 1em;
-}
-/*
-#date-range *{
-  margin: 0 4em 0 4em;
-  text-align: left;
-  /*width: 15em;*
-}
-
-#date-range {
-  margin-top: 1em;
-  margin-bottom: 1em;
-  text-align: center;
-  /*display: inline-block*
-}
-*/
-
-
-#date-range form input{
-  /*display: inline-block;*/
-  vertical-align: middle;
-  margin: 5px 15px 10px 0;
-  padding: 10px;
-}
-
-form {
-  flex-direction: column;
-  align-items: stretch;
-  /*display: inline-block;*/
-  text-align: center;
-}
-
-
-/*.dropdown {
-  just messin around with some css, we need to make the dropdowns look nice (with no css btw, mac makes it look p good)
-  background: orange;
-  color: black;
-}*/

@@ -18,12 +18,12 @@ class SolarGraph extends Component {
     });
 
     // Specifications for svg element.
-    const w = 1260;
+    const w = 1160;
     const h = 740;
 
     // margin properties
     const margin = {
-      top: 60, right: 10, bottom: 70, left: 50,
+      top: 60, right: 10, bottom: 70, left: 90,
     };
 
     // width and height of actual graph
@@ -36,8 +36,7 @@ class SolarGraph extends Component {
       .attr('height', height)
       .attr('viewBox', [0, 0, w, h])
       .attr('preserveAspectRatio', 'xMidYMin meet')
-      .classed('svg-content', true)
-      .attr('class', 'lineviz');
+      .classed('svg-content', true);
 
     // ASYNCHRONOUS - Load CSV file (1st Day Jan 2019 Sample)
     // http://127.0.0.1:5000//data/location/32.61/-85.14.csv
@@ -78,12 +77,6 @@ class SolarGraph extends Component {
         .attr('transform', `translate(${margin.left},${margin.top})`);
 
       gParent.append('text')
-        .attr('class', 'graph-title')
-        .attr('text-anchor', 'middle')
-        .attr('transform', `translate(${w / 2 - margin.left}, ${-margin.top / 2})`)
-        .text('Solar Predictions');
-
-      gParent.append('text')
         .attr('class', 'axis-label')
         .attr('text-anchor', 'middle')
         .attr('transform', `translate(${w / 2 - margin.left}, ${height + margin.bottom / 2})`)
@@ -92,7 +85,7 @@ class SolarGraph extends Component {
       gParent.append('text')
         .attr('class', 'axis-label')
         .attr('text-anchor', 'middle')
-        .attr('transform', `translate(${-margin.left}, ${height / 2})`)
+        .attr('transform', `translate(${-margin.left / 2}, ${height / 2})`)
         .text('GHI');
 
       const gLegend = gParent.append('g')
@@ -102,13 +95,13 @@ class SolarGraph extends Component {
         .attr('cx', 0)
         .attr('cy', -6)
         .attr('r', 6)
-        .attr('fill', 'red');
+        .attr('fill', 'var(--cinnabarRed)');
 
       gLegend.append('circle')
         .attr('cx', 0)
         .attr('cy', -6 + 20)
         .attr('r', 6)
-        .attr('fill', 'steelblue');
+        .attr('fill', 'var(--tealBlue)');
 
       gLegend.append('text')
         .attr('class', 'axis-label')
@@ -379,41 +372,49 @@ class SolarGraph extends Component {
     const { sublocationList } = this.props;
     return (
       <div className="solar-graph-page" >
-        <div className="solar-text">
-          <h1 className="solar-header">Analyzing Location Solar Data</h1>
-          <p className = "solar-graph-explanation">You can use this tool to observe Global Horizontal Irradiance (GHI) data for any particular location. GHI measures the total solar radiation received on a theoretical horizontal surface.</p>
+        <div className="graph-container">
+          <svg id="solar-graph" />
+        </div>
+        <div className="graph-sidebar">
+          <h5>Analyzing Location Solar Data</h5>
           <p>
-            Scroll to zoom in or out and drag-click to shift the chart!
+            You can use this tool to observe Global Horizontal Irradiance (GHI) data for any particular location.
+            GHI measures the total solar radiation received on a theoretical horizontal surface. 
           </p>
-        </div>
-        <svg id="solar-graph" />
-        <div id="button-group" />
-        <div id="location-selector-linechart">
-          <select className="dropdown" name="county-selector" id="county-selector" onChange={this.updateSelectOptions}>
-            <option selected disabled hidden>Select a County</option>
-             {Object.keys(sublocationList).map(county => (
-                <option value={county}>{county}</option>
+          <p>Scroll to zoom in or out and drag-click to shift the chart!</p>
+          <hr/>
+          <p>View data from a solar farm</p>
+          <div id="button-group" />
+          <hr/>
+          <p>View data from a sublocation in a county</p>
+          <div id="location-selector-linechart">
+            <select className="dropdown" name="county-selector" id="county-selector" onChange={this.updateSelectOptions}>
+              <option selected disabled hidden>Select a County</option>
+              {Object.keys(sublocationList).map(county => (
+                  <option value={county}>{county}</option>
+                ))}
+            </select>
+            <select className="dropdown" name="latlong-selector" id="latlong-selector">
+              <option selected disabled hidden>Select a County Sublocation</option>
+              {this.state.coordList.map(coord => (
+                <option value={`${coord.latitude},${coord.longitude}`}>Lat: {coord.latitude}, Long: {coord.longitude}</option>
               ))}
-          </select>
-          <select className="dropdown" name="latlong-selector" id="latlong-selector">
-            <option selected disabled hidden>Select a County Sublocation</option>
-            {this.state.coordList.map(coord => (
-              <option value={`${coord.latitude},${coord.longitude}`}>Lat: {coord.latitude}, Long: {coord.longitude}</option>
-            ))}
-          </select>
-        </div> 
-
-        <div id="date-range">
-          <form>
-            <label for="start">Start Date:</label>
-              <input type="date" name="start" min="2015-01-01" max="2019-12-31" value="2019-01-01" />
-            <label for="start">End Date:</label>
-              <input type="date" name="start" min="2015-01-01" max="2019-12-31" value="2019-12-31"/>
-              {/*Change the class name! The class should be something similar, but can't be solarfarmbutton since the farm buttons are dependent on it I believe*/}
-            <button className="coolbutton" type="button" id="submit-linechart">Submit</button>
-          </form>
+            </select>
+          </div> 
+          <div id="date-range">
+            <form>
+              {/* <div>
+                <label for="start">Start Date: </label>
+                <input type="date" name="start" min="2015-01-01" max="2019-12-31" value="2019-01-01" />
+              </div>
+              <div>
+                <label for="start">End Date: </label>
+                <input type="date" name="start" min="2015-01-01" max="2019-12-31" value="2019-12-31"/>
+              </div> */}
+              <button className="submit-button" type="button" id="submit-linechart">Submit</button>
+            </form>
+          </div>
         </div>
-
       </div>
     );
   }
