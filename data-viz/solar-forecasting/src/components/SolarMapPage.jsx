@@ -180,7 +180,7 @@ class SolarMap extends Component {
     // this gets range of colors in a specific domain
     // remember, this is across 0 to the max GHI value. we have a pivot here as well
     var colorScale = d3.scaleLinear()
-      .domain([0, 400, 800])
+      .domain([4.4, 4.75, 5.1])
       .range(["#f7ba86", '#f25050', '#370757']); // a beautiful orange to red to purple. slight adjustments can be made in opacity (orange, red), but much nicer
 
     const hLegend = 300; // to give space for legend at bottom (at the bottom inside of the svg)
@@ -210,8 +210,10 @@ class SolarMap extends Component {
 
     Promise.all([
       d3.json('/data/Counties_Georgia_Topo.json'),
+      d3.json('/data/avg_ghi.json')
     ]).then(data => {
       const topoData = data[0];
+      const avgGHIData = data[1]
 
       const geoData = topojson.feature(topoData, {
         type: 'GeometryCollection',
@@ -225,26 +227,12 @@ class SolarMap extends Component {
       const path = d3.geoPath()
         .projection(projection);
 
-      // var generate random Array - array len appx 159. max ghi val = 800
-      const arrCountyGHI = Array.from({ length: 160 }, () => Math.floor(Math.random() * 800));
-
-      geoData.features.forEach((county, i) => {
-        const currentCounty = county;
-        currentCounty.properties.GHI = arrCountyGHI[i];
-      });
-
       const counties = g.selectAll('path')
         .data(geoData.features)
         .enter()
         .append('path')
         .attr('d', path)
-        .attr('fill', (county, i) => {
-          const countyName = county.properties.NAME10;
-          if (countySublocationList[countyName]) {
-            return colorScale(arrCountyGHI[i])
-          }
-          return 'var(--countyGray)';
-        })
+        .attr('fill', (county, i) => colorScale(avgGHIData[county.properties.NAME10]))
         .attr('cursor', 'pointer')
         .attr('class', 'county')
         .attr('id', county => county.properties.NAME10)
@@ -252,7 +240,7 @@ class SolarMap extends Component {
           div.transition()
             .duration(200)
             .style('opacity', 0.9);
-          div.html(`<span>${county.properties.NAMELSAD10}<br>GHI: ${county.properties.GHI}</span>`)
+          div.html(`<span>${county.properties.NAMELSAD10}<br>GHI: ${avgGHIData[county.properties.NAME10]}</span>`)
             .style('left', `${event.pageX}px`)
             .style('top', `${event.pageY - 28}px`);
         })
@@ -401,28 +389,12 @@ class SolarMap extends Component {
         // remove county data
         g.selectAll('.sublocation').remove();
 
-        var minArr1 = arrCountyGHI[0];
-        var maxArr1 = arrCountyGHI[0];
-
-        for (let i = 0; i < arrCountyGHI.length; i++) {
-          var temp1 = arrCountyGHI[i];
-          if (temp1 < minArr1) {
-            minArr1 = temp1;
-          } else if (temp1 > maxArr1) {
-            maxArr1 = temp1;
-          }
-        }
-
-        redoLegend(minArr1, maxArr1);
+        const min = d3.min(Object.values(avgGHIData));
+        const max = d3.max(Object.values(avgGHIData));
+        redoLegend(min, max);
 
         // reset color
-        counties.transition(1000).attr('fill', (county, i) => {
-          const countyName = county.properties.NAME10;
-          if (countySublocationList[countyName]) {
-            return colorScale(arrCountyGHI[i])
-          }
-          return 'var(--countyGray)';
-        });
+        counties.transition(1000).attr('fill', (county, i) => colorScale(avgGHIData[county.properties.NAME10]));
 
         // un-zoom
         svg.transition().duration(750).call(
@@ -453,7 +425,7 @@ class SolarMap extends Component {
     
     const legendWidth = 600; // the length in the x direction
 
-    createLegend(0, 800);
+    createLegend(4.4, 5.1);
 
     
 
