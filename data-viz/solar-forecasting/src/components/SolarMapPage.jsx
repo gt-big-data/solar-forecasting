@@ -582,9 +582,10 @@ class SolarMap extends Component {
         <div className="sidebar">
           <h5>Solar Map</h5>
           <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sapiente in magnam labore
-            nobis ea eum laudantium dolore aut laboriosam aspernatur, officiis cupiditate, officia
-            laborum quas quasi reprehenderit. Nihil, corrupti possimus!
+            This map visualizes GHI (Global Horizontal Irradiance) across the state of Georgia. You can click on select counties to view all GHI data across areas of the county. Scroll to zoom in or out, and drag-click to translate the map!<br/><br/>
+
+For more details (line chart) of a particular location, click the particular area and hit “Find Detailed Information.”
+
           </p>
           <div>
             <label for="county-list">County: </label>
