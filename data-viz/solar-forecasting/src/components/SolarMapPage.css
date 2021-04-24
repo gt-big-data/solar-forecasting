@@ -25,6 +25,10 @@
 
 /* Map Style */
 
+.county:hover {
+  fill: var(--leafGreen);
+}
+
 .county-border {
   fill: none;
   stroke: #303030;

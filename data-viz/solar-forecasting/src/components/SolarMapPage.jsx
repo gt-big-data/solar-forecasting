@@ -190,7 +190,7 @@ class SolarMap extends Component {
     const width = w - margin.left - margin.right;
     const height = h - margin.top - margin.bottom;
 
-    const div = d3.select('#visualization-page').append('div')
+    const div = d3.select('.solar-map-page').append('div')
       .attr('class', 'tooltip')
       .style('opacity', 0);
 
@@ -236,8 +236,15 @@ class SolarMap extends Component {
         .enter()
         .append('path')
         .attr('d', path)
-        .attr('fill', (county, i) => colorScale(arrCountyGHI[i]))
+        .attr('fill', (county, i) => {
+          const countyName = county.properties.NAME10;
+          if (countySubLocationList[countyName]) {
+            return colorScale(arrCountyGHI[i])
+          }
+          return 'var(--countyGray)';
+        })
         .attr('cursor', 'pointer')
+        .attr('class', 'county')
         .attr('id', county => county.properties.NAME10)
         .on('mouseover', (event, county) => {
           div.transition()
@@ -339,8 +346,8 @@ class SolarMap extends Component {
         document.getElementById('county-list').value = countyName;
 
         // style update
-        counties.transition().style('fill', '#EFEFEF');
-        d3.select(this).transition(1000).style('fill', '#edd287');
+        counties.transition().attr('fill', 'var(--countyGray)');
+        d3.select(this).transition(1000).attr('fill', 'var(--countyYellow)');
 
         // zoom
         const [[x0, y0], [x1, y1]] = path.bounds(d);
@@ -368,8 +375,16 @@ class SolarMap extends Component {
         // remove county data
         g.selectAll('.sublocation').remove();
 
+        // reset color
+        counties.transition(1000).attr('fill', (county, i) => {
+          const countyName = county.properties.NAME10;
+          if (countySubLocationList[countyName]) {
+            return colorScale(arrCountyGHI[i])
+          }
+          return 'var(--countyGray)';
+        });
+
         // un-zoom
-        counties.transition(1000).style('fill', (county, i) => colorScale(arrCountyGHI[i]));
         svg.transition().duration(750).call(
           zoom.transform,
           d3.zoomIdentity,
