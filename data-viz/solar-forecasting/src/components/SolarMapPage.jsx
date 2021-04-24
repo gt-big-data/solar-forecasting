@@ -173,6 +173,8 @@ class SolarMap extends Component {
     const w = 1260;
     const h = 740;
 
+    const updateCoordinates = this.props.updateCoordinates;
+
     // this gets range of colors in a specific domain
     // remember, this is across 0 to the max GHI value. we have a pivot here as well
     const colorScale = d3.scaleLinear()
@@ -301,22 +303,7 @@ class SolarMap extends Component {
               }
             })
             .attr('class', 'sublocation')
-            .on('click', (event, point) => {
-              fetch(`http://127.0.0.1:5000/data/location/${point.latitude}/${point.longitude}`)
-                .then(response => response.text())
-                .then(stringData => {
-                  console.log(d3.csvParseRows(stringData, (d, i) => {
-                    return {
-                      test1: d[0],
-                      test2: d[1],
-                      test3: d[2],
-                      test4: d[3],
-                      test5: d[4],
-                    }
-                  }));
-                  clickSublocation(point);
-                });
-            });
+            .on('click', (event, point) => clickSublocation(point));
           });
         } catch(error) {
           document.getElementById('error-message').style.opacity = 1;
@@ -328,6 +315,7 @@ class SolarMap extends Component {
        */
       function clickSublocation(point) {
         document.getElementById('coordinates').innerText = `Lat: ${point.latitude}, Long: ${point.longitude}`;
+        updateCoordinates(point.latitude, point.longitude)
       }
 
       /**
@@ -522,8 +510,7 @@ class SolarMap extends Component {
           <div id="error-message"><strong>No data for that county.</strong></div>
           <div>
             <p id="coordinates"></p>
-            <p id="location" />
-            <p id="elevation" />
+            <button id="view-detailed">View Detailed Data</button>
           </div>
         </div>
       </div>

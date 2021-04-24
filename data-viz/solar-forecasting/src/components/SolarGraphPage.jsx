@@ -522,6 +522,8 @@ class SolarGraph extends Component {
   }
 
   render() {
+    // this.props.latitude
+    // this.props.longitude
     return (
       <div className="solar-graph-page" >
         <div className="solar-text">
