@@ -331,7 +331,8 @@ class SolarGraph extends Component {
 
 
       function makeAPICall(latLongArr) {
-        //1. do csv stuff copy paste
+        // remove farm button highlight
+        document.getElementById('clickedfarmbutton').id = '';
         fetch(`http://127.0.0.1:5000/data/location/${latLongArr[0]}/${latLongArr[1]}`)
           .then(response => response.text())
           .then(stringData => {
