@@ -201,6 +201,23 @@ class SolarGraph extends Component {
       .attr('class', 'lineviz');
 
     // ASYNCHRONOUS - Load CSV file (1st Day Jan 2019 Sample)
+    // http://127.0.0.1:5000//data/location/32.61/-85.14.csv
+
+    d3.csv("http://127.0.0.1:5000//data/location/32.61/-85.14.csv", function(data) {
+      // console.log(data);
+      console.log(data[0]);
+      console.log("yo");
+      console.log(data[1]);
+      console.log("yo");
+      console.log(data[2]);
+      console.log("yo");
+      console.log(data[3]);
+      console.log("yo");
+      console.log(data[4]);
+      console.log("yo");
+
+    });
+
     Promise.all(dataList.map((filePath) => d3.csv(filePath, rowConverter))).then((data) => {
       const datasetMerriweather = data[0];
       const datasetButler = data[1];
