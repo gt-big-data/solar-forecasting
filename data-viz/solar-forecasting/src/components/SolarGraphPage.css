@@ -66,6 +66,23 @@
   color: white;
 }
 
+.coolbutton {
+  border-radius: 16px;
+  background-color: white;
+  /*background-color: #EDC8C8;*/
+  color: black;
+  transition-duration: 0.3s;
+  padding: 8px 28px;
+  font: 15px Arial, sans-serif;
+  border-color: #F76444;
+}
+
+/*.coolbutton:hover {
+  background-color: #F76444;
+  color: white;
+}*/
+
+
 #solar-graph {
   overflow: auto;
 }
