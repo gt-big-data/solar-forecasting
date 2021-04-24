@@ -2,6 +2,168 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 import './SolarGraphPage.css';
 
+const countyList = [
+  "Appling",
+  "Atkinson",
+  "Bacon",
+  "Baker",
+  "Baldwin",
+  "Banks",
+  "Barrow",
+  "Bartow",
+  "Ben Hill",
+  "Berrien",
+  "Bibb",
+  "Bleckley",
+  "Brantley",
+  "Brooks",
+  "Bryan",
+  "Bulloch",
+  "Burke",
+  "Butts",
+  "Calhoun",
+  "Camden",
+  "Candler",
+  "Carroll",
+  "Catoosa",
+  "Charlton",
+  "Chatham",
+  "Chattahoochee",
+  "Chattooga",
+  "Cherokee",
+  "Clarke",
+  "Clay",
+  "Clayton",
+  "Clinch",
+  "Cobb",
+  "Coffee",
+  "Colquitt",
+  "Columbia",
+  "Cook",
+  "Coweta",
+  "Crawford",
+  "Crisp",
+  "Dade",
+  "Dawson",
+  "DeKalb",
+  "Decatur",
+  "Dodge",
+  "Dooly",
+  "Dougherty",
+  "Douglas",
+  "Early",
+  "Echols",
+  "Effingham",
+  "Elbert",
+  "Emanuel",
+  "Evans",
+  "Fannin",
+  "Fayette",
+  "Floyd",
+  "Forsyth",
+  "Franklin",
+  "Fulton",
+  "Gilmer",
+  "Glascock",
+  "Glynn",
+  "Gordon",
+  "Grady",
+  "Greene",
+  "Gwinnett",
+  "Habersham",
+  "Hall",
+  "Hancock",
+  "Haralson",
+  "Harris",
+  "Hart",
+  "Heard",
+  "Henry",
+  "Houston",
+  "Irwin",
+  "Jackson",
+  "Jasper",
+  "Jeff Davis",
+  "Jefferson",
+  "Jenkins",
+  "Johnson",
+  "Jones",
+  "Lamar",
+  "Lanier",
+  "Laurens",
+  "Lee",
+  "Liberty",
+  "Lincoln",
+  "Long",
+  "Lowndes",
+  "Lumpkin",
+  "Macon",
+  "Madison",
+  "Marion",
+  "McDuffie",
+  "McIntosh",
+  "Meriwether",
+  "Miller",
+  "Mitchell",
+  "Monroe",
+  "Montgomery",
+  "Morgan",
+  "Murray",
+  "Muscogee",
+  "Newton",
+  "Oconee",
+  "Oglethorpe",
+  "Paulding",
+  "Peach",
+  "Pickens",
+  "Pierce",
+  "Pike",
+  "Polk",
+  "Pulaski",
+  "Putnam",
+  "Quitman",
+  "Rabun",
+  "Randolph",
+  "Richmond",
+  "Rockdale",
+  "Schley",
+  "Screven",
+  "Seminole",
+  "Spalding",
+  "Stephens",
+  "Stewart",
+  "Sumter",
+  "Talbot",
+  "Taliaferro",
+  "Tattnall",
+  "Taylor",
+  "Telfair",
+  "Terrell",
+  "Thomas",
+  "Tift",
+  "Toombs",
+  "Towns",
+  "Treutlen",
+  "Troup",
+  "Turner",
+  "Twiggs",
+  "Union",
+  "Upson",
+  "Walker",
+  "Walton",
+  "Ware",
+  "Warren",
+  "Washington",
+  "Wayne",
+  "Webster",
+  "Wheeler",
+  "White",
+  "Whitfield",
+  "Wilcox",
+  "Wilkes",
+  "Wilkinson",
+  "Worth"
+];
+
 class SolarGraph extends Component {
   componentDidMount() {
     const dataList = [
@@ -16,6 +178,7 @@ class SolarGraph extends Component {
       GHI: parseFloat(d.GHI),
       Prediction: +d.Predictions,
     });
+
     // Specifications for svg element.
     const w = 1260;
     const h = 740;
@@ -31,14 +194,17 @@ class SolarGraph extends Component {
 
     // create new svg element for the graph. Has larger true width and height (w, h)
     const svg = d3.select('#solar-graph')
-      .attr('width', width - 300)
+      .attr('width', width)
       .attr('height', height)
       .attr('viewBox', [0, 0, w, h])
-      .attr('preserveAspectRatio', 'xMidYMid meet')
+      .attr('preserveAspectRatio', 'xMidYMin meet')
       .classed('svg-content', true)
       .attr('class', 'lineviz');
 
     // ASYNCHRONOUS - Load CSV file (1st Day Jan 2019 Sample)
+    // http://127.0.0.1:5000//data/location/32.61/-85.14.csv
+
+
     Promise.all(dataList.map((filePath) => d3.csv(filePath, rowConverter))).then((data) => {
       const datasetMerriweather = data[0];
       const datasetButler = data[1];
@@ -156,6 +322,8 @@ class SolarGraph extends Component {
       // Function to scale the graph appropriately, alongside the x axis.
       // Particularly responds to a d3 event.
       function zoomed(event) {
+        // console.log("X " + event.transform.x);
+        // console.log("Y " + event.transform.y);
         zoomPerformed = true; // Do not make false again.
         t = event.transform;
         xt = t.rescaleX(timeXScale);
@@ -165,6 +333,8 @@ class SolarGraph extends Component {
       function displayLineGraph(dataset) {
         // This statement is only necessary if we want to view a part of the data.
         // dataset = dataset.slice(dataset.length - 4000, dataset.length);
+
+        //lets try to access vars appropriately
 
         const zoom = d3.zoom()
           .scaleExtent([1, 400]) // how much I can zoom in
@@ -322,14 +492,118 @@ class SolarGraph extends Component {
 
       createButtons();
       farmButtonClick(datasetMerriweather, merriweatherButton);
+
+
+      //another thing that needs to be done - add the dropdown selections: list the specific tasks to be done:
+      //Add County list dropdown - alright good to go.
+      //Add dropdown that is based on the county list, and should have a list of lattitudes. - should be somewhat ok, just displaying them (options there in inspector)
+
+      //we need to append county names here. we also are dependent on the locations that platform gives us, so right now, cannot give info on the second dropdown box.
+      function buildDropdowns() {
+        var countyDropdown = document.getElementById("county-selector");
+
+        // Add options
+        for (var i in countyList) {
+            countyDropdown.append('<option value=' + countyList[i] + " County" + '>' + countyList[i] + " County" + '</option>');
+        }
+
+
+
+
+        // console.log(countyDropdown);
+        // countyList.forEach(function (item, index) {
+        //   var tempOption = document.createElement("OPTION"); //put a class here if needed, later for css stuff
+        //   tempOption.value = item + " County";
+        //   // tempOption.hidden = false;
+        //   // tempOption.disabled = false;
+        //   console.log(tempOption.value);
+
+        //   console.log(countyDropdown.append(tempOption));
+        // })
+      }
+
+      // buildDropdowns();
+
+
+
+      function makeAPICall(latLongArr) {
+        //1. do csv stuff copy paste
+        fetch(`http://127.0.0.1:5000/data/location/${latLongArr[0]}/${latLongArr[1]}`)
+          .then(response => response.text())
+          .then(stringData => {
+            //please change prediction value accordingly! 10 is just for testing purposes to see if Prediction data is displaying properly.
+            var apidata = d3.csvParseRows(stringData, (d, i) => {
+              return {
+                date: new Date(+2019, (+d[0] - 1), +d[1], +d[2], +d[3]),
+                GHI: d[4],
+                Prediction: 10,
+              }
+            })
+            displayLineGraph(apidata);
+          });
+      }
+
+      function submitGetQueryArgs() {
+        var regex = /[+-]?\d+(\.\d+)?/g;
+
+        var latLong = document.getElementById("latlong-selector");
+        var latLongText = latLong.options[latLong.selectedIndex].text;
+        var latLongArr = latLongText.match(regex).map(function(v) {
+          return parseFloat(v);
+        });
+        makeAPICall(latLongArr)
+      }
+
+      if (this.props.latitude !== null) {
+        // load chart with prop data
+        makeAPICall([this.props.latitude, this.props.longitude]);
+      }
+
+      document.getElementById("submit-linechart").onclick =() => submitGetQueryArgs();
+      //the id for that div may not be needed (check the css file for something separate to manage the div if needed.)
     });
   }
 
+  
+
   render() {
+    // this.props.latitude
+    // this.props.longitude
     return (
-      <div className="solar-graph-page">
+      <div className="solar-graph-page" >
+        <div className="solar-text">
+          <h1 className="solar-header">Analyzing Location Solar Data</h1>
+          <p className = "solar-graph-explanation">You can use this tool to observe Global Horizontal Irradiance (GHI) data for any particular location. GHI measures the total solar radiation received on a theoretical horizontal surface.</p>
+          <p>
+            Scroll to zoom in or out and drag-click to shift the chart!
+          </p>
+        </div>
         <svg id="solar-graph" />
         <div id="button-group" />
+        <div id="location-selector-linechart">
+          <select className="dropdown" name="county-selector" id="county-selector">
+            <option selected disabled hidden>Select a County</option>
+             {countyList.map(county => (
+                <option value={county}>{county}</option>
+              ))}
+          </select>
+          <select className="dropdown" name="latlong-selector" id="latlong-selector">
+            <option selected disabled hidden>Select a County Sublocation</option>
+            <option value='Something'>Lat: 32.61 Long: -85.14</option>
+          </select>
+        </div> 
+
+        <div id="date-range">
+          <form>
+            <label for="start">Start Date:</label>
+              <input type="date" name="start" min="2015-01-01" max="2019-12-31" value="2019-01-01" />
+            <label for="start">End Date:</label>
+              <input type="date" name="start" min="2015-01-01" max="2019-12-31" value="2019-12-31"/>
+              {/*Change the class name! The class should be something similar, but can't be solarfarmbutton since the farm buttons are dependent on it I believe*/}
+            <button className="coolbutton" type="button" id="submit-linechart">Submit</button>
+          </form>
+        </div>
+
       </div>
     );
   }

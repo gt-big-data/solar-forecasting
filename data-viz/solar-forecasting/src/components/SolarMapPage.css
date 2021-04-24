@@ -25,6 +25,10 @@
 
 /* Map Style */
 
+.county:hover {
+  fill: var(--leafGreen);
+}
+
 .county-border {
   fill: none;
   stroke: #303030;
@@ -60,4 +64,17 @@
 
 .pathMap {
   stroke: #303030;
+}
+
+#error-message {
+  width: 100%;
+  background-color: var(--lightYellow);
+  padding: 1em;
+  margin: 1em 0em;
+  border-radius: 5px;
+  opacity: 0;
+}
+
+.sublocation {
+  cursor: pointer;
 }
