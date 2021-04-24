@@ -178,7 +178,7 @@ class SolarMap extends Component {
 
     // this gets range of colors in a specific domain
     // remember, this is across 0 to the max GHI value. we have a pivot here as well
-    const colorScale = d3.scaleLinear()
+    var colorScale = d3.scaleLinear()
       .domain([0, 400, 800])
       .range(["#f7ba86", '#f25050', '#370757']); // a beautiful orange to red to purple. slight adjustments can be made in opacity (orange, red), but much nicer
 
@@ -284,10 +284,31 @@ class SolarMap extends Component {
         try {
         const countySublocationData = countySubLocationList[county];
         document.getElementById('error-message').style.opacity = 0;
+
+
         
         fetch(`http://127.0.0.1:5000/data/avg_noon_ghi/${county}`)
           .then(response => response.json())
           .then(sublocationData => {
+
+            //before doing the stuff, we should redo the legend. (this includes redefining the colorscale)
+            //find the min and max of data
+            var minArr = sublocationData[0]['Average Noon GHI'];
+            var maxArr = sublocationData[0]['Average Noon GHI'];
+
+            for (let i = 0; i < sublocationData.length; i++) {
+              var temp = sublocationData[i]['Average Noon GHI'];
+              if (temp < minArr) {
+                minArr = temp;
+              } else if (temp > maxArr) {
+                maxArr = temp;
+              }
+            }
+
+            redoLegend(minArr, maxArr);
+
+
+
             // drawing points
             g.selectAll('.sublocation')
             .data(countySublocationData)
@@ -327,6 +348,8 @@ class SolarMap extends Component {
       function clicked(event, d) {
         // remove current rects
         g.selectAll('.sublocation').remove();
+
+
 
         const countyName = d.properties.NAME10;
         renderCountyData(countyName);
@@ -488,6 +511,8 @@ class SolarMap extends Component {
     }
 
     function redoLegend(minDomain, maxDomain) {
+      console.log(minDomain);
+      console.log(maxDomain);
       //need to redo the color scale, before we move to call the legend function again.
       //also need to delete the legend before making a new one. so just delete all the elements by class.
 
@@ -497,7 +522,9 @@ class SolarMap extends Component {
       .range(["#f7ba86", '#f25050', '#370757']); // a beautiful orange to red to purple. slight adjustments can be made in opacity (orange, red), but much nicer
 
       //proceed with deleting the x-axis of the legend already on display.
-      document.getElementByClass("map-legend-axis").remove();
+      const classArr = Array.from(document.getElementsByClassName("map-legend-axis"));
+
+      classArr.forEach(item => item.remove());
 
       //now lets recreate it.
       const xScale = d3.scaleLinear()
@@ -511,7 +538,8 @@ class SolarMap extends Component {
         .scale(xScale);
 
       // Set up X axis
-      const legendsvg = document.getElementByClass('legendWrapper');
+      const legendsvg = d3.select('.legendWrapper');
+      console.log(legendsvg);
 
       legendsvg.append('g')
         .attr('class', 'map-legend-axis')
