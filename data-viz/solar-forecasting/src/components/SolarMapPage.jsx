@@ -399,83 +399,126 @@ class SolarMap extends Component {
     // .attr("stop-color", function(d) { return d; });
 
     // and this guy we can use for actually placing values literally in the correct spot
-    const countScale = d3.scaleLinear()
-      .domain([0, 800]) // same thing, from 0 to max GHI value.
-      .range([0, width]);
+    
+    const legendWidth = 600; // the length in the x direction
 
-    // Calculate the variables for the temp gradient
-    const numStops = colorScale.domain().length;
-    const countRange = countScale.domain();
-    countRange[2] = countRange[1] - countRange[0];
-    const countPoint = [];
-    for (let i = 0; i < numStops; i += 1) {
-      // Take partial differences (basically the stops and where they should be)
-      countPoint.push((i * countRange[2]) / (numStops - 1) + countRange[0]);
+    createLegend(0, 800);
+
+    
+
+    function createLegend(minDomain, maxDomain) { 
+      const countScale = d3.scaleLinear()
+        .domain([minDomain, maxDomain]) // same thing, from 0 to max GHI value.
+        .range([0, width]);
+
+      // Calculate the variables for the temp gradient
+      const numStops = colorScale.domain().length;
+      const countRange = countScale.domain();
+      countRange[2] = countRange[1] - countRange[0];
+      const countPoint = [];
+      for (let i = 0; i < numStops; i += 1) {
+        // Take partial differences (basically the stops and where they should be)
+        countPoint.push((i * countRange[2]) / (numStops - 1) + countRange[0]);
+      }
+
+      // Create the gradient
+      svg.append('defs') // objects are not directly rendered, called later to render
+        .append('linearGradient') // this is an actual element. defined via arrow (x1,x2, y1,y2)
+        .attr('id', 'legend-bigmap') // ID = critical here. We need to be able to reference this somehow later.
+        .attr('x1', '0%')
+        .attr('y1', '0%') // %s determine how far along the arrow do you want to start color, and it scales it backwards ig to negative vals and whatev
+        .attr('x2', '100%')
+        .attr('y2', '0%')
+        .attr('class', 'legend-defs')
+        .selectAll('stop')
+        .data(d3.range(numStops))
+        .enter()
+        .append('stop') // for all these guys, generate a stop element (defines offset + stop-color)
+        .attr('offset', (d, i) => countScale(countPoint[i]) / width)
+        .attr('stop-color', (d, i) => colorScale(countPoint[i])); // the interpreter of colorScale is here!.
+
+      
+      // Color Legend container
+      const legendsvg = svg.append('g') // into the svg, we add a g element, which will wrap around our legend.
+        .attr('class', 'legendWrapper')
+        .attr('transform', `translate(${width / 2 + 80},${h + hLegend / 2})`); // this part here is important, how much we move it down.
+
+      // FIX ^^, offset the rectangle BETTER (more "robustly" instead of + 80)!!!
+
+      // Draw the Rectangle
+      legendsvg.append('rect') // using a rectangle element. We can adjust later on to beutify it
+        .attr('class', 'legendRect') // in case we need to CSS REFERENCE it for beautifying
+        .attr('x', -legendWidth / 2)
+        .attr('y', 0)
+        .attr('width', legendWidth)
+        .attr('height', 20)
+        .style('fill', 'url(#legend-bigmap)'); // This calls and displays it. Very essential.
+
+      // Append title
+      legendsvg.append('text')
+        .attr('class', 'legendTitle')
+        .attr('x', 0)
+        .attr('y', -20)
+        .style('text-anchor', 'middle')
+        .text('Global Horizontal Irradiance (GHI)');
+
+      // Add desc about units
+      legendsvg.append('text')
+        .attr('class', 'legendDesc')
+        .attr('x', 0)
+        .attr('y', 60)
+        .style('text-anchor', 'middle')
+        .text('*Measured in Watts per square meter (W/m^2)');
+
+      const xScale = d3.scaleLinear()
+        .range([-legendWidth / 2, legendWidth / 2])
+        .domain([minDomain, maxDomain]);
+
+      // Define x-axis
+      const xAxis = d3.axisBottom()
+        .ticks(5)
+        // .tickFormat(formatPercent)
+        .scale(xScale);
+
+      // Set up X axis
+      legendsvg.append('g')
+        .attr('class', 'map-legend-axis')
+        .attr('transform', `translate(0,${20})`)
+        .call(xAxis);
     }
 
-    // Create the gradient
-    svg.append('defs') // objects are not directly rendered, called later to render
-      .append('linearGradient') // this is an actual element. defined via arrow (x1,x2, y1,y2)
-      .attr('id', 'legend-bigmap') // ID = critical here. We need to be able to reference this somehow later.
-      .attr('x1', '0%')
-      .attr('y1', '0%') // %s determine how far along the arrow do you want to start color, and it scales it backwards ig to negative vals and whatev
-      .attr('x2', '100%')
-      .attr('y2', '0%')
-      .selectAll('stop')
-      .data(d3.range(numStops))
-      .enter()
-      .append('stop') // for all these guys, generate a stop element (defines offset + stop-color)
-      .attr('offset', (d, i) => countScale(countPoint[i]) / width)
-      .attr('stop-color', (d, i) => colorScale(countPoint[i])); // the interpreter of colorScale is here!.
+    function redoLegend(minDomain, maxDomain) {
+      //need to redo the color scale, before we move to call the legend function again.
+      //also need to delete the legend before making a new one. so just delete all the elements by class.
 
-    const legendWidth = 600; // the length in the x direction
-    // Color Legend container
-    const legendsvg = svg.append('g') // into the svg, we add a g element, which will wrap around our legend.
-      .attr('class', 'legendWrapper')
-      .attr('transform', `translate(${width / 2 + 80},${h + hLegend / 2})`); // this part here is important, how much we move it down.
+      //redefining colorScale - keep the domain as length 3 to have some third element so we get 3 colors! (the middle guy is just the average, just for the purposes explained)
+      colorScale = d3.scaleLinear()
+      .domain([minDomain, minDomain + (maxDomain-minDomain) / 2, maxDomain])
+      .range(["#f7ba86", '#f25050', '#370757']); // a beautiful orange to red to purple. slight adjustments can be made in opacity (orange, red), but much nicer
 
-    // FIX ^^, offset the rectangle BETTER (more "robustly" instead of + 80)!!!
+      //proceed with deleting the x-axis of the legend already on display.
+      document.getElementByClass("map-legend-axis").remove();
 
-    // Draw the Rectangle
-    legendsvg.append('rect') // using a rectangle element. We can adjust later on to beutify it
-      .attr('class', 'legendRect') // in case we need to CSS REFERENCE it for beautifying
-      .attr('x', -legendWidth / 2)
-      .attr('y', 0)
-      .attr('width', legendWidth)
-      .attr('height', 20)
-      .style('fill', 'url(#legend-bigmap)'); // This calls and displays it. Very essential.
+      //now lets recreate it.
+      const xScale = d3.scaleLinear()
+        .range([-legendWidth / 2, legendWidth / 2])
+        .domain([minDomain, maxDomain]);
 
-    // Append title
-    legendsvg.append('text')
-      .attr('class', 'legendTitle')
-      .attr('x', 0)
-      .attr('y', -20)
-      .style('text-anchor', 'middle')
-      .text('Global Horizontal Irradiance (GHI)');
+      // Define x-axis
+      const xAxis = d3.axisBottom()
+        .ticks(5)
+        // .tickFormat(formatPercent)
+        .scale(xScale);
 
-    // Add desc about units
-    legendsvg.append('text')
-      .attr('class', 'legendDesc')
-      .attr('x', 0)
-      .attr('y', 60)
-      .style('text-anchor', 'middle')
-      .text('*Measured in Watts per square meter (W/m^2)');
+      // Set up X axis
+      const legendsvg = document.getElementByClass('legendWrapper');
 
-    const xScale = d3.scaleLinear()
-      .range([-legendWidth / 2, legendWidth / 2])
-      .domain([0, 800]);
+      legendsvg.append('g')
+        .attr('class', 'map-legend-axis')
+        .attr('transform', `translate(0,${20})`)
+        .call(xAxis);
 
-    // Define x-axis
-    const xAxis = d3.axisBottom()
-      .ticks(5)
-      // .tickFormat(formatPercent)
-      .scale(xScale);
-
-    // Set up X axis
-    legendsvg.append('g')
-      .attr('class', 'map-legend-axis')
-      .attr('transform', `translate(0,${20})`)
-      .call(xAxis);
+    }
   }
 
   updateCounty = () => {
