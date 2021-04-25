@@ -519,9 +519,6 @@ class SolarMap extends Component {
         maxDomain = d3.max([650, maxDomain]);
       }
       
-
-      console.log(minDomain);
-      console.log(maxDomain);
       //need to redo the color scale, before we move to call the legend function again.
       //also need to delete the legend before making a new one. so just delete all the elements by class.
 
@@ -548,7 +545,6 @@ class SolarMap extends Component {
 
       // Set up X axis
       const legendsvg = d3.select('.legendWrapper');
-      console.log(legendsvg);
 
       legendsvg.append('g')
         .attr('class', 'map-legend-axis')
