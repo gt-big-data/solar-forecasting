@@ -10,6 +10,8 @@ f = open("latlong-list.json",)
 
 latlong = json.load(f)
 
+print(latlong)
+
 testcounter = 0
 
 def endanddump():
@@ -17,8 +19,11 @@ def endanddump():
         json.dump(latlong, outfile)
     quit()
 
-for county in copy.deepcopy(latlong):
-    for locObject in latlong[county]:
+
+tempJson = copy.deepcopy(latlong)
+
+for county in tempJson:
+    for locObject in tempJson[county]:
         # if (testcounter == 5):
         #     endanddump()
         print("Start Iteration")
@@ -32,6 +37,14 @@ for county in copy.deepcopy(latlong):
 
 
         resp = requests.get("https://geo.fcc.gov/api/census/area?lat=" + str(lat) + "&lon=" + str(lon) + "&format=json")
+
+        counter = 0
+        while (resp.status_code != 200):
+            print("WAITING!")
+            counter += 1
+            time.sleep(1)
+            if (counter == 20):
+                break
 
         if (resp.status_code == 200):
 
