@@ -346,7 +346,7 @@ class SolarGraph extends Component {
               return {
                 date: new Date(+2019, (+d[0] - 1), +d[1], +d[2], +d[3]),
                 GHI: d[4],
-                Prediction: 10,
+                Prediction: 0,
               }
             })
             displayLineGraph(apidata);
