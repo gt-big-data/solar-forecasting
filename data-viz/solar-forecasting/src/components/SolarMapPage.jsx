@@ -174,13 +174,16 @@ class SolarMap extends Component {
     const w = 1260;
     const h = 740;
 
+    const constMinGeneral = 4.4;
+    const constMaxGeneral = 5.1;
+
     const updateCoordinates = this.props.updateCoordinates;
     const countySublocationList = this.props.sublocationList;
 
     // this gets range of colors in a specific domain
     // remember, this is across 0 to the max GHI value. we have a pivot here as well
     var colorScale = d3.scaleLinear()
-      .domain([4.4, 4.75, 5.1])
+      .domain([constMinGeneral, constMinGeneral + (constMaxGeneral - constMinGeneral) / 2, constMaxGeneral])
       .range(["#f7ba86", '#f25050', '#370757']); // a beautiful orange to red to purple. slight adjustments can be made in opacity (orange, red), but much nicer
 
     const hLegend = 300; // to give space for legend at bottom (at the bottom inside of the svg)
@@ -291,7 +294,7 @@ class SolarMap extends Component {
                   maxArr = temp;
                 }
               }
-              redoLegend(minArr, maxArr);
+              redoLegend(minArr, maxArr, false);
               
 
               const coordGHIMap = new Map();
@@ -389,9 +392,9 @@ class SolarMap extends Component {
         // remove county data
         g.selectAll('.sublocation').remove();
 
-        const min = d3.min(Object.values(avgGHIData));
-        const max = d3.max(Object.values(avgGHIData));
-        redoLegend(min, max);
+        // const min = d3.min(Object.values(avgGHIData));
+        // const max = d3.max(Object.values(avgGHIData));
+        redoLegend(constMinGeneral, constMaxGeneral, true);
 
         // reset color
         counties.transition(1000).attr('fill', (county, i) => colorScale(avgGHIData[county.properties.NAME10]));
@@ -425,7 +428,7 @@ class SolarMap extends Component {
     
     const legendWidth = 600; // the length in the x direction
 
-    createLegend(4.4, 5.1);
+    createLegend(constMinGeneral, constMaxGeneral);
 
     
 
@@ -510,9 +513,12 @@ class SolarMap extends Component {
         .call(xAxis);
     }
 
-    function redoLegend(minDomain, maxDomain) {
-      minDomain = d3.min([600, minDomain]);
-      maxDomain = d3.max([650, maxDomain]);
+    function redoLegend(minDomain, maxDomain, isReset) {
+      if (!isReset) {
+        minDomain = d3.min([600, minDomain]);
+        maxDomain = d3.max([650, maxDomain]);
+      }
+      
 
       console.log(minDomain);
       console.log(maxDomain);
