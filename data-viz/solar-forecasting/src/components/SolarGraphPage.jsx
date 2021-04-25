@@ -188,7 +188,12 @@ class SolarGraph extends Component {
 
         // Linear scaling for y axis
         lineYScale
-          .domain([0, d3.max(dataset, (d) => d.GHI)]);
+          .domain([0, d3.max(dataset, (d) => +d.GHI)]);
+
+        console.log(lineYScale);
+        console.log(d3.max(dataset, (d) => d.GHI));
+        console.log(d3.max(dataset, (d) => +d.GHI));
+        console.log(lineYScale.domain());
 
         gParent.select('.axis--x').call(xAxis);
         gParent.select('.axis--y').call(yAxis);
